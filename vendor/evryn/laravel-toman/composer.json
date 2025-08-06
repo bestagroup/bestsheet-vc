@@ -1,0 +1,55 @@
+{
+    "name": "evryn/laravel-toman",
+    "description": "A simple stable Laravel package to handle popular payment gateways in Iran including ZarinPal and IDPay.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Amirreza Nasiri",
+            "email": "nasiri.amirreza.96@gmail.com",
+            "homepage": "https://amirreza.in"
+        }
+    ],
+    "homepage": "https://github.com/evryn/laravel-toman",
+    "keywords": [
+        "zarinpal", "زرین پال",
+        "idpay", "آیدی پی",
+        "laravel", "laraveltoman", "laravel-toman",
+        "toman", "payment", "gateway", "درگاه", "پرداخت"
+    ],
+    "require": {
+        "php": "^8.0|^8.1",
+        "guzzlehttp/guzzle": "^7.2",
+        "laravel/framework": "^9.0|^10.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0|^9.0",
+        "mockery/mockery": "^1.3.3",
+        "orchestra/testbench": "^7.0|^8.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Evryn\\LaravelToman\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Evryn\\LaravelToman\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Evryn\\LaravelToman\\LaravelTomanServiceProvider"
+            ],
+            "aliases": {
+                "Payment": "Evryn\\LaravelToman\\Facades\\Payment"
+            }
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --exclude-group external",
+        "test-coverage": "vendor/bin/phpunit --coverage-clover coverage.xml",
+        "test-dev": "vendor/bin/phpunit --coverage-html coverage --coverage-text"
+    }
+}
