@@ -23,6 +23,8 @@ class ProfileController extends Controller
 
         $projects = Auth::user()->project;
 
-        return view('panel.profile')->with(compact('thispage' , 'projects'));
+        $company = Auth::user()->company;
+
+        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company'));
     }
 }

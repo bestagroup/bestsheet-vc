@@ -1,23 +1,5 @@
 @php
-    // پروفایل تستی شرکت
     $hasProfile = true;
-    $profile = [
-        'company_name' => 'شرکت دانش‌بنیان پارس',
-        'registration_number' => '123456',
-        'national_id' => '14001234567',
-        'company_phone' => '021-22220000',
-        'company_email' => 'info@parscompany.ir',
-        'company_address' => 'تهران، بلوار کشاورز، پلاک ۱۰۰',
-        'website' => 'parscompany.ir'
-    ];
-
-    $projects = (object)[
-        'title'           => 'ثبت ۱۲۳۴۵۶',
-        'company_id'      => '14001234567',
-        'company_tel'     => '021-22223333',
-        'company_email'   => 'info@rahno.vc',
-        'company_address' => 'تهران، بلوار کشاورز، پلاک ۲۲',
-    ];
 @endphp
 
 <div class="tab-pane fade justify-content-center" id="navs-co-profile-card" role="tabpanel">
@@ -31,8 +13,8 @@
                             <i class="mdi mdi-domain" style="font-size:2rem; color:#696cff"></i>
                         </div>
                         <div>
-                            <div class="fw-bold mb-1" style="font-size:1.2rem;">{{ $profile['company_name'] }}</div>
-                            <div class="small text-secondary" dir="ltr" style="font-size:0.95rem;">{{ $profile['website'] }}</div>
+                            <div class="fw-bold mb-1" style="font-size:1.2rem;">{{ $company->company_name }}</div>
+                            <div class="small text-secondary" dir="ltr" style="font-size:0.95rem;">{{ $company->website }}</div>
                         </div>
                     </div>
                     <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="toggleEditMode()" style="font-size:.98rem">
@@ -44,23 +26,23 @@
                 <dl class="row g-3 pt-3" style="font-size: 0.96rem;">
                     <div class="col-12 d-flex">
                         <dt class="col-5 text-start text-muted">شماره ثبت:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $projects->title }}</dd>
+                        <dd class="col-7 text-dark mb-0">{{ $company->registration_number }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">شناسه ملی:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $projects->company_id }}</dd>
+                        <dd class="col-7 text-dark mb-0">{{ $company->national_id }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">تلفن:</dt>
-                        <dd class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $projects->company_tel }}</dd>
+                        <dd class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->phone }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">ایمیل:</dt>
-                        <dd class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $projects->company_email }}</dd>
+                        <dd class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->email }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">آدرس:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $projects->company_address }}</dd>
+                        <dd class="col-7 text-dark mb-0">{{ $company->address }}</dd>
                     </div>
                 </dl>
 
@@ -70,6 +52,6 @@
 
     {{-- فرم ویرایش اطلاعات شرکت --}}
     <div id="companyEditForm" class="{{ $hasProfile ? 'd-none' : '' }}">
-        @include('profile.company_profile_form', ['profile' => $profile])
+        @include('profile.company_profile_form', ['profile' => $company->id])
     </div>
 </div>

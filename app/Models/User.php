@@ -103,4 +103,9 @@ class User extends Authenticatable
         return $this->hasOne(Project::class);
     }
 
+    public function company()
+    {
+        return $this->hasOne(Company::class);
+    }
+
 }
