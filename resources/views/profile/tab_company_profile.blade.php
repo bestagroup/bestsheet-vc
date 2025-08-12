@@ -26,26 +26,25 @@
                 <dl class="row g-3 pt-3" style="font-size: 0.96rem;">
                     <div class="col-12 d-flex">
                         <dt class="col-5 text-start text-muted">شماره ثبت:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $company->registration_number }}</dd>
+                        <dd id="company-registration-number" class="col-7 text-dark mb-0">{{ $company->registration_number }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">شناسه ملی:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $company->national_id }}</dd>
+                        <dd id="company-national-id" class="col-7 text-dark mb-0">{{ $company->national_id }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">تلفن:</dt>
-                        <dd class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->phone }}</dd>
+                        <dd id="company-phone" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->phone }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">ایمیل:</dt>
-                        <dd class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->email }}</dd>
+                        <dd id="company-email" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->email }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">آدرس:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $company->address }}</dd>
+                        <dd id="company-address" class="col-7 text-dark mb-0">{{ $company->address }}</dd>
                     </div>
                 </dl>
-
             </div>
         </div>
     </div>

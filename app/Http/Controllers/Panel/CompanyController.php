@@ -72,6 +72,13 @@ class CompanyController extends Controller
                 $flag    = 'success';
                 $subject = 'عملیات موفق';
                 $message = 'اطلاعات با موفقیت ثبت شد';
+                $data    =[
+                    'registration_number' => $companies->registration_number,
+                    'national_id'         => $companies->national_id,
+                    'phone'               => $companies->phone,
+                    'email'               => $companies->email,
+                    'address'             => $companies->address,
+                ];
             }
             else {
                 $success = false;
@@ -89,7 +96,7 @@ class CompanyController extends Controller
             $message = 'اطلاعات ثبت نشد،لطفا بعدا مجدد تلاش نمایید ';
         }
 
-        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
+        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message ,'data' => $data]);
     }
 
 

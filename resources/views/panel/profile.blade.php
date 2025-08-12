@@ -220,21 +220,6 @@
                             <a href="javascript:void(0)" class="btn btn-secondary">گزینه نمایشی</a>
                         </div>
                     </div>
-                    <!-- اطلاعات شرکت -->
-                    {{-- profile.blade.php یا هر جای مناسب --}}
-                    @php
-                        // فرض بر این که اطلاعات شرکت از دیتابیس اومده یا دستی تعریف شده
-                        $hasProfile = true;
-                        $profile = [
-                            'company_name' => 'شرکت دانش‌بنیان پارس',
-                            'registration_number' => '123456',
-                            'national_id' => '14001234567',
-                            'company_phone' => '021-22220000',
-                            'company_email' => 'info@parscompany.ir',
-                            'company_address' => 'تهران، بلوار کشاورز، پلاک ۱۰۰',
-                            'website' => 'parscompany.ir'
-                        ];
-                    @endphp
 
                     @if(Auth::user()->level == 'applicant')
                         @include('profile.tab_company_profile')
@@ -260,8 +245,6 @@
         </div>
         @endsection
 
-
-
         @push('scripts')
             <script>
                 function toggleEditMode() {
@@ -269,5 +252,80 @@
                     document.getElementById('companyEditForm').classList.toggle('d-none');
                 }
             </script>
+            <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
+            <script src="{{asset('assets/vendor/js/bootstrap.bundle.min.js')}}"></script>
+            <script>
+                jQuery(function($){
+                    function showToast(message, type = 'success') {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-top-center",
+                            timeOut: 3000,
+                            rtl: true
+                        };
+
+                        if (toastr[type]) {
+                            toastr[type](message);
+                        } else {
+                            toastr.success(message);
+                        }
+                    }
+
+                    $(document).on('click', '[id^=editsubmit_]', function(e){
+                        e.preventDefault();
+                        const $btn = $(this);
+                        const id = this.id.split('_')[1];
+                        const $form = $('#editform_' + id);
+
+                        if (!$form.length) {
+                            console.error('فرم editform_' + id + ' پیدا نشد!');
+                            return;
+                        }
+
+                        const url = $form.attr('action'); // استفاده از URL داینامیک
+                        const originalHtml = $btn.html();
+                        disableBtnWithSpinner($btn);
+
+                        $.ajax({
+                            url: url,
+                            method: 'PATCH',
+                            data: $form.serialize(),
+                            success: function (data) {
+                                if (data.success) {
+                                    const company = data.data;
+                                    $('#company-registration-number').text(company.registration_number || '');
+                                    $('#company-national-id').text(company.national_id || '');
+                                    $('#company-phone').text(company.phone || '');
+                                    $('#company-email').text(company.email || '');
+                                    $('#company-address').text(company.address || '');
+                                    toggleEditMode();
+                                    showToast('آیتم با موفقیت ویرایش شد!', 'success');
+                                }
+
+                                else {
+                                    swal(data.subject, data.message, data.flag);
+                                }
+                            },
+                            error: function () {
+                                swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
+                            },
+                            complete: function () {
+                                restoreBtn($btn, originalHtml);
+                            }
+                        });
+                    });
+
+                    function disableBtnWithSpinner($btn){
+                        $btn.prop('disabled', true).html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
+                        );
+                    }
+                    function restoreBtn($btn, html){
+                        $btn.prop('disabled', false).html(html);
+                    }
+                });
+            </script>
+
     @endpush
 
