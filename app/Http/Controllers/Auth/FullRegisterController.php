@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\User_logs;
@@ -43,6 +44,12 @@ class FullRegisterController extends Controller
                 'title'     => $request->title,
                 'CEO'       => $request->CEO,
                 'user_id'   => $user->id,
+            ]);
+
+            $companies = Company::create([
+                'commercial_name'   => $request->title,
+                'ceo_name'          => $request->CEO,
+                'user_id'           => $user->id,
             ]);
 
             Auth::login($user);
