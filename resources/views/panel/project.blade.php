@@ -1,8 +1,7 @@
 @extends('layouts.base')
 @section('style')
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css"/>
-
+<link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
 <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto !important;word-wrap:break-word;white-space: nowrap;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
 @endsection
 @section('content')
@@ -52,25 +51,24 @@
     </div>
 
     <!-- Delete Modal -->
-    @foreach($projects as $project)
-        <div class="modal fade" id="deleteModal{{$project->id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content text-center">
-                    <div class="modal-header border-bottom-0">
-                        <h5 class="modal-title w-100" id="deleteModalLabel">{{$thispage['delete']}}</h5>
-                        <button type="button" class="btn-close position-absolute start-0 mx-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        آیا از حذف این زیر منو مطمئن هستید؟
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
-                        <button type="button" class="btn btn-danger" id="deletesubmit_{{$project->id}}" data-id="{{$project->id}}">حذف</button>
-                    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title w-100" id="deleteModalLabel">{{ $thispage['delete'] }}</h5>
+                    <button type="button" class="btn-close position-absolute start-0 mx-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    آیا از حذف این زیر منو مطمئن هستید؟
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">حذف</button>
                 </div>
             </div>
         </div>
-    @endforeach
+    </div>
+
     <!-- Add Modal -->
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -862,18 +860,18 @@
         </div>
     @endforeach
     <!-- Media Modal -->
-    @foreach($projects as $project)
-        <div class="modal fade" id="uploadModal{{ $project->id }}" tabindex="-1" aria-labelledby="uploadModalLabel{{ $project->id }}" aria-hidden="true">
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="uploadModalLabel">{{$thispage['add']}}</h5>
+                    <h5 class="modal-title">{{ $thispage['add'] }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone{{ $project->id }} myform" data-record-id="{{ $project->id }}" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
+                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data"
+                          class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
                         @csrf
-                        <input type="hidden" name="record_id" value="{{ $project->id }}">
+                        <input type="hidden" name="record_id" id="recordIdInput">
                         <div class="dz-message text-center text-muted">
                             <div class="mb-3">
                                 <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
@@ -886,19 +884,19 @@
             </div>
         </div>
     </div>
-         <div class="modal fade" id="showModal{{ $project->id }}" tabindex="-1" aria-labelledby="showModalLabel{{ $project->id }}" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="previewModalLabel">پیش نمایش فایل</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
-                    </div>
-                    <div class="modal-body text-center" id="previewContent">
-                    </div>
+    <!-- مودال پیش نمایش عمومی -->
+    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">پیش نمایش فایل</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body text-center" id="previewContent">
                 </div>
             </div>
         </div>
-    @endforeach
+    </div>
 
 @endsection
 @section('script')
@@ -1091,6 +1089,8 @@
 
     <script>
         jQuery(function ($) {
+            let deleteId = null;
+
             function showToast(message, type = 'success') {
                 toastr.options = {
                     closeButton: true,
@@ -1099,18 +1099,20 @@
                     timeOut: 3000,
                     rtl: true
                 };
-
-                if (toastr[type]) {
-                    toastr[type](message);
-                } else {
-                    toastr.success(message);
-                }
+                toastr[type] ? toastr[type](message) : toastr.success(message);
             }
-            $(document).on('click', '[id^=deletesubmit_]', function (e) {
-                e.preventDefault();
+
+            // وقتی روی دکمه حذف کلیک شد
+            $(document).on('click', '.delete-btn', function () {
+                deleteId = $(this).data('id');
+                $('#deleteModal').modal('show');
+            });
+
+            // وقتی تایید حذف کلیک شد
+            $('#confirmDelete').on('click', function (e) {
                 const $btn = $(this);
-                const id = $btn.data('id');
                 const originalHtml = $btn.html();
+
                 $btn.prop('disabled', true).html(
                     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال حذف...'
                 );
@@ -1118,13 +1120,9 @@
                 $.ajax({
                     url: "{{ route(request()->segment(2).'.destroy', 0) }}",
                     method: 'DELETE',
-                    data: { "_token": "{{ csrf_token() }}", id },
-                    success: function (data) {
-                        const modalEl = document.getElementById('deleteModal' + id);
-                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                        modal.hide();
-                        $('.modal-backdrop').remove();
-                        $('body').removeClass('modal-open').css('padding-right', '');
+                    data: { "_token": "{{ csrf_token() }}", id: deleteId },
+                    success: function () {
+                        $('#deleteModal').modal('hide');
                         $('.yajra-datatable').DataTable().ajax.reload(null, false);
                         showToast('آیتم با موفقیت حذف شد!', 'success');
                     },
@@ -1137,6 +1135,7 @@
                 });
             });
         });
+
     </script>
 
     <script>
@@ -1156,32 +1155,50 @@
     </script>
 
     <script>
+        /* مهم: جلوگیری از auto discover تا Dropzone خودش خودکار روی فرم نصب نشه */
+        Dropzone.autoDiscover = false;
+
         document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll("form.dropzone").forEach(formEl => {
-                const dz = new Dropzone(formEl, {
-                    url: "{{ route('storemedia') }}",
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    },
-                    maxFilesize: 20,
-                    acceptedFiles: 'image/*,video/*,application/pdf,application/msword,...',
-                    dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
+            const fileFormSelector = "#fileUploadZone";
+            let currentRecordId = null;
 
-                    init: function () {
-                        this.on("success", function (file, response) {
-                            const extension = file.name.split('.').pop().toLowerCase();
-                            previewFile(response.file_path.replace(/^\/+/, ''), extension);
-                            showToast("✅ فایل با موفقیت آپلود شد");
-                        });
+            // یکبار Dropzone را بساز
+            const dz = new Dropzone(fileFormSelector, {
+                url: "{{ route('storemedia') }}",
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                maxFilesize: 20,
+                acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
+                init: function () {
+                    this.on("sending", function (file, xhr, formData) {
+                        // هنگام ارسال آیدی فعلی را الصاق کن
+                        formData.append("record_id", currentRecordId || document.getElementById('recordIdInput').value);
+                    });
+                    this.on("success", function (file, response) {
+                        const extension = file.name.split('.').pop().toLowerCase();
+                        previewFile(response.file_path.replace(/^\/+/, ''), extension);
+                        showToast("✅ فایل با موفقیت آپلود شد");
+                        this.removeFile(file); // اگر می‌خواهی پیش‌نمایش بلافاصله پاک شود
+                    });
+                    this.on("error", function (file, response) {
+                        showToast("❌ خطا در آپلود فایل", "danger");
+                    });
+                }
+            });
 
-                        this.on("error", function (file, response) {
-                            showToast("❌ خطا در آپلود فایل", "danger");
-                        });
-                    }
-                });
+            // وقتی کاربر روی دکمه آپلود کلیک کرد
+            $(document).on('click', '.upload-btn', function () {
+                currentRecordId = $(this).data('id');
+                $('#recordIdInput').val(currentRecordId);
+
+                // پاک‌سازی فایل‌های قبلی (اختیاری)
+                dz.removeAllFiles(true);
+
+                $('#uploadModal').modal('show');
             });
         });
     </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
