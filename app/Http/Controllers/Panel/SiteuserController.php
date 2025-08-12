@@ -10,6 +10,8 @@ use App\Models\TypeUser;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -21,23 +23,24 @@ class SiteuserController extends Controller
         $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'submenu' , 'class' , 'controller')->get();
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
         $typeusers      = TypeUser::all();
-        $users          = User::leftjoin('type_users' , 'type_users.id' , '=' , 'users.type_id')
-            ->select('users.id' , 'users.name' , 'users.email' , 'users.phone' , 'type_users.title_fa' , 'users.status' , 'users.level' , 'users.birthday' , 'users.national_id' , 'users.type_id')
-            ->where('users.level','=','site')->get();
+        $users          = User::select('users.id' , 'users.name' , 'users.email' , 'users.phone' , 'users.status' , 'users.level' , 'users.birthday' , 'users.national_id' , 'users.role_id' , 'roles.title_fa', 'users.gender')
+            ->leftjoin('role_user' , 'role_user.user_id' , '=' , 'users.id')
+            ->leftjoin('roles' , 'roles.id' , '=' , 'role_user.role_id')
+            ->where('users.level','=','applicant')->get();
         $thispage       = [
-            'title'   => 'مدیریت  کاربران سایت ',
-            'list'    => 'لیست  کاربران سایت ',
-            'add'     => 'افزودن  کاربران سایت ',
-            'create'  => 'ایجاد  کاربران سایت ',
-            'enter'   => 'ورود  کاربران سایت ',
-            'edit'    => 'ویرایش  کاربران سایت ',
-            'delete'  => 'حذف  کاربران سایت ',
+            'title'   => 'مدیریت  کاربران شرکت ها ',
+            'list'    => 'لیست  کاربران شرکت ها ',
+            'add'     => 'افزودن  کاربران شرکت ها ',
+            'create'  => 'ایجاد  کاربران شرکت ها ',
+            'enter'   => 'ورود  کاربران شرکت ها ',
+            'edit'    => 'ویرایش  کاربران شرکت ها ',
+            'delete'  => 'حذف  کاربران شرکت ها ',
         ];
 
         if ($request->ajax()) {
-            $data = User::leftjoin('type_users' , 'type_users.id' , '=' , 'users.type_id')
-                ->select('users.id' , 'users.name' , 'users.email' , 'users.phone' , 'type_users.title_fa' , 'users.status')
-                ->where('users.level','=','site')->get();
+            $data = User::leftjoin('roles' , 'roles.id' , '=' , 'users.role_id')
+                ->select('users.id' , 'users.name' , 'users.email' , 'users.phone' , 'roles.title_fa' , 'users.status')
+                ->where('users.level','=','applicant')->get();
 
             return Datatables::of($data)
                 ->addColumn('name', function ($data) {
@@ -74,18 +77,29 @@ class SiteuserController extends Controller
     {
         try {
 
-            Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
-            $this->validator($request->all())->validate();
 
-            event(new Registered($user = $this->create($request->all())));
+            $validator->validate();
 
-            if ($result1 = $this->registered($request, $user)) {
-                return $result1;
-            }
+            $user = new User();
+            $user->name         = $request->input('name');
+            $user->phone        = $request->input('phone');
+            $user->email        = $request->input('email');
+            $user->role_id      = 5;
+            $user->gender       = $request->input('gender');
+            $user->level        = 'applicant';
+            $user->status       = 4;
+            $user->password     = Hash::make($request->input('password'));
+            $result1 = $user->save();
+
+            DB::table('role_user')->insert([
+                'role_id' => $user->role_id,
+                'user_id' => $user->id,
+            ]);
 
             if ($result1 == true) {
                 $success = true;
@@ -118,20 +132,17 @@ class SiteuserController extends Controller
     }
     public function update(Request $request)
     {
-
-        $user               = User::findOrfail($request->input('id'));
+        $user               = User::findOrfail($request->input('user_id'));
         $user->name         = $request->input('name');
         $user->phone        = $request->input('phone');
         $user->email        = $request->input('email');
-        $user->national_id  = $request->input('national_id');
-        $user->type_id      = $request->input('typeuser_id');
-        $user->birthday     = $request->input('birthday');
         $user->gender       = $request->input('gender');
         if ($request->input('password')) {
-            $user->password = $request->input('password');
+            $user->password     = Hash::$request->input('password');
         }
-        $user->status       = $request->input('status');
+
         $result = $user->update();
+
         try{
             if ($result == true) {
                 $success = true;

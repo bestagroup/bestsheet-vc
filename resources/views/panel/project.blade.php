@@ -952,7 +952,6 @@
 
     <script>
         jQuery(function($){
-            // ✅ تابع نهایی showToast با toastr.js
             function showToast(message, type = 'success') {
                 toastr.options = {
                     closeButton: true,
@@ -968,8 +967,6 @@
                     toastr.success(message);
                 }
             }
-
-            // 👇 منطق ارسال فرم بدون تغییر
             $('#submit').on('click', function(e){
                 e.preventDefault();
                 var $btn  = $(this);
@@ -1037,7 +1034,6 @@
                 }
             }
 
-            // 🚫 هیچ چیز دیگه‌ای تغییر نکرده، فقط از تابع بالا استفاده شده
             $(document).on('click', '[id^=editsubmit_]', function(e){
                 e.preventDefault();
                 const $btn = $(this);
@@ -1095,7 +1091,6 @@
 
     <script>
         jQuery(function ($) {
-            // ✅ فقط نسخه‌ی صحیح toast
             function showToast(message, type = 'success') {
                 toastr.options = {
                     closeButton: true,
@@ -1111,8 +1106,6 @@
                     toastr.success(message);
                 }
             }
-
-            // 👇 بقیه منطق دست نخورده
             $(document).on('click', '[id^=deletesubmit_]', function (e) {
                 e.preventDefault();
                 const $btn = $(this);
