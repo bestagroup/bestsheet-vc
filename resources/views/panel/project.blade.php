@@ -906,6 +906,8 @@
     <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
     <script src="{{asset('assets/vendor/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js'}}"></script>
+    <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js'}}"></script>
+    <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js'}}"></script>
 
     <script type="text/javascript">
         $(function () {
@@ -915,7 +917,9 @@
                 order: [[0, 'desc']],
                 scrollX: true,
                 scrollCollapse: true,
-                fixedColumns: { rightColumns: 1 },
+                fixedColumns: {
+                    start: 3
+                },
                 ajax: "{{ route(request()->segment(2) . '.index') }}",
                 columns: [
                     {data: 'action'                         , name: 'action', orderable: true, searchable: true},

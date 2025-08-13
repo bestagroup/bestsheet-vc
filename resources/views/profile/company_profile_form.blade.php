@@ -38,8 +38,14 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="legal_type_{{$company->id}}" name="legal_type"
-                                   placeholder="نوع شرکت" value="{{ $company->legal_type }}">
+                            <select name="legal_type" id="legal_type_{{$company->id}}" class="form-control">
+                                <option value="" selected>انتخاب کنید</option>
+                                <option value="مسئولیت محدود"   {{$company->legal_type == 'مسئولیت محدود' ? 'selected' : ''}}>مسئولیت محدود</option>
+                                <option value="سهامی خاص"       {{$company->legal_type == 2 ? 'سهامی خاص' : ''}}>سهامی خاص</option>
+                                <option value="سهامی عام"       {{$company->legal_type == 2 ? 'سهامی عام' : ''}}>سهامی عام</option>
+                                <option value="تعاونی"          {{$company->legal_type == 2 ? 'تعاونی' : ''}}>تعاونی</option>
+                                <option value="موسسه غیر تجاری" {{$company->legal_type == 2 ? 'موسسه غیر تجاری' : ''}}>موسسه غیر تجاری</option>
+                            </select>
                             <label for="legal_type">نوع شرکت</label>
                         </div>
                     </div>
