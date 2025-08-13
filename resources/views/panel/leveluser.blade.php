@@ -3,7 +3,10 @@
 @section('title', 'مدیریت سطح کاربران')
 
 @push('head')
-    <link rel="stylesheet" href="{{ asset('https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css') }}"/>
+@section('style')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
+    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+@endsection
 @endpush
 
 @section('content')

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Site\Exception;
+use App\Models\Company;
 use App\Models\MenuPanel;
 use App\Models\SubmenuPanel;
 use App\Models\TypeUser;
@@ -23,6 +24,7 @@ class SiteuserController extends Controller
         $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'submenu' , 'class' , 'controller')->get();
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
         $typeusers      = TypeUser::all();
+        $companies      = Company::select('id' , 'company_name' , 'user_id')->get();
         $users          = User::select('users.id' , 'users.name' , 'users.email' , 'users.phone' , 'users.status' , 'users.level' , 'users.birthday' , 'users.national_id' , 'users.role_id' , 'roles.title_fa', 'users.gender')
             ->leftjoin('role_user' , 'role_user.user_id' , '=' , 'users.id')
             ->leftjoin('roles' , 'roles.id' , '=' , 'role_user.role_id')
@@ -70,7 +72,7 @@ class SiteuserController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('panel.siteuser')->with(compact(['thispage' , 'menupanels' , 'submenupanels' , 'users' , 'typeusers']));
+        return view('panel.siteuser')->with(compact(['thispage' , 'menupanels' , 'submenupanels' , 'users' , 'typeusers' , 'companies']));
     }
 
     public function store(Request $request)
@@ -95,6 +97,11 @@ class SiteuserController extends Controller
             $user->status       = 4;
             $user->password     = Hash::make($request->input('password'));
             $result1 = $user->save();
+
+            Company::whereId($request->input('company_id'))->update([
+                'user_id' => $user->id,
+            ]);
+
 
             DB::table('role_user')->insert([
                 'role_id' => $user->role_id,
@@ -142,6 +149,10 @@ class SiteuserController extends Controller
         }
 
         $result = $user->update();
+
+        Company::whereId($request->input('company_id'))->update([
+            'user_id' => $request->input('user_id'),
+        ]);
 
         try{
             if ($result == true) {

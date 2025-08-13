@@ -1,6 +1,9 @@
 @extends('layouts.base')
 @section('title', 'لیست کاربران شرکت ها')
-<link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
+@section('style')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
+    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+@endsection
 @section('content')
     <div class="card">
         <div class="card-body">
@@ -93,6 +96,17 @@
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="تکرار رمز عبور">
                             </div>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">نام شرکت</label>
+                                <select name="company_id" id="company_id" class="form-control">
+                                    <option value="" selected>انتخاب کنید</option>
+                                    @foreach($companies as $company)
+                                    <option value="{{$company->id}}">{{$company->company_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="text-end">
                             <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
@@ -147,6 +161,17 @@
                                     <input type="password" name="password_confirmation" id="password_confirmation_{{$user->id}}" class="form-control">
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">نام شرکت</label>
+                                    <select name="company_id" id="company_id" class="form-control">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        @foreach($companies as $company)
+                                            <option value="{{$company->id}}" {{$company->user_id == $user->id ? 'selected' : ''}}>{{$company->company_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="text-end">
                                 <button type="button" id="editsubmit_{{$user->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
                             </div>
@@ -158,6 +183,7 @@
     @endforeach
 @endsection
 @section('script')
+    <script src="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'}}"></script>
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
     <script src="{{asset('assets/vendor/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
