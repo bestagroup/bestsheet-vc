@@ -1,13 +1,10 @@
 @extends('layouts.base')
-
 @section('title', 'پروفایل حساب کاربری')
-
-<style>
-    .nav-tabs .nav-link.active {
-        border-bottom: 3px solid #7367f0 !important;
-    }
-</style>
-
+@section('style')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
+    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+    <style>.nav-tabs .nav-link.active {border-bottom: 3px solid #7367f0 !important;}</style>
+@endsection
 @section('content')
     <div class="container mt-4">
         <div class="card text-center mb-3">
@@ -246,6 +243,8 @@
         @endsection
 
         @push('scripts')
+            <script src="{{'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js'}}"></script>
+
             <script>
                 function toggleEditMode() {
                     document.getElementById('companyProfileCard').classList.toggle('d-none');
@@ -322,6 +321,46 @@
                     function restoreBtn($btn, html){
                         $btn.prop('disabled', false).html(html);
                     }
+                });
+            </script>
+            <script>
+                Dropzone.autoDiscover = false;
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    const fileFormSelector = "#fileUploadZone";
+                    let currentRecordId = null;
+
+                    const dz = new Dropzone(fileFormSelector, {
+                        url: "{{ route('storemedia') }}",
+                        headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                        maxFilesize: 20,
+                        acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
+                        init: function () {
+                            this.on("sending", function (file, xhr, formData) {
+
+                                formData.append("record_id", currentRecordId || document.getElementById('recordIdInput').value);
+                            });
+                            this.on("success", function (file, response) {
+                                const extension = file.name.split('.').pop().toLowerCase();
+                                previewFile(response.file_path.replace(/^\/+/, ''), extension);
+                                showToast("✅ فایل با موفقیت آپلود شد");
+                                this.removeFile(file);
+                            });
+                            this.on("error", function (file, response) {
+                                showToast("❌ خطا در آپلود فایل", "danger");
+                            });
+                        }
+                    });
+
+                    $(document).on('click', '.upload-btn', function () {
+                        currentRecordId = $(this).data('id');
+                        $('#recordIdInput').val(currentRecordId);
+
+                        dz.removeAllFiles(true);
+
+                        $('#uploadModal').modal('show');
+                    });
                 });
             </script>
 

@@ -1159,14 +1159,12 @@
     </script>
 
     <script>
-        /* مهم: جلوگیری از auto discover تا Dropzone خودش خودکار روی فرم نصب نشه */
         Dropzone.autoDiscover = false;
 
         document.addEventListener("DOMContentLoaded", function () {
             const fileFormSelector = "#fileUploadZone";
             let currentRecordId = null;
 
-            // یکبار Dropzone را بساز
             const dz = new Dropzone(fileFormSelector, {
                 url: "{{ route('storemedia') }}",
                 headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
@@ -1175,14 +1173,14 @@
                 dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
                 init: function () {
                     this.on("sending", function (file, xhr, formData) {
-                        // هنگام ارسال آیدی فعلی را الصاق کن
+
                         formData.append("record_id", currentRecordId || document.getElementById('recordIdInput').value);
                     });
                     this.on("success", function (file, response) {
                         const extension = file.name.split('.').pop().toLowerCase();
                         previewFile(response.file_path.replace(/^\/+/, ''), extension);
                         showToast("✅ فایل با موفقیت آپلود شد");
-                        this.removeFile(file); // اگر می‌خواهی پیش‌نمایش بلافاصله پاک شود
+                        this.removeFile(file);
                     });
                     this.on("error", function (file, response) {
                         showToast("❌ خطا در آپلود فایل", "danger");
@@ -1190,12 +1188,10 @@
                 }
             });
 
-            // وقتی کاربر روی دکمه آپلود کلیک کرد
             $(document).on('click', '.upload-btn', function () {
                 currentRecordId = $(this).data('id');
                 $('#recordIdInput').val(currentRecordId);
 
-                // پاک‌سازی فایل‌های قبلی (اختیاری)
                 dz.removeAllFiles(true);
 
                 $('#uploadModal').modal('show');

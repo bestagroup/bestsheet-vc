@@ -2,8 +2,8 @@
     <div class="mb-4">
         <label class="form-label fw-bold">درصد پیشرفت فرآیند:</label>
         <div class="progress" style="height: 20px;">
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{ round(($projects->invest_step) / count($investsteps) * 100) }}%;" aria-valuenow="{{ count($investsteps) + 1 }}" aria-valuemin="0" aria-valuemax="{{ count($investsteps) }}">
-                {{ round(($projects->invest_step ) / count($investsteps) * 100) }}%
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ round(($projects->invest_step) - 1 / count($investsteps) * 100) }}%;" aria-valuenow="{{ count($investsteps) + 1 }}" aria-valuemin="0" aria-valuemax="{{ count($investsteps) }}">
+                {{ round(($projects->invest_step - 1 ) / count($investsteps) * 100) }}%
             </div>
         </div>
     </div>
@@ -11,13 +11,13 @@
         <div class="col-md-4">
             <div class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
                 @foreach($investsteps as $step)
-                    <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($projects->invest_step + 1) ? 'active' : '' }}"
+                    <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($projects->invest_step) ? 'active' : '' }}"
                          style="cursor: default; border-right: 5px solid {{ $step->id < $projects->invest_step ? '#4caf50' : ($step->id === $projects->invest_step ? '#7367f0' : '#ddd') }};">
                         <span class="me-2 d-inline-flex justify-content-center align-items-center rounded-circle"
                               style="width: 28px; height: 28px; background: {{ $step->id < $projects->invest_step ? '#c8e6c9' : ($step->id === $projects->invest_step ? '#ede7f6' : '#f1f1f1') }};
                                      color: {{ $step->id < $projects->invest_step ? '#2e7d32' : ($step->id === $projects->invest_step ? '#5e35b1' : '#aaa') }};
                                      font-weight: bold;">
-                            {{ $step->id + 1 }}
+                            {{ $step->id }}
                         </span>
                         <div class="flex-grow-1">
                             <div class="fw-bold {{ $step->id === $projects->invest_step ? 'text-dark' : 'text-muted' }}">{{ $step->title }}</div>
@@ -37,12 +37,12 @@
                 <div class="col-md-8">
                     <div class="card border shadow-sm">
                         <div class="card-header bg-light d-flex align-items-center">
-                            <span class="badge bg-primary me-2" style="width:26px;">{{ $projects->invest_step + 1 }}</span>
+                            <span class="badge bg-primary me-2" style="width:26px;">{{ $projects->invest_step }}</span>
                             <h6 class="mb-0 fw-bold">{{ $step->title }}</h6>
                         </div>
                         <div class="card-body">
                             <p class="text-muted">{{ $step->description }}</p>
-                            {!! $step->content !!}
+                            {!! Blade::render($step->content) !!}
                         </div>
                     </div>
                 </div>
