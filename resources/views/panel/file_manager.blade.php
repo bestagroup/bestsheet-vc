@@ -97,8 +97,6 @@
 @endsection
 @section('script')
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
-{{--    <script src="{{'https://cdn.datatables.net/plug-ins/1.13.5/i18n/fa.json'}}"></script>--}}
     <script src="{{'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js'}}"></script>
     <script src="{{'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js'}}"></script>
 

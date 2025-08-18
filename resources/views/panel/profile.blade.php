@@ -252,8 +252,6 @@
                     document.getElementById('companyEditForm').classList.toggle('d-none');
                 }
             </script>
-            <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
-            <script src="{{asset('assets/vendor/js/bootstrap.bundle.min.js')}}"></script>
             <script>
                 jQuery(function($){
                     function showToast(message, type = 'success') {

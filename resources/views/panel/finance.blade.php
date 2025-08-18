@@ -137,7 +137,6 @@
 @section('script')
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
     <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
-{{--    <script src="https://cdn.datatables.net/plug-ins/1.13.5/i18n/fa.json"></script>--}}
 
     <script type="text/javascript">
         $(function () {

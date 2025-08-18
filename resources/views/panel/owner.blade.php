@@ -180,9 +180,6 @@
 @endsection
 @section('script')
     <script src="{{ 'https://cdn.datatables.net/2.2.2/js/dataTables.min.js' }}"></script>
-    <script src="{{'https://cdn.jsdelivr.net/npm/sweetalert2@11'}}"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.13.5/i18n/fa.json"></script>
-
 
     <script type="text/javascript">
         $(function () {

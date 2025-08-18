@@ -218,8 +218,6 @@
 @endsection
 @section('script')
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
 
     <script type="text/javascript">
         $(function () {
