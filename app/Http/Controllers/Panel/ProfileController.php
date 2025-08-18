@@ -27,11 +27,13 @@ class ProfileController extends Controller
 
 
         $company = Auth::user()->company;
-
+    if($company) {
         $projects = Project::with('company')->whereId($company->id)->first();
-
         $investsteps = DB::table('investsteps')->get();
-
+    }else{
+        $projects = null;
+        $investsteps = null;
+    }
         return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps'));
     }
 }
