@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
@@ -21,10 +24,14 @@ class ProfileController extends Controller
         ];
 
 
-        $projects = Auth::user()->project;
+
 
         $company = Auth::user()->company;
 
-        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company'));
+        $projects = Project::with('company')->whereId($company->id)->first();
+
+        $investsteps = DB::table('investsteps')->get();
+
+        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps'));
     }
 }
