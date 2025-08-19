@@ -2,7 +2,7 @@
     <div class="mb-4">
         <label class="form-label fw-bold">درصد پیشرفت فرآیند:</label>
         <div class="progress" style="height: 20px;">
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{ round(($projects->invest_step)15 / count($investsteps) * 100) }}%;" aria-valuenow="{{ count($investsteps) - 1 }}" aria-valuemin="0" aria-valuemax="{{ count($investsteps) }}">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ round(($projects->invest_step) / count($investsteps) * 100) }}%;" aria-valuenow="{{ count($investsteps) - 1 }}" aria-valuemin="0" aria-valuemax="{{ count($investsteps) }}">
                 {{ round(($projects->invest_step - 1 ) / count($investsteps) * 100) }}%
             </div>
         </div>
