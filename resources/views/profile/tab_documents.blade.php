@@ -48,7 +48,7 @@
                                     <td>{{ $sizeInKB }} KB</td>
                                     <td>{{ jdate($file->created_at)->format('%Y/%m/%d') }}</td>
                                     <td class="text-center">
-                                        <a href="{{asset('storage/' . $file->file_path)}}" class="btn btn-sm btn-outline-primary" title="دانلود"><i class="mdi mdi-download"></i></a>
+                                        <a href="{{asset('storage/' . $file->file_path)}}" class="btn btn-sm btn-outline-primary" title="دانلود"><i class="mdi mdi-download"></i> دریافت</a>
                                     </td>
                                 </tr>
                             @else
