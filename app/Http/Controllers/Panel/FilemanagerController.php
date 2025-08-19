@@ -105,6 +105,7 @@ class FilemanagerController extends Controller
         $extension      = $file->getClientOriginalExtension();
         $size           = $file->getSize();
         $project_id     = $request->input('record_id');
+        $company_id     = $request->input('record_id');
         $mime = $request->file('file')->getMimeType();
 
         $type = match (true) {
@@ -137,6 +138,7 @@ class FilemanagerController extends Controller
             'file_path'     => $path,
             'size'          => $size,
             'project_id'    => $project_id,
+            'company_id'    => $company_id,
             'mime'          => $mime,
             'user_id'       => Auth::user()->id,
         ]);

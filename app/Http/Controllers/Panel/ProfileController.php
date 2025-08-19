@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\MediaFile;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,14 +27,16 @@ class ProfileController extends Controller
 
 
 
-        $company = Auth::user()->company;
+        $company        = Auth::user()->company;
     if($company) {
-        $projects = Project::with('company')->whereId($company->id)->first();
-        $investsteps = DB::table('investsteps')->get();
+        $projects       = Project::with('company')->whereId($company->id)->first();
+        $files          = MediaFile::with('company')->where('company_id', $company->id)->get();
+        $investsteps    = DB::table('investsteps')->get();
     }else{
-        $projects = null;
-        $investsteps = null;
+        $projects       = null;
+        $investsteps    = null;
+        $files          = null;
     }
-        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps'));
+        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps' , 'files'));
     }
 }

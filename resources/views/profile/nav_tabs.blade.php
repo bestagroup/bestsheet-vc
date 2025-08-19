@@ -45,7 +45,7 @@
                     data-bs-toggle="tab" data-bs-target="#navs-guarantee-card"
                     aria-controls="navs-guarantee-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
-                تعهدات و تضامین
+                تعهدات
             </button>
         </li>
     @elseif(Auth::user()->level == 'investor')

@@ -23,4 +23,9 @@ class Company extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function MediaFile()
+    {
+        return $this->hasMany(MediaFile::class);
+    }
 }

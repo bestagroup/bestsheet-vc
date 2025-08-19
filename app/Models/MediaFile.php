@@ -37,4 +37,9 @@ class MediaFile extends Model
         return $this->id != 1;
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
 }
