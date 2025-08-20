@@ -1,7 +1,5 @@
 @extends('layouts.auth')
-
 @section('title', 'ایجاد حساب و ثبت طرح')
-
 @section('content')
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner py-4">
@@ -126,7 +124,7 @@
     </div>
 @endsection
 
-@push('scripts')
+@section('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const togglePasswordElements = document.querySelectorAll('.form-password-toggle');
@@ -145,4 +143,13 @@
             });
         });
     </script>
-@endpush
+    <script>
+        @if (session('success'))
+        toastr.success("{{ session('success') }}");
+        @endif
+
+        @if (session('error'))
+        toastr.error("{{ session('error') }}");
+        @endif
+    </script>
+@endsection

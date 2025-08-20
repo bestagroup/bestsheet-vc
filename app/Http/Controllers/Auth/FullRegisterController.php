@@ -27,6 +27,13 @@ class FullRegisterController extends Controller
             'terms_accepted' => 'accepted'
         ]);
 
+        if (User::where('phone', $request->phone)->exists()) {
+            return redirect()->back()->with('error', 'با این شماره قبلا ثبت نام شده است ❌');
+        }
+        if (User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'با این ایمیل قبلا ثبت نام شده است ❌');
+        }
+
         DB::beginTransaction();
 
         try {
