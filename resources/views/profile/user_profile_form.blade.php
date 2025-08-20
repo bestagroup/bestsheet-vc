@@ -70,6 +70,6 @@
                     </div>
                     <div class="col-12 text-center">
                         <button type="button" class="btn btn-primary" id="editsubmit_{{Auth::user()->id}}">ذخیره</button>
-                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEdituserMode()">انصراف</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEditMode('user')">انصراف</button>
                     </div>
                 </form>

@@ -114,6 +114,8 @@
                     </div>
                     <div class="col-12 text-center">
                         <button type="button" class="btn btn-primary" id="editsubmit_{{$company->id}}">ذخیره</button>
-                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEditMode()">انصراف</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEditMode('company')">
+                            انصراف
+                        </button>
                     </div>
                 </form>

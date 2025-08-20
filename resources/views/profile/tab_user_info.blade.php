@@ -1,49 +1,68 @@
+@php
+    $user = Auth::user();
+    use Illuminate\Support\Facades\DB;
+    $roleName = DB::table('roles')->where('id', $user->role_id)->value('title_fa');
+    $genderAvatar = $user->gender == 2 ? '8.png' : '1.png';
+@endphp
+
 <div class="tab-pane fade show active justify-content-center" id="navs-user-card" role="tabpanel">
-    <div class="mb-12 col-md-12">
-        <div class="card-body">
-            <div class="user-avatar-section">
-                <div class="d-flex align-items-center flex-column">
-                    @if(Auth::user()->gender == 1)
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
-                    @elseif(Auth::user()->gender == 2)
-                        <img src="{{ asset('assets/img/avatars/8.png') }}" class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
-                    @else
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
-                    @endif
-                    <div class="user-info text-center">
-                        <h4>{{ Auth::user()->name }}</h4>
-                        <span class="badge bg-label-danger">
-                            @php
-                                use Illuminate\Support\Facades\DB;
-                                $roleName = DB::table('roles')->where('id', Auth::user()->role_id)->value('title_fa');
-                            @endphp
-                            {{ $roleName }}
-                        </span>
+    {{-- کارت پروفایل کاربر --}}
+    <div id="userProfileCard">
+        <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius:1.25rem;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center flex-column mb-4">
+                    <img src="{{ asset('assets/img/avatars/'.$genderAvatar) }}"
+                         class="img-fluid rounded mb-3 mt-2 shadow-sm" height="120" width="120" alt="User avatar"/>
+
+                    <div class="text-center">
+                        <h4 class="mb-1">{{ $user->name }}</h4>
+                        <span class="badge bg-label-danger">{{ $roleName }}</span>
                     </div>
                 </div>
-            </div>
 
-            <h5 class="pb-3 border-bottom mb-3 mt-4">مشخصات فردی</h5>
-            <div class="info-container" style="text-align: right; max-width: 30%; margin: 0 auto;">
-                <ul class="list-unstyled mb-4">
-                    <li class="mb-3"><span class="fw-semibold me-2">نام کاربری:</span> {{ Auth::user()->username }}</li>
-                    <li class="mb-3"><span class="fw-semibold me-2">ایمیل:</span> {{ Auth::user()->email }}</li>
-                    <li class="mb-3"><span class="fw-semibold me-2">وضعیت:</span> <span class="badge bg-label-success">فعال</span></li>
-                    <li class="mb-3"><span class="fw-semibold me-2">نقش:</span>
-                        @if(Auth::user()->level == 'admin') مدیر سیستم
-                        @elseif(Auth::user()->level == 'investor') مدیر سیستم
-                        @endif
-                    </li>
-                    <li class="mb-3"><span class="fw-semibold me-2">تماس:</span> {{ Auth::user()->phone }}</li>
-                </ul>
-                <div class="d-flex justify-content-center">
-                    <a href="javascript:" class="btn btn-primary me-3" data-bs-target="#editUser" data-bs-toggle="modal">ویرایش</a>
+                <dl class="row g-3" style="font-size:0.95rem;">
+                    <div class="col-12 d-flex">
+                        <dt class="col-5 text-start text-muted">نام کاربری:</dt>
+                        <dd class="col-7 text-dark mb-0">{{ $user->username }}</dd>
+                    </div>
+                    <div class="col-12 d-flex border-top pt-3">
+                        <dt class="col-5 text-start text-muted">ایمیل:</dt>
+                        <dd class="col-7 text-dark mb-0">{{ $user->email }}</dd>
+                    </div>
+                    <div class="col-12 d-flex border-top pt-3">
+                        <dt class="col-5 text-start text-muted">وضعیت:</dt>
+                        <dd class="col-7 text-dark mb-0"><span class="badge bg-label-success">فعال</span></dd>
+                    </div>
+                    <div class="col-12 d-flex border-top pt-3">
+                        <dt class="col-5 text-start text-muted">نقش:</dt>
+                        <dd class="col-7 text-dark mb-0">
+                            @if($user->level == 'admin')
+                                مدیر سیستم
+                            @elseif($user->level == 'investor')
+                                سرمایه‌گذار سیستم
+                            @elseif($user->level == 'applicant')
+                                سرمایه‌پذیر سیستم
+                            @endif
+                        </dd>
+                    </div>
+                    <div class="col-12 d-flex border-top pt-3">
+                        <dt class="col-5 text-start text-muted">موبایل:</dt>
+                        <dd class="col-7 text-dark mb-0">{{ $user->phone }}</dd>
+                    </div>
+                </dl>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="button" class="btn btn-primary me-3" onclick="toggleEditMode('user')">
+                        <i class="mdi mdi-pencil-outline"></i> ویرایش
+                    </button>
                     <a href="javascript:" class="btn btn-outline-danger suspend-user">تعلیق</a>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- مودال ویرایش اطلاعات کاربر --}}
-    @include('modals.edit_user')
+    {{-- فرم ویرایش پروفایل --}}
+    <div id="userEditForm" class="d-none">
+        @include('profile.user_profile_form')
+    </div>
 </div>
