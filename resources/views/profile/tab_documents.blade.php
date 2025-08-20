@@ -25,7 +25,7 @@
                                 <tr>
                                     <td>
                                         @if ($file->mime == 'image/jpeg')
-                                            <img src="{{ asset('storage/' . $file->file_path) }}" alt="{{ $file->file_name }}" class="file-preview">
+                                            <img src="{{ asset('storage/' . $file->file_path) }}" width="200" alt="{{ $file->file_name }}" class="file-preview">
                                         @elseif (Str::startsWith($mime, 'video/'))
                                             <i class="mdi mdi-video-box mdi-48px file-icon text-blue-500"></i>
                                         @elseif (Str::startsWith($mime, 'audio/'))
