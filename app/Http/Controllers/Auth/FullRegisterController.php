@@ -24,18 +24,6 @@ class FullRegisterController extends Controller
             'email'             => 'required|email|max:255|unique:users,email',  // یکتا
             'password'          => 'required|string|min:8|confirmed',
             'terms_accepted'    => 'accepted',
-        ], [
-            'title.required'          => 'نام شرکت یا نام طرح الزامی است.',
-            'CEO.required'            => 'نام رابط یا نام مدیرعامل الزامی است.',
-            'phone.required'          => 'شماره همراه الزامی است.',
-            'phone.unique'            => 'با این شماره قبلاً ثبت‌نام شده است.',
-            'email.required'          => 'ایمیل الزامی است.',
-            'email.email'             => 'فرمت ایمیل معتبر نیست.',
-            'email.unique'            => 'با این ایمیل قبلاً ثبت‌نام شده است.',
-            'password.required'       => 'رمز عبور الزامی است.',
-            'password.min'            => 'رمز عبور باید حداقل :min کاراکتر باشد.',
-            'password.confirmed'      => 'تأیید رمز عبور مطابقت ندارد.',
-            'terms_accepted.accepted' => 'پذیرفتن شرایط و قوانین الزامی است.',
         ]);
 
         DB::beginTransaction();
