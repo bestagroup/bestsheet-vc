@@ -35,6 +35,7 @@ class FullRegisterController extends Controller
                 'phone'           => $request->phone,
                 'level'           => 'applicant',
                 'status'          => 4,
+                'role_id'         => 5,
                 'change_password' => 1,
                 'password'        => Hash::make($request->password),
             ]);
