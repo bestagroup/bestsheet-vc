@@ -9,6 +9,26 @@ class Company extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'company_name'           ,
+        'commercial_name'        ,
+        'registration_number'    ,
+        'registration_date'      ,
+        'national_id'            ,
+        'economic_code'          ,
+        'legal_type'             ,
+        'phone'                  ,
+        'email'                  ,
+        'website'                ,
+        'province'               ,
+        'city'                   ,
+        'address'                ,
+        'postal_code'            ,
+        'ceo_name'               ,
+        'ceo_national_code'      ,
+        'is_verified'            ,
+    ];
     public function members()
     {
         return $this->hasMany(CompanyMembers::class);
