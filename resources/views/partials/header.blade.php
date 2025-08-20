@@ -94,7 +94,7 @@
           </li>
           <li>
             <a class="dropdown-item" href="#">
-              <i class="mdi mdi-settings-outline me-2"></i>
+              <i class="mdi mdi-cog me-2"></i>
               <span class="align-middle">تنظیمات</span>
             </a>
           </li>
