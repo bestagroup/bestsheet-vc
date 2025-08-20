@@ -25,7 +25,7 @@
                                 <tr>
                                     <td>
                                         @if ($file->mime == 'image/jpeg')
-                                            <img src="{{ asset('storage/' . $file->file_path) }}" width="200" alt="{{ $file->file_name }}" class="file-preview">
+                                            <img src="{{ asset('storage/' . $file->file_path) }}" width="100" alt="{{ $file->file_name }}" class="file-preview">
                                         @elseif (Str::startsWith($mime, 'video/'))
                                             <i class="mdi mdi-video-box mdi-48px file-icon text-blue-500"></i>
                                         @elseif (Str::startsWith($mime, 'audio/'))
@@ -44,7 +44,7 @@
                                             <i class="mdi mdi-file mdi-48px file-icon text-gray-500"></i>
                                         @endif
                                     </td>
-                                    <td>{{ $file->orginal_name }}</td>
+                                    <td>{{ $file->original_name }}</td>
                                     <td>{{ $sizeInKB }} KB</td>
                                     <td>{{ jdate($file->created_at)->format('%Y/%m/%d') }}</td>
                                     <td class="text-center">
