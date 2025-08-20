@@ -33,21 +33,23 @@ class FullRegisterController extends Controller
                 'name'            => $request->CEO,
                 'email'           => $request->email,
                 'phone'           => $request->phone,
-                'level'           => 'investor',
+                'level'           => 'applicant',
+                'status'          => 4,
                 'change_password' => 1,
                 'password'        => Hash::make($request->password),
-            ]);
-
-            $project = Project::create([
-                'title'   => $request->title,
-                'CEO'     => $request->CEO,
-                'user_id' => $user->id,
             ]);
 
             $companies = Company::create([
                 'commercial_name' => $request->title,
                 'ceo_name'        => $request->CEO,
                 'user_id'         => $user->id,
+            ]);
+
+            $project = Project::create([
+                'company_id'   => $companies->id,
+                'title'        => $request->title,
+                'CEO'          => $request->CEO,
+                'user_id'      => $user->id,
             ]);
 
             Auth::login($user);
