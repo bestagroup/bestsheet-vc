@@ -25,199 +25,105 @@
                                     <div class="d-flex align-items-center flex-column">
                                         @if(Auth::user()->gender == 1)
                                             <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120"
-                                                 alt="User avatar"/>
+                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
                                         @elseif(Auth::user()->gender == 2)
                                             <img src="{{ asset('assets/img/avatars/8.png') }}"
-                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120"
-                                                 alt="User avatar"/>
+                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
                                         @else
                                             <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120"
-                                                 alt="User avatar"/>
+                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
                                         @endif
+
                                         <div class="user-info text-center">
-                                            <h4>{{Auth::user()->name}}</h4>
+                                            <h4>{{ Auth::user()->name }}</h4>
                                             <span class="badge bg-label-danger">
-                                                @php
-                                                    use Illuminate\Support\Facades\DB;
-                                                    $roleName = DB::table('roles')
-                                                        ->where('id', Auth::user()->role_id)
-                                                        ->value('title_fa');
-                                                @endphp
+                            @php
+                                use Illuminate\Support\Facades\DB;
+                                $roleName = DB::table('roles')->where('id', Auth::user()->role_id)->value('title_fa');
+                            @endphp
                                                 {{ $roleName }}
-                                            </span>
+                        </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between flex-wrap my-2 py-1">
 
-                                </div>
-                                <h5 class="pb-3 border-bottom mb-3">مشخصات فردی</h5>
-                                <div class="info-container" style="text-align: right;max-width: 30%;margin: 0 auto;">
-                                    <ul class="list-unstyled mb-4">
-                                        <li class="mb-3">
-                                            <span class="fw-semibold text-heading me-2">نام کاربری:</span>
-                                            <span>{{Auth::user()->username}}</span>
-                                        </li>
-                                        <li class="mb-3">
-                                            <span class="fw-semibold text-heading me-2">ایمیل:</span>
-                                            <span>{{Auth::user()->email}}</span>
-                                        </li>
-                                        <li class="mb-3">
-                                            <span class="fw-semibold text-heading me-2">وضعیت:</span>
-                                            <span class="badge bg-label-success">فعال</span>
-                                        </li>
-                                        <li class="mb-3">
-                                            <span class="fw-semibold text-heading me-2">نقش:</span>
-                                            @if(Auth::user()->level == 'admin')
-                                                <span> مدیر سیستم </span>
-                                            @elseif(Auth::user()->level == 'investor')
-                                                <span> سرمایه گذار سیستم </span>
-                                            @elseif(Auth::user()->level == 'applicant')
-                                                <span> سرمایه پذیر سیستم </span>
-                                            @endif
-                                        </li>
-                                        <li class="mb-3">
-                                            <span class="fw-semibold text-heading me-2">تماس:</span>
-                                            <span>{{Auth::user()->phone}}</span>
-                                        </li>
-                                    </ul>
-                                    <div class="d-flex justify-content-center">
-                                        <a href="javascript:;" class="btn btn-primary me-3" data-bs-target="#editUser"
-                                           data-bs-toggle="modal">ویرایش</a>
-                                        <a href="javascript:;" class="btn btn-outline-danger suspend-user">تعلیق</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                <h5 class="pb-3 border-bottom mb-3 mt-4">مشخصات فردی</h5>
 
-                        <!-- Edit User Modal -->
-                        <div class="modal fade" id="editUser" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-simple modal-edit-user">
-                                <div class="modal-content p-3 p-md-5">
-                                    <div class="modal-body py-3 py-md-0">
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        <div class="text-center mb-4">
-                                            <h3 class="mb-2">ویرایش اطلاعات کاربر</h3>
-                                            <p class="pt-1">
-                                                به روز رسانی جزئیات کاربر یک حسابرسی حریم خصوصی دریافت
-                                                خواهد کرد.
-                                            </p>
+                                {{-- فرم اینلاین ویرایش --}}
+                                <form id="editUserForm" class="row g-4" action="#" method="POST" style="max-width:720px;margin:0 auto;text-align:right;">
+                                    @csrf
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="name" name="name" class="form-control"
+                                                   placeholder="نام و نام خانوادگی" value="{{ Auth::user()->name }}">
+                                            <label for="name">نام و نام خانوادگی</label>
                                         </div>
-                                        <form id="editUserForm" class="row g-4" onsubmit="return false">
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="text" id="modalEditName" name="modalEditName"
-                                                           class="form-control" placeholder="{{Auth::user()->name}}"/>
-                                                    <label for="modalEditName">نام و نام خانوادگی</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="text" id="modalEditUserName" name="modalEditUserName"
-                                                           class="form-control"
-                                                           placeholder="{{Auth::user()->username}}"/>
-                                                    <label for="modalEditUserName">نام کاربری</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="text" id="modalEditNationalCode"
-                                                           name="modalEditNationalCode" class="form-control"
-                                                           placeholder="{{Auth::user()->national_id}}"/>
-                                                    <label for="modalEditNationalCode">کد ملی</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="text" id="modalEditUserEmail" name="modalEditUserEmail"
-                                                           class="form-control" placeholder="{{Auth::user()->email}}"/>
-                                                    <label for="modalEditUserEmail">ایمیل</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="text" id="modalEditAge" name="modalEditAge"
-                                                           class="form-control" placeholder="20"/>
-                                                    <label for="modalEditAge">سن</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select id="modalEditUserGender" name="modalEditUserGender"
-                                                            class="select2 form-select" data-allow-clear="true">
-                                                        <option value="">انتخاب</option>
-                                                        <option
-                                                            {{Auth::user()->gender == '1' ? 'selected' : ''}} value="1">
-                                                            مرد
-                                                        </option>
-                                                        <option
-                                                            {{Auth::user()->gender == '2' ? 'selected' : ''}} value="2">
-                                                            زن
-                                                        </option>
-                                                    </select>
-                                                    <label for="modalEditUserGender">جنسیت</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="input-group input-group-merge">
-                                                    <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="modalEditUserPhone"
-                                                               name="modalEditUserPhone"
-                                                               class="form-control phone-number-mask"
-                                                               placeholder="{{Auth::user()->phone}}"/>
-                                                        <label for="modalEditUserPhone">شماره موبایل</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="input-group input-group-merge">
-                                                    <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="modalEditUserTelephone"
-                                                               name="modalEditUserTelephone"
-                                                               class="form-control phone-number-mask"
-                                                               placeholder="021 22206434"/>
-                                                        <label for="modalEditUserTelephone">شماره تماس</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-12">
-                                                <div class="input-group input-group-merge">
-                                                    <div class="form-floating form-floating-outline">
-                                                        <textarea rows="20" cols="20" class="form-control"
-                                                                  name="address"
-                                                                  placeholder="آدرس پستی را وارد کنید"></textarea>
-                                                        <label for="modalEditUserTelephone">آدرس ثبتی</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 text-center">
-                                                <button type="submit" class="btn btn-primary me-sm-3 me-1">ارسال
-                                                </button>
-                                                <button type="reset" class="btn btn-outline-secondary"
-                                                        data-bs-dismiss="modal" aria-label="Close">منصرف
-                                                </button>
-                                            </div>
-                                        </form>
                                     </div>
-                                </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="username" name="username" class="form-control"
+                                                   placeholder="نام کاربری" value="{{ Auth::user()->username }}">
+                                            <label for="username">نام کاربری</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="national_id" name="national_id" class="form-control"
+                                                   placeholder="کد ملی" value="{{ Auth::user()->national_id }}">
+                                            <label for="national_id">کد ملی</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="email" id="email" name="email" class="form-control"
+                                                   placeholder="ایمیل" value="{{ Auth::user()->email }}">
+                                            <label for="email">ایمیل</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" id="age" name="age" class="form-control"
+                                                   placeholder="سن" value="{{ Auth::user()->age ?? '' }}">
+                                            <label for="age">سن</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <select id="gender" name="gender" class="form-select">
+                                                <option value="">انتخاب</option>
+                                                <option value="1" {{ Auth::user()->gender == 1 ? 'selected' : '' }}>مرد</option>
+                                                <option value="2" {{ Auth::user()->gender == 2 ? 'selected' : '' }}>زن</option>
+                                            </select>
+                                            <label for="gender">جنسیت</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="phone" name="phone" class="form-control"
+                                                   placeholder="شماره موبایل" value="{{ Auth::user()->phone }}">
+                                            <label for="phone">شماره موبایل</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="telephone" name="telephone" class="form-control"
+                                                   placeholder="شماره تماس" value="{{ Auth::user()->telephone ?? '' }}">
+                                            <label for="telephone">شماره تماس</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating form-floating-outline">
+                        <textarea id="address" name="address" class="form-control" rows="3"
+                                  placeholder="آدرس">{{ Auth::user()->address ?? '' }}</textarea>
+                                            <label for="address">آدرس ثبتی</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-primary me-sm-3 me-1">ذخیره</button>
+                                        <button type="reset" class="btn btn-outline-secondary">انصراف</button>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                        <!--/ Edit User Modal -->
-
-                        <div class="tab-pane fade" id="navs-company-card" role="tabpanel">
-                            <h4 class="card-title">پروفایل</h4>
-                            <p class="card-text">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                                استفاده</p>
-                            <a href="javascript:void(0)" class="btn btn-secondary">گزینه نمایشی</a>
-                        </div>
-                        <div class="tab-pane fade" id="navs-invest-flow-card" role="tabpanel">
-                            <h4 class="card-title">پیام ها</h4>
-                            <p class="card-text">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                                استفاده</p>
-                            <a href="javascript:void(0)" class="btn btn-secondary">گزینه نمایشی</a>
                         </div>
                     </div>
 
