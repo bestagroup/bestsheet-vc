@@ -20,7 +20,7 @@
                                 $mime = $file->mime_type ?? '';
                                 $sizeInKB = number_format($file->size / 1024, 1);
                             @endphp
-                            @if($files)
+                            @if(count($files) > 0)
 
                                 <tr>
                                     <td>
