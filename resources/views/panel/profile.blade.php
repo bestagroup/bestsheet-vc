@@ -21,65 +21,113 @@
                     <div class="tab-pane fade show active justify-content-center" id="navs-user-card" role="tabpanel">
                         <div class="mb-12 col-md-12">
                             <div class="card-body">
-                                <div id="userProfileCard" class="">
-                                    <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius: 1.25rem;">
-                                        <div class="card-body p-4">
-                                            <div class="d-flex align-items-center justify-content-between mb-3">
-                                                <div class="d-flex align-items-center gap-3">
-                                                    <div class="rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width:56px; height:56px; background:#f2f3f6;">
-                                                        @if(Auth::user()->gender == 1)
-                                                            <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                                 class="img-fluid rounded mb-3 mt-4" height="100" width="100" alt="User avatar"/>
-                                                        @elseif(Auth::user()->gender == 2)
-                                                            <img src="{{ asset('assets/img/avatars/8.png') }}"
-                                                                 class="img-fluid rounded mb-3 mt-4" height="100" width="100" alt="User avatar"/>
-                                                        @else
-                                                            <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                                 class="img-fluid rounded mb-3 mt-4" height="100" width="100" alt="User avatar"/>
-                                                        @endif
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-bold mb-1" style="font-size:1.2rem;">{{ Auth::user()->name }}</div>
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="toggleEditMode('user')" style="font-size:.98rem">
-                                                    <i class="mdi mdi-pencil-outline"></i>
-                                                    <span class="d-none d-md-inline">ویرایش</span>
-                                                </button>
-                                            </div>
+                                <div class="user-avatar-section">
+                                    <div class="d-flex align-items-center flex-column">
+                                        @if(Auth::user()->gender == 1)
+                                            <img src="{{ asset('assets/img/avatars/1.png') }}"
+                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
+                                        @elseif(Auth::user()->gender == 2)
+                                            <img src="{{ asset('assets/img/avatars/8.png') }}"
+                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
+                                        @else
+                                            <img src="{{ asset('assets/img/avatars/1.png') }}"
+                                                 class="img-fluid rounded mb-3 mt-4" height="120" width="120" alt="User avatar"/>
+                                        @endif
 
-                                            <dl class="row g-3 pt-3" style="font-size: 0.96rem;">
-                                                <div class="col-12 d-flex">
-                                                    <dt class="col-5 text-start text-muted">نام و نام خانوادگی</dt>
-                                                    <dd id="company-registration-number" class="col-7 text-dark mb-0">{{ Auth::user()->name }}</dd>
-                                                </div>
-                                                <div class="col-12 d-flex border-top pt-3">
-                                                    <dt class="col-5 text-start text-muted">ادرس ایمیل</dt>
-                                                    <dd id="company-national-id" class="col-7 text-dark mb-0">{{ Auth::user()->email }}</dd>
-                                                </div>
-                                                <div class="col-12 d-flex border-top pt-3">
-                                                    <dt class="col-5 text-start text-muted">شماره موبایل</dt>
-                                                    <dd id="company-phone" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ Auth::user()->phone }}</dd>
-                                                </div>
-                                                <div class="col-12 d-flex border-top pt-3">
-                                                    <dt class="col-5 text-start text-muted">جنسیت</dt>
-                                                    <dd id="company-email" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ Auth::user()->gender == 2 ? 'زن' : (Auth::user()->gender == 1 ? 'مرد' : '') }}</dd>
-                                                </div>
-                                                <div class="col-12 d-flex border-top pt-3">
-                                                    <dt class="col-5 text-start text-muted">آدرس:</dt>
-                                                    <dd id="company-address" class="col-7 text-dark mb-0">{{ $company->address }}</dd>
-                                                </div>
-                                            </dl>
+                                        <div class="user-info text-center">
+                                            <h4>{{ Auth::user()->name }}</h4>
+                                            <span class="badge bg-label-danger">
+                            @php
+                                use Illuminate\Support\Facades\DB;
+                                $roleName = DB::table('roles')->where('id', Auth::user()->role_id)->value('title_fa');
+                            @endphp
+                                                {{ $roleName }}
+                        </span>
                                         </div>
                                     </div>
                                 </div>
+
+                                <h5 class="pb-3 border-bottom mb-3 mt-4">مشخصات فردی</h5>
+
+                                {{-- فرم اینلاین ویرایش --}}
+                                <form id="editUserForm" class="row g-4" action="#" method="POST" style="max-width:720px;margin:0 auto;text-align:right;">
+                                    @csrf
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="name" name="name" class="form-control"
+                                                   placeholder="نام و نام خانوادگی" value="{{ Auth::user()->name }}">
+                                            <label for="name">نام و نام خانوادگی</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="username" name="username" class="form-control"
+                                                   placeholder="نام کاربری" value="{{ Auth::user()->username }}">
+                                            <label for="username">نام کاربری</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="national_id" name="national_id" class="form-control"
+                                                   placeholder="کد ملی" value="{{ Auth::user()->national_id }}">
+                                            <label for="national_id">کد ملی</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="email" id="email" name="email" class="form-control"
+                                                   placeholder="ایمیل" value="{{ Auth::user()->email }}">
+                                            <label for="email">ایمیل</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" id="age" name="age" class="form-control"
+                                                   placeholder="سن" value="{{ Auth::user()->age ?? '' }}">
+                                            <label for="age">سن</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <select id="gender" name="gender" class="form-select">
+                                                <option value="">انتخاب</option>
+                                                <option value="1" {{ Auth::user()->gender == 1 ? 'selected' : '' }}>مرد</option>
+                                                <option value="2" {{ Auth::user()->gender == 2 ? 'selected' : '' }}>زن</option>
+                                            </select>
+                                            <label for="gender">جنسیت</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="phone" name="phone" class="form-control"
+                                                   placeholder="شماره موبایل" value="{{ Auth::user()->phone }}">
+                                            <label for="phone">شماره موبایل</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" id="telephone" name="telephone" class="form-control"
+                                                   placeholder="شماره تماس" value="{{ Auth::user()->telephone ?? '' }}">
+                                            <label for="telephone">شماره تماس</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating form-floating-outline">
+                        <textarea id="address" name="address" class="form-control" rows="3"
+                                  placeholder="آدرس">{{ Auth::user()->address ?? '' }}</textarea>
+                                            <label for="address">آدرس ثبتی</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-primary me-sm-3 me-1">ذخیره</button>
+                                        <button type="reset" class="btn btn-outline-secondary">انصراف</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
 
                     @if(Auth::user()->level == 'applicant')
-                        @include('profile.tab_user_profile')
-
                         @include('profile.tab_company_profile')
 
                     <!-- فرایند سرمایه گذاری -->
@@ -105,9 +153,9 @@
 
         @push('scripts')
             <script>
-                function toggleEditMode(type) {
-                    document.getElementById(type + 'ProfileCard').classList.toggle('d-none');
-                    document.getElementById(type + 'EditForm').classList.toggle('d-none');
+                function toggleEditMode() {
+                    document.getElementById('companyProfileCard').classList.toggle('d-none');
+                    document.getElementById('companyEditForm').classList.toggle('d-none');
                 }
             </script>
             <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
