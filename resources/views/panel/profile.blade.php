@@ -105,7 +105,78 @@
                                     $('#company-phone').text(company.phone || '');
                                     $('#company-email').text(company.email || '');
                                     $('#company-address').text(company.address || '');
-                                    toggleEditMode();
+                                    toggleEditMode('company');
+                                    showToast('آیتم با موفقیت ویرایش شد!', 'success');
+                                }
+
+                                else {
+                                    swal(data.subject, data.message, data.flag);
+                                }
+                            },
+                            error: function () {
+                                swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
+                            },
+                            complete: function () {
+                                restoreBtn($btn, originalHtml);
+                            }
+                        });
+                    });
+
+                    function disableBtnWithSpinner($btn){
+                        $btn.prop('disabled', true).html(
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
+                        );
+                    }
+                    function restoreBtn($btn, html){
+                        $btn.prop('disabled', false).html(html);
+                    }
+                });
+            </script>
+            <script>
+                jQuery(function($){
+                    function showToast(message, type = 'success') {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-top-center",
+                            timeOut: 3000,
+                            rtl: true
+                        };
+
+                        if (toastr[type]) {
+                            toastr[type](message);
+                        } else {
+                            toastr.success(message);
+                        }
+                    }
+
+                    $(document).on('click', '[id^=editusersubmit_]', function(e){
+                        e.preventDefault();
+                        const $btn = $(this);
+                        const id = this.id.split('_')[1];
+                        const $form = $('#edituserform_' + id);
+
+                        if (!$form.length) {
+                            console.error('فرم edituserform_' + id + ' پیدا نشد!');
+                            return;
+                        }
+
+                        const url = $form.attr('action'); // استفاده از URL داینامیک
+                        const originalHtml = $btn.html();
+                        disableBtnWithSpinner($btn);
+
+                        $.ajax({
+                            url: url,
+                            method: 'PATCH',
+                            data: $form.serialize(),
+                            success: function (data) {
+                                if (data.success) {
+                                    const user = data.data;
+                                    $('#user_national_id').text(user.user_national_id || '');
+                                    $('#user_phone').text(user.user_phone || '');
+                                    $('#user_email').text(user.user_email || '');
+                                    $('#user_address').text(user.user_address || '');
+                                    toggleEditMode('user');
                                     showToast('آیتم با موفقیت ویرایش شد!', 'success');
                                 }
 

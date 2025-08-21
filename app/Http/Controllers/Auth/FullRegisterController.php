@@ -73,7 +73,57 @@ class FullRegisterController extends Controller
             return back()->withErrors(['system' => 'خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.'])->withInput();
         }
     }
+    public function update(Request $request, $id)
+    {
+        if (Auth::user()->level == 'admin'){
+            $users = User::findOrfail($id);
+        }elseif(Auth::user()->level == 'applicant'){
+            $users = Auth::user();
+        }
 
+        $users->name        = $request->input('name');
+        $users->national_id = $request->input('national_id');
+        $users->father_name = $request->input('father_name');
+        $users->national_id = $request->input('national_id');
+        $users->email       = $request->input('email');
+        $users->phone       = $request->input('phone');
+        $users->gender      = $request->input('gender');
+        $users->postalcode  = $request->input('postalcode');
+        $users->address     = $request->input('address');
+
+        $result = $users->update();
+
+        try{
+            if ($result == true) {
+                $success = true;
+                $flag    = 'success';
+                $subject = 'عملیات موفق';
+                $message = 'اطلاعات با موفقیت ثبت شد';
+                $data    =[
+                    'user_national_id'         => $users->national_id,
+                    'user_phone'               => $users->phone,
+                    'user_email'               => $users->email,
+                    'user_address'             => $users->address,
+                ];
+            }
+            else {
+                $success = false;
+                $flag    = 'error';
+                $subject = 'عملیات نا موفق';
+                $message = 'اطلاعات ثبت نشد، لطفا مجددا تلاش نمایید';
+            }
+
+        } catch (Exception $e) {
+
+            $success = false;
+            $flag    = 'error';
+            $subject = 'خطا در ارتباط با سرور';
+            //$message = strchr($e);
+            $message = 'اطلاعات ثبت نشد،لطفا بعدا مجدد تلاش نمایید ';
+        }
+
+        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message ,'data' => $data]);
+    }
     public function logout(){
         Auth::logout();
         return redirect()->to('/login');

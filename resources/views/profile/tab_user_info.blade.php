@@ -34,12 +34,16 @@
 
                 <dl class="row g-3" style="font-size:0.95rem;">
                     <div class="col-12 d-flex">
-                        <dt class="col-5 text-start text-muted">نام کاربری:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $user->username }}</dd>
+                        <dt class="col-5 text-start text-muted">کد ملی :</dt>
+                        <dd class="col-7 text-dark mb-0" id="user_national_id">{{ $user->national_id }}</dd>
+                    </div>
+                    <div class="col-12 d-flex border-top pt-3">
+                        <dt class="col-5 text-start text-muted">موبایل:</dt>
+                        <dd class="col-7 text-dark mb-0" id="user_phone">{{ $user->phone }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">ایمیل:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $user->email }}</dd>
+                        <dd class="col-7 text-dark mb-0" id="user_email">{{ $user->email }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">وضعیت:</dt>
@@ -58,8 +62,8 @@
                         </dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
-                        <dt class="col-5 text-start text-muted">موبایل:</dt>
-                        <dd class="col-7 text-dark mb-0">{{ $user->phone }}</dd>
+                        <dt class="col-5 text-start text-muted">آدرس:</dt>
+                        <dd class="col-7 text-dark mb-0" id="user_address">{{ $user->address }}</dd>
                     </div>
                 </dl>
             </div>
