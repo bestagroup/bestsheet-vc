@@ -8,6 +8,7 @@
                     <tr>
                         <th style="width:40px"></th>
                         <th>نام فایل</th>
+                        <th>موضوع فایل</th>
                         <th>حجم</th>
                         <th>تاریخ بارگذاری</th>
                         <th class="text-center" style="width:120px">عملیات</th>
@@ -45,6 +46,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $file->original_name }}</td>
+                                    <td>{{ DB::table('subject_files')->whereId($file->subject_id)->pluck('title')->first() }}</td>
                                     <td>{{ $sizeInKB }} KB</td>
                                     <td>{{ jdate($file->created_at)->format('%Y/%m/%d') }}</td>
                                     <td class="text-center">

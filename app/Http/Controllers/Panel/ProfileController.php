@@ -30,7 +30,7 @@ class ProfileController extends Controller
         $company        = Auth::user()->company;
     if($company) {
         $projects       = Project::with('company')->whereId($company->id)->first();
-        $files          = MediaFile::with('company')->where('company_id', $company->id)->get();
+        $files          = MediaFile::with('company')->where('company_id', $company->id)->whereRole(1)->get();
         $investsteps    = DB::table('investsteps')->get();
     }else{
         $projects       = null;

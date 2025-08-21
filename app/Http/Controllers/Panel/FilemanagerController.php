@@ -101,6 +101,7 @@ class FilemanagerController extends Controller
         ]);
 
         $file           = $request->file('file');
+        $subject_id     = $request->input('subject_id');
         $originalName   = $file->getClientOriginalName();
         $extension      = $file->getClientOriginalExtension();
         $size           = $file->getSize();
@@ -132,6 +133,7 @@ class FilemanagerController extends Controller
         }
 
         MediaFile::create([
+            'subject_id'    => $subject_id,
             'name'          => $fileName,
             'original_name' => $originalName,
             'type'          => rtrim($type, 's'),

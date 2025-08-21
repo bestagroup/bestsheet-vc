@@ -10,14 +10,26 @@
     <div id="userProfileCard">
         <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius:1.25rem;">
             <div class="card-body p-4">
-                <div class="d-flex align-items-center flex-column mb-4">
-                    <img src="{{ asset('assets/img/avatars/'.$genderAvatar) }}"
-                         class="img-fluid rounded mb-3 mt-2 shadow-sm" height="120" width="120" alt="User avatar"/>
-
-                    <div class="text-center">
-                        <h4 class="mb-1">{{ $user->name }}</h4>
-                        <span class="badge bg-label-danger">{{ $roleName }}</span>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width:56px; height:56px; background:#f2f3f6;">
+                            @if(Auth::user()->gender == 1)
+                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                            @elseif(Auth::user()->gender == 2)
+                                <img src="{{ asset('assets/img/avatars/8.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                            @else
+                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                            @endif
+                        </div>
+                        <div>
+                            <div class="fw-bold mb-1" style="font-size:1.2rem;">{{  $user->name }}</div>
+                            <div class="small text-secondary" dir="ltr" style="font-size:0.95rem;">{{ $roleName }}</div>
+                        </div>
                     </div>
+                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="toggleEditMode('user')" style="font-size:.98rem">
+                        <i class="mdi mdi-pencil-outline"></i>
+                        <span class="d-none d-md-inline">ویرایش</span>
+                    </button>
                 </div>
 
                 <dl class="row g-3" style="font-size:0.95rem;">
@@ -37,11 +49,11 @@
                         <dt class="col-5 text-start text-muted">نقش:</dt>
                         <dd class="col-7 text-dark mb-0">
                             @if($user->level == 'admin')
-                                مدیر سیستم
+                                مدیر
                             @elseif($user->level == 'investor')
-                                سرمایه‌گذار سیستم
+                                سرمایه‌گذار
                             @elseif($user->level == 'applicant')
-                                سرمایه‌پذیر سیستم
+                                سرمایه‌پذیر
                             @endif
                         </dd>
                     </div>
@@ -50,13 +62,6 @@
                         <dd class="col-7 text-dark mb-0">{{ $user->phone }}</dd>
                     </div>
                 </dl>
-
-                <div class="d-flex justify-content-center mt-4">
-                    <button type="button" class="btn btn-primary me-3" onclick="toggleEditMode('user')">
-                        <i class="mdi mdi-pencil-outline"></i> ویرایش
-                    </button>
-                    <a href="javascript:" class="btn btn-outline-danger suspend-user">تعلیق</a>
-                </div>
             </div>
         </div>
     </div>
