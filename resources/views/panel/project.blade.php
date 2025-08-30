@@ -20,9 +20,7 @@
                 <thead>
                     <tr class="table-light">
                         <th>تغییرات</th>
-                        <th>سریال</th>
                         <th>نام تجاری طرح</th>
-                        <th>نام شرکت</th>
                         <th>مدیرعامل شرکت</th>
                         <th>وضعیت پرتفو</th>
                         <th>مرحله فرایند شرکت</th>
@@ -921,13 +919,11 @@
                 ajax: "{{ route(request()->segment(2) . '.index') }}",
                 columns: [
                     {data: 'action'                         , name: 'action', orderable: true, searchable: true},
-                    {data: 'id'                             , name: 'id'},
-                    {data: 'title'                          , name: 'title'},
-                    {data: 'company_name'                   , name: 'company_name'},
+                    {data: 'commercial_name'                , name: 'commercial_name'},
                     {data: 'CEO'                            , name: 'CEO'},
                     {data: 'portfo_status'                  , name: 'portfo_status'},
                     {data: 'flow_level'                     , name: 'flow_level'},
-                    {data: 'progress_percentage'            , name: 'progress_percentage'},
+                    {data: 'invest_step'                    , name: 'invest_step'},
                     {data: 'activity_status'                , name: 'activity_status'},
                     {data: 'start_date'                     , name: 'start_date'},
                     {data: 'amount_request_accept'          , name: 'amount_request_accept'},

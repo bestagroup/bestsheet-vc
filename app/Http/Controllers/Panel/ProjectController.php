@@ -33,40 +33,48 @@ class ProjectController extends Controller
         ];
 
         if ($request->ajax()) {
-            $data = DB::table('projects as p')
-                ->leftJoin('finances as f', 'p.id', '=', 'f.project_id')
+            $financeSub = DB::table('finances')
                 ->select(
-                    'p.id', 'p.title','p.company_name','p.CEO','p.portfo_status','p.flow_level'
-                    ,'p.progress_percentage','p.activity_status','p.start_date','p.amount_request_accept'
-                    ,'p.company_name', 'p.amount_commitment_first_stage',
-                    DB::raw('MAX(CASE WHEN f.serial = 1 THEN f.amount END) as first_stage_payment'),
+                    'project_id',
+                    DB::raw("MAX(CASE WHEN serial = 1 THEN amount END) as first_stage_payment"),
+                    DB::raw("MAX(CASE WHEN serial = 2 THEN amount END) as second_stage_payment"),
+                    DB::raw("MAX(CASE WHEN serial = 3 THEN amount END) as third_stage_payment"),
+                    DB::raw("MAX(CASE WHEN serial = 4 THEN amount END) as fourth_stage_payment"),
+                    DB::raw("MAX(CASE WHEN serial = 5 THEN amount END) as fifth_stage_payment")
+                )
+                ->groupBy('project_id');
+
+            $data = DB::table('projects as p')
+                ->leftJoinSub($financeSub, 'f', function ($join) {
+                    $join->on('p.id', '=', 'f.project_id');
+                })
+                ->leftJoin('companies as c', 'p.company_id', '=', 'c.id')
+                ->select(
+                    'p.id',
+                    'c.commercial_name',
+                    'c.ceo_name as CEO',
+                    'p.portfo_status',
+                    'p.flow_level',
+                    'p.progress_percentage',
+                    'p.activity_status',
+                    'p.start_date',
+                    'p.amount_request_accept',
+                    'p.amount_commitment_first_stage',
                     'p.amount_commitment_second_stage',
-                    DB::raw('MAX(CASE WHEN f.serial = 2 THEN f.amount END) as second_stage_payment'),
                     'p.amount_commitment_third_stage',
-                    DB::raw('MAX(CASE WHEN f.serial = 3 THEN f.amount END) as third_stage_payment'),
                     'p.amount_commitment_fourth_stage',
-                    DB::raw('MAX(CASE WHEN f.serial = 4 THEN f.amount END) as fourth_stage_payment'),
                     'p.amount_commitment_fifth_stage',
-                    DB::raw('MAX(CASE WHEN f.serial = 5 THEN f.amount END) as fifth_stage_payment')
+                    'f.first_stage_payment',
+                    'f.second_stage_payment',
+                    'f.third_stage_payment',
+                    'f.fourth_stage_payment',
+                    'f.fifth_stage_payment',
+                    'p.invest_step'
                 )
-                ->groupBy(
-                    'p.id', 'p.title', 'p.company_name', 'p.CEO', 'p.portfo_status', 'p.flow_level',
-                    'p.progress_percentage', 'p.activity_status', 'p.start_date', 'p.amount_request_accept',
-                    'p.amount_commitment_first_stage', 'p.amount_commitment_second_stage',
-                    'p.amount_commitment_third_stage', 'p.amount_commitment_fourth_stage',
-                    'p.amount_commitment_fifth_stage'
-                )
-                ->orderBy('p.id', 'desc')
                 ->get();
             return Datatables::of($data)
-                ->addColumn('id', function ($data) {
-                    return ($data->id);
-                })
-                ->addColumn('title', function ($data) {
-                    return ($data->title);
-                })
-                ->addColumn('company_name', function ($data) {
-                    return ($data->company_name);
+                ->addColumn('commercial_name', function ($data) {
+                    return ($data->commercial_name);
                 })
                 ->addColumn('CEO', function ($data) {
                     return ($data->CEO);
@@ -77,14 +85,14 @@ class ProjectController extends Controller
                 ->addColumn('flow_level', function ($data) {
                     return ($data->flow_level);
                 })
-                ->addColumn('progress_percentage', function ($data) {
-                    return ($data->progress_percentage . '%');
-                })
                 ->addColumn('activity_status', function ($data) {
                     return ($data->activity_status);
                 })
                 ->addColumn('start_date', function ($data) {
                     return ($data->start_date);
+                })
+                ->addColumn('invest_step', function ($data) {
+                    return (($data->invest_step * 100 ) / 20 . '%');
                 })
                 ->addColumn('amount_request_accept', function ($data) {
                     return (number_format($data->amount_request_accept));
@@ -149,7 +157,7 @@ class ProjectController extends Controller
     {
         try {
             $project = new Project();
-            $project->title                         = $request->input('title');
+            $project->commercial_name               = $request->input('commercial_name');
             $project->company_name                  = $request->input('company_name');
             $project->CEO                           = $request->input('CEO');
             $project->portfo_status                 = $request->input('portfo_status');

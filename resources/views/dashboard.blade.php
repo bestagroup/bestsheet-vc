@@ -575,7 +575,7 @@
 
             <!-- Roles Datatables -->
             <div class="col-lg-12 col-12">
-                <div class="card">
+                <div class="card" style="max-height: 509px">
                     <div class="table-responsive rounded-3">
                         <table class="datatables-crm table table-sm">
                             <thead class="table-light">
