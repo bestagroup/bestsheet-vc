@@ -108,22 +108,22 @@
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 6)
                                 <div>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="مجوزها"><i class="mdi mdi-file-document-multiple-outline"></i> مجوز ها </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="مدارک ثبتی"><i class="mdi mdi-file-document-multiple-outline"></i> مدارک ثبتی </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="مستندات فروش"><i class="mdi mdi-file-document-multiple-outline"></i> مستندات فروش </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="7" data-title="مجوزها"><i class="mdi mdi-file-document-multiple-outline"></i> مجوز ها </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="9" data-title="مدارک ثبتی"><i class="mdi mdi-file-document-multiple-outline"></i> مدارک ثبتی </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="10" data-title="مستندات فروش"><i class="mdi mdi-file-document-multiple-outline"></i> مستندات فروش </button>
                                 </div>
                                 <div>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="رزومه اعضاء"><i class="mdi mdi-file-document-multiple-outline"></i> رزومه اعضاء </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="قرارداد فروش"><i class="mdi mdi-file-document-multiple-outline"></i> قرارداد فروش </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="قراداد کارکنان"><i class="mdi mdi-file-document-multiple-outline"></i> قراداد کارکنان </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="11" data-title="رزومه اعضاء"><i class="mdi mdi-file-document-multiple-outline"></i> رزومه اعضاء </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="12" data-title="قرارداد فروش"><i class="mdi mdi-file-document-multiple-outline"></i> قرارداد فروش </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="13" data-title="قراداد کارکنان"><i class="mdi mdi-file-document-multiple-outline"></i> قراداد کارکنان </button>
                                 </div>
                                 <div>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="نتایج رتبه بندی اعتباری سهامداران"><i class="mdi mdi-file-document-multiple-outline"></i> نتایج رتبه بندی اعتباری سهامداران </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="لیست بیمه تمامی اعضای شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> لیست بیمه تمامی اعضای شرکت </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="14" data-title="نتایج رتبه بندی اعتباری سهامداران"><i class="mdi mdi-file-document-multiple-outline"></i> نتایج رتبه بندی اعتباری سهامداران </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="8" data-title="لیست بیمه تمامی اعضای شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> لیست بیمه تمامی اعضای شرکت </button>
                                 </div>
                             <div>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="اظهارنامه مالیاتی"><i class="mdi mdi-file-document-multiple-outline"></i> اظهارنامه مالیاتی </button>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="صورت مالی حسابرسی شده شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> صورت مالی حسابرسی شده شرکت </button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="15" data-title="اظهارنامه مالیاتی"><i class="mdi mdi-file-document-multiple-outline"></i> اظهارنامه مالیاتی </button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="16" data-title="صورت مالی حسابرسی شده شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> صورت مالی حسابرسی شده شرکت </button>
                             </div>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -136,7 +136,8 @@
                                                 <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
 
                                                     <input type="hidden" name="record_id" id="recordIdInput">
-                                                    <input type="hidden" name="subject_id" id="subject_id">
+                                                    <input type="hidden" name="subject_id" id="subjectIdInput">
+                                                    <input type="hidden" name="title" id="fileTitleInput">
                                                     <div class="dz-message text-center text-muted">
                                                         <div class="mb-3">
                                                             <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>

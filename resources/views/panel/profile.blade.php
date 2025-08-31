@@ -251,14 +251,27 @@
                 });
             </script>
             <script>
-                const uploadModal = document.getElementById('uploadModal')
-                uploadModal.addEventListener('show.bs.modal', event => {
-                    const button = event.relatedTarget
-                    const title = button.getAttribute('data-bs-title')
-                    const modalTitle = uploadModal.querySelector('.modal-title')
-                    modalTitle.textContent = 'بارگذاری فایل ' + title
-                })
-            </script>
+                document.querySelectorAll('.upload-btn').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        let recordId = this.getAttribute('data-id');
+                        let subjectId = this.getAttribute('data-subject');
+                        let title = this.getAttribute('data-title');
 
+                        // مقداردهی به hidden input ها
+                        document.getElementById('recordIdInput').value = recordId;
+                        document.getElementById('subjectIdInput').value = subjectId;
+                        document.getElementById('fileTitleInput').value = title;
+
+                        // تغییر عنوان مودال
+                        document.getElementById('uploadModalLabel').innerText = "بارگذاری فایل " + title;
+
+                        // نمایش مودال
+                        let modal = new bootstrap.Modal(document.getElementById('uploadModal'));
+                        modal.show();
+                    });
+                });
+
+
+            </script>
     @endpush
 
