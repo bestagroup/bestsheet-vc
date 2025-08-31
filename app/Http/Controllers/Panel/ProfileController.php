@@ -28,14 +28,14 @@ class ProfileController extends Controller
 
 
         $company        = Auth::user()->company;
-    if($company) {
-        $projects       = Project::with('company')->whereId($company->id)->first();
-        $files          = MediaFile::with('company')->where('company_id', $company->id)->whereRole(1)->get();
-        $investsteps    = DB::table('investsteps')->get();
-    }else{
-        $projects       = null;
-        $investsteps    = null;
-        $files          = null;
+        if($company) {
+            $projects       = Project::with('company')->whereId($company->id)->first();
+            $files          = MediaFile::where('company_id', $company->id)->whereRole(1)->get();
+            $investsteps    = DB::table('investsteps')->get();
+        }else{
+            $projects       = null;
+            $investsteps    = null;
+            $files          = null;
     }
         return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps' , 'files'));
     }

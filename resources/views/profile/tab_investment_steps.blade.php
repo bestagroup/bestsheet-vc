@@ -43,7 +43,7 @@
                         <div class="card-body">
                             <p class="text-muted">{{ $step->description }}</p>
                             @if($step->id == 1)
-                                <button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="{{Auth::user()->company->id}}"><i class="mdi mdi-file-document-multiple-outline"></i></button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" data-id="{{Auth::user()->company->id}}" data-subject="4"><i class="mdi mdi-file-document-multiple-outline"></i></button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -53,8 +53,8 @@
                                             </div>
                                             <div class="modal-body">
                                                 <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
-
                                                     <input type="hidden" name="record_id" id="recordIdInput">
+                                                    <input type="hidden" name="subject_id" id="subject_id">
                                                     <div class="dz-message text-center text-muted">
                                                         <div class="mb-3">
                                                             <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
@@ -67,23 +67,30 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 4)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 2)
                                 <div class="alert alert-info">در حال بررسی ، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 3)
                                 <div class="alert alert-info">در حال بررسی ، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 4)
-                                <button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="{{Auth::user()->company->id}}"><i class="mdi mdi-file-document-multiple-outline"></i></button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" data-id="{{Auth::user()->company->id}}" data-subject="5"><i class="mdi mdi-file-document-multiple-outline"></i> فایل طرح کسب و کار </button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" data-id="{{Auth::user()->company->id}}" data-subject="6"><i class="mdi mdi-file-document-multiple-outline"></i> فایل برنامه مالی </button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title"> بارگزاری فایل </h5>
+                                                <h5 class="modal-title"> بارگزاری فایل طرح کسب و کار </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
 
                                                     <input type="hidden" name="record_id" id="recordIdInput">
+                                                    <input type="hidden" name="subject_id" id="subject_id">
                                                     <div class="dz-message text-center text-muted">
                                                         <div class="mb-3">
                                                             <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
@@ -96,22 +103,40 @@
                                         </div>
                                     </div>
                                 </div>
+
                             @elseif($step->id == 5)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 6)
-                                <div class="alert alert-info">1- مجوز ها 2- لیست بیمه تمامی اعضای شرکت 3- مدارک ثبتی 4- مستندات فروش 5- رزومه اعضاء 6- قرارداد فروش 7- قراداد کارکنان 8- نتایج رتبه بندی اعتباری سهامداران 9- اظهارنامه مالیاتی 10- صورت مالی حسابرسی شده شرکت</div>
-                                <button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="{{Auth::user()->company->id}}"><i class="mdi mdi-file-document-multiple-outline"></i></button>
+                                <div>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="مجوزها"><i class="mdi mdi-file-document-multiple-outline"></i> مجوز ها </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="مدارک ثبتی"><i class="mdi mdi-file-document-multiple-outline"></i> مدارک ثبتی </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="مستندات فروش"><i class="mdi mdi-file-document-multiple-outline"></i> مستندات فروش </button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="رزومه اعضاء"><i class="mdi mdi-file-document-multiple-outline"></i> رزومه اعضاء </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="قرارداد فروش"><i class="mdi mdi-file-document-multiple-outline"></i> قرارداد فروش </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="قراداد کارکنان"><i class="mdi mdi-file-document-multiple-outline"></i> قراداد کارکنان </button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="نتایج رتبه بندی اعتباری سهامداران"><i class="mdi mdi-file-document-multiple-outline"></i> نتایج رتبه بندی اعتباری سهامداران </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="لیست بیمه تمامی اعضای شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> لیست بیمه تمامی اعضای شرکت </button>
+                                </div>
+                            <div>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="اظهارنامه مالیاتی"><i class="mdi mdi-file-document-multiple-outline"></i> اظهارنامه مالیاتی </button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-bs-toggle="modal" data-bs-target="#uploadModal" data-bs-title="صورت مالی حسابرسی شده شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> صورت مالی حسابرسی شده شرکت </button>
+                            </div>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title"> بارگزاری فایل </h5>
+                                                <h5 class="modal-title" id="uploadModalLabel"> بارگزاری فایل </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
 
                                                     <input type="hidden" name="record_id" id="recordIdInput">
+                                                    <input type="hidden" name="subject_id" id="subject_id">
                                                     <div class="dz-message text-center text-muted">
                                                         <div class="mb-3">
                                                             <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>

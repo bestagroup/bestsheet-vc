@@ -12,7 +12,7 @@ class MediaFile extends Model
     use Sluggable;
 
     protected $fillable = [
-        'name','slug' ,'original_name', 'type' ,'file_path', 'size','user_id','project_id','mime'
+        'name','slug' ,'original_name', 'type' ,'file_path', 'size','user_id','project_id','mime' , 'subject_id' , 'role', 'company_id'
     ];
 
     protected $appends = ['url'];

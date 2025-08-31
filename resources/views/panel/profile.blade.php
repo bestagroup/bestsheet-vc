@@ -250,5 +250,15 @@
                     });
                 });
             </script>
+            <script>
+                const uploadModal = document.getElementById('uploadModal')
+                uploadModal.addEventListener('show.bs.modal', event => {
+                    const button = event.relatedTarget
+                    const title = button.getAttribute('data-bs-title')
+                    const modalTitle = uploadModal.querySelector('.modal-title')
+                    modalTitle.textContent = 'بارگذاری فایل ' + title
+                })
+            </script>
+
     @endpush
 
