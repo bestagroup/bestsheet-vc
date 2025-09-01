@@ -18,6 +18,14 @@
         </li>
         <li class="nav-item">
             <button type="button" class="nav-link d-flex flex-column gap-1" role="tab"
+                    data-bs-toggle="tab" data-bs-target="#navs-co-profile-card"
+                    aria-controls="navs-co-profile-card" aria-selected="false">
+                <i class="tf-icons mdi mdi-rocket mdi-20px me-1"></i>
+                اطلاعات طرح
+            </button>
+        </li>
+        <li class="nav-item">
+            <button type="button" class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-invest-card"
                     aria-controls="navs-invest-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-clipboard-flow mdi-20px me-1"></i>

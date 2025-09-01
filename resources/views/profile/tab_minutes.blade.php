@@ -20,6 +20,39 @@
 @endphp
 
 <div class="tab-pane fade justify-content-center" id="navs-minutes-card" role="tabpanel">
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMinutesModal">
+            <i class="mdi mdi-plus"></i>افزودن صورتجلسات
+        </button>
+    </div>
+    <div class="modal fade" id="addMinutesModal" tabindex="-1" aria-labelledby="addMinutesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">افزودن صورتجلسات</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6"><select class="form-select"><option value="">نوع</option><option>چک</option><option>سفته</option><option>وثیقه ملکی</option><option>تعهد اجرایی</option><option>سایر</option></select></div>
+                            <div class="col-md-6"><input type="text" class="form-control" placeholder="عنوان یا شماره"></div>
+                            <div class="col-md-6"><input type="text" class="form-control" placeholder="ارائه‌دهنده"></div>
+                            <div class="col-md-6"><input type="text" class="form-control" placeholder="مبلغ (تومان)"></div>
+                            <div class="col-md-6"><input type="text" class="form-control" placeholder="تاریخ صدور"></div>
+                            <div class="col-md-6"><input type="text" class="form-control" placeholder="تاریخ سررسید"></div>
+                            <div class="col-12"><input type="file" class="form-control"></div>
+                            <div class="col-12"><textarea class="form-control" rows="2" placeholder="توضیحات تکمیلی"></textarea></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
+                        <button type="submit" class="btn btn-primary">ثبت تعهد</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="card shadow-sm">
         <div class="card-body">
             <h6 class="fw-bold mb-3">صورتجلسات</h6>

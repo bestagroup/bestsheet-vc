@@ -30,16 +30,14 @@
                     @if(Auth::user()->level == 'applicant')
                         @include('profile.tab_company_profile')
 
-                    <!-- فرایند سرمایه گذاری -->
+                        @include('profile.tab_project_profile')
+
                         @include('profile.tab_investment_steps')
 
-                    <!-- فایل ها و مستندات -->
                         @include('profile.tab_documents')
 
-                    <!-- صورتجلسات -->
                         @include('profile.tab_minutes')
 
-                    <!-- تعهدات و تضامین -->
                         @include('profile.tab_guarantees')
 
                     @elseif(Auth::user()->level == 'investor')
@@ -253,12 +251,12 @@
             <script>
                 document.querySelectorAll('.upload-btn').forEach(btn => {
                     btn.addEventListener('click', function () {
-                        let recordId = this.getAttribute('data-id');
-                        let subjectId = this.getAttribute('data-subject');
-                        let title = this.getAttribute('data-title');
+                        let recordId    = this.getAttribute('data-id');
+                        let subjectId   = this.getAttribute('data-subject');
+                        let title       = this.getAttribute('data-title');
 
                         // مقداردهی به hidden input ها
-                        document.getElementById('recordIdInput').value = recordId;
+                        document.getElementById('recordIdInput').value  = recordId;
                         document.getElementById('subjectIdInput').value = subjectId;
                         document.getElementById('fileTitleInput').value = title;
 
