@@ -22,34 +22,54 @@
 <div class="tab-pane fade justify-content-center" id="navs-minutes-card" role="tabpanel">
     <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMinutesModal">
-            <i class="mdi mdi-plus"></i>افزودن صورتجلسات
+            <i class="mdi mdi-plus"></i>مدیریت صورتجلسات
         </button>
     </div>
     <div class="modal fade" id="addMinutesModal" tabindex="-1" aria-labelledby="addMinutesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <form>
-                    <div class="modal-header">
-                        <h5 class="modal-title fw-bold">افزودن صورتجلسات</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6"><select class="form-select"><option value="">نوع</option><option>چک</option><option>سفته</option><option>وثیقه ملکی</option><option>تعهد اجرایی</option><option>سایر</option></select></div>
-                            <div class="col-md-6"><input type="text" class="form-control" placeholder="عنوان یا شماره"></div>
-                            <div class="col-md-6"><input type="text" class="form-control" placeholder="ارائه‌دهنده"></div>
-                            <div class="col-md-6"><input type="text" class="form-control" placeholder="مبلغ (تومان)"></div>
-                            <div class="col-md-6"><input type="text" class="form-control" placeholder="تاریخ صدور"></div>
-                            <div class="col-md-6"><input type="text" class="form-control" placeholder="تاریخ سررسید"></div>
-                            <div class="col-12"><input type="file" class="form-control"></div>
-                            <div class="col-12"><textarea class="form-control" rows="2" placeholder="توضیحات تکمیلی"></textarea></div>
+                <div class="card-body">
+                    <form id="addminuteform" method="POST" class="row g-4 mb-4" action="{{route('minute.store')}}">
+                    @csrf
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating form-floating-outline">
+                            <input type="text" class="form-control" id="title" name="title" placeholder="عنوان">
+                            <label for="title">عنوان</label>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
-                        <button type="submit" class="btn btn-primary">ثبت تعهد</button>
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating form-floating-outline">
+                            <input type="text" class="form-control" id="date" name="date" placeholder="تاریخ برگزاری">
+                            <label for="date">تاریخ برگزاری</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating form-floating-outline">
+                            <select name="type" id="type" class="form-control">
+                                <option value="" selected>انتخاب کنید</option>
+                                <option value="صورتجلسه هیئت مدیره" >صورتجلسه هیئت مدیره</option>
+                            </select>
+                            <label for="type">نوع شرکت</label>
+                        </div>
+                    </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group">
+                                <input type="text" name="logo" class="form-control"
+                                       id="file_{{ $company->id }}" readonly
+                                       placeholder="انتخاب فایل">
+                                <button class="btn btn-outline-secondary file-selector" type="button"
+                                        data-record-id="{{ $company->id }}"
+                                        data-input-id="file_{{ $company->id }}">
+                                    انتخاب فایل
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-center">
+                        <button type="button" class="btn btn-primary" id="editsubmit_{{$company->id}}">ذخیره</button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </div>

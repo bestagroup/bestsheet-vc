@@ -1,9 +1,10 @@
+@foreach($projects as $project)
 <div class="tab-pane fade justify-content-center" id="navs-invest-card" role="tabpanel">
     <div class="mb-4">
         <label class="form-label fw-bold">درصد پیشرفت فرآیند:</label>
         <div class="progress" style="height: 20px;">
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{ round(($projects->invest_step) / count($investsteps) * 100) }}%;" aria-valuenow="{{ count($investsteps) - 1 }}" aria-valuemin="0" aria-valuemax="{{ count($investsteps) }}">
-                {{ round(($projects->invest_step - 1 ) / count($investsteps) * 100) }}%
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ round(($project->invest_step) / count($investsteps) * 100) }}%;" aria-valuenow="{{ count($investsteps) - 1 }}" aria-valuemin="0" aria-valuemax="{{ count($investsteps) }}">
+                {{ round(($project->invest_step - 1 ) / count($investsteps) * 100) }}%
             </div>
         </div>
     </div>
@@ -11,21 +12,21 @@
         <div class="col-md-4">
             <div class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
                 @foreach($investsteps as $step)
-                    <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($projects->invest_step) ? 'active' : '' }}"
-                         style="cursor: default; border-right: 5px solid {{ $step->id < $projects->invest_step ? '#4caf50' : ($step->id === $projects->invest_step ? '#7367f0' : '#ddd') }};">
+                    <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($project->invest_step) ? 'active' : '' }}"
+                         style="cursor: default; border-right: 5px solid {{ $step->id < $project->invest_step ? '#4caf50' : ($step->id === $project->invest_step ? '#7367f0' : '#ddd') }};">
                         <span class="me-2 d-inline-flex justify-content-center align-items-center rounded-circle"
-                              style="width: 28px; height: 28px; background: {{ $step->id < $projects->invest_step ? '#c8e6c9' : ($step->id === $projects->invest_step ? '#ede7f6' : '#f1f1f1') }};
-                                  color: {{ $step->id < $projects->invest_step ? '#2e7d32' : ($step->id === $projects->invest_step ? '#5e35b1' : '#aaa') }};
+                              style="width: 28px; height: 28px; background: {{ $step->id < $project->invest_step ? '#c8e6c9' : ($step->id === $project->invest_step ? '#ede7f6' : '#f1f1f1') }};
+                                  color: {{ $step->id < $project->invest_step ? '#2e7d32' : ($step->id === $project->invest_step ? '#5e35b1' : '#aaa') }};
                                   font-weight: bold;">
                             {{ $step->id }}
                         </span>
                         <div class="flex-grow-1">
-                            <div class="fw-bold {{ $step->id === $projects->invest_step ? 'text-dark' : 'text-muted' }}">{{ $step->title }}</div>
+                            <div class="fw-bold {{ $step->id === $project->invest_step ? 'text-dark' : 'text-muted' }}">{{ $step->title }}</div>
                             <small class="text-muted">{{ $step->description }}</small>
                         </div>
-                        @if($step->id === $projects->invest_step)
+                        @if($step->id === $project->invest_step)
                             <span class="badge bg-primary ms-auto">اکنون</span>
-                        @elseif($step->id < $projects->invest_step)
+                        @elseif($step->id < $project->invest_step)
                             <i class="mdi mdi-check-circle-outline text-success ms-auto"></i>
                         @endif
                     </div>
@@ -33,11 +34,11 @@
             </div>
         </div>
         @foreach($investsteps as $step)
-            @if($projects->invest_step === $step->id)
+            @if($project->invest_step === $step->id)
                 <div class="col-md-8">
                     <div class="card border shadow-sm">
                         <div class="card-header bg-light d-flex align-items-center">
-                            <span class="badge bg-primary me-2" style="width:26px;">{{ $projects->invest_step }}</span>
+                            <span class="badge bg-primary me-2" style="width:26px;">{{ $project->invest_step }}</span>
                             <h6 class="mb-0 fw-bold">{{ $step->title }}</h6>
                         </div>
                         <div class="card-body">
@@ -157,7 +158,7 @@
                             @elseif($step->id == 8)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 9)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="فایل ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>فایل ارزش گذاری</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="19" data-title="فایل ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>فایل ارزش گذاری</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -185,7 +186,7 @@
                             @elseif($step->id == 10)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 11)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="19" data-title="فایل قراداد"><i class="mdi mdi-file-document-multiple-outline"></i>فایل قراداد</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="20" data-title="فایل قراداد"><i class="mdi mdi-file-document-multiple-outline"></i>فایل قراداد</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -236,7 +237,9 @@
                                     </table>
                                 </div>
                             @elseif($step->id == 14)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="16" data-title="مستندات شاخص کلیدی اول"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی اول</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="21" data-title="مستندات شاخص کلیدی اول"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی اول</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -263,7 +266,8 @@
                                     </div>
                                 </div>
                             @elseif($step->id == 15)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="16" data-title="مستندات شاخص کلیدی دوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی دوم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="22" data-title="مستندات شاخص کلیدی دوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی دوم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -290,7 +294,8 @@
                                     </div>
                                 </div>
                             @elseif($step->id == 16)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="16" data-title="مستندات شاخص کلیدی سوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی سوم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="23" data-title="مستندات شاخص کلیدی سوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی سوم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -317,7 +322,8 @@
                                     </div>
                                 </div>
                             @elseif($step->id == 17)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="16" data-title="مستندات شاخص کلیدی چهارم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی چهارم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="24" data-title="مستندات شاخص کلیدی چهارم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی چهارم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -356,3 +362,4 @@
         @endforeach
     </div>
 </div>
+@endforeach

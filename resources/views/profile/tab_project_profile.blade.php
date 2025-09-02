@@ -3,7 +3,8 @@
 @endphp
 
 <div class="tab-pane fade justify-content-center" id="navs-project-profile-card" role="tabpanel">
-    {{-- کارت اطلاعات شرکت --}}
+
+    @foreach($projects as $project)
     <div id="companyProfileCard" class="{{ $hasProfile ? '' : 'd-none' }}">
         <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius: 1.25rem;">
             <div class="card-body p-4">
@@ -13,43 +14,34 @@
                             <i class="mdi mdi-domain" style="font-size:2rem; color:#696cff"></i>
                         </div>
                         <div>
-                            <div class="fw-bold mb-1" style="font-size:1.2rem;">{{ $projects->portfo_status }}</div>
-                            <div class="small text-secondary" dir="ltr" style="font-size:0.95rem;">{{ $projects->flow_level }}</div>
+                            <div class="fw-bold mb-1" style="font-size:1.2rem;">{{ $project->title }}</div>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="toggleEditMode('company')" style="font-size:.98rem">
-                        <i class="mdi mdi-pencil-outline"></i>
-                        <span class="d-none d-md-inline">ویرایش</span>
-                    </button>
                 </div>
 
                 <dl class="row g-3 pt-3" style="font-size: 0.96rem;">
                     <div class="col-12 d-flex">
-                        <dt class="col-5 text-start text-muted">شماره ثبت:</dt>
-                        <dd id="company-registration-number" class="col-7 text-dark mb-0">{{ $company->registration_number }}</dd>
+                        <dt class="col-5 text-start text-muted">وضعیت طرح:</dt>
+                        <dd id="company-registration-number" class="col-7 text-dark mb-0">{{ $project->flow_level }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
-                        <dt class="col-5 text-start text-muted">شناسه ملی:</dt>
-                        <dd id="company-national-id" class="col-7 text-dark mb-0">{{ $company->national_id }}</dd>
+                        <dt class="col-5 text-start text-muted">وضعیت همکاری:</dt>
+                        <dd id="company-national-id" class="col-7 text-dark mb-0">{{ $project->activity_status }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
-                        <dt class="col-5 text-start text-muted">تلفن:</dt>
-                        <dd id="company-phone" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->phone }}</dd>
+                        <dt class="col-5 text-start text-muted">تاریخ شروع قرارداد:</dt>
+                        <dd id="company-phone" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $project->start_date }}</dd>
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
-                        <dt class="col-5 text-start text-muted">ایمیل:</dt>
-                        <dd id="company-email" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">{{ $company->email }}</dd>
-                    </div>
-                    <div class="col-12 d-flex border-top pt-3">
-                        <dt class="col-5 text-start text-muted">آدرس:</dt>
-                        <dd id="company-address" class="col-7 text-dark mb-0">{{ $company->address }}</dd>
+                        <dt class="col-5 text-start text-muted">مرحله سرمایه گذاری:</dt>
+                        <dd id="company-email" class="col-7 text-dark mb-0" dir="ltr" style="font-family: monospace">@foreach($investsteps as $step) {{ $project->invest_step == $step->id ? $step->title : '' }} @endforeach</dd>
                     </div>
                 </dl>
             </div>
         </div>
     </div>
+    @endforeach
 
-    {{-- فرم ویرایش اطلاعات شرکت --}}
     <div id="companyEditForm" class="{{ $hasProfile ? 'd-none' : '' }}">
         @include('profile.company_profile_form', ['profile' => $company->id])
     </div>

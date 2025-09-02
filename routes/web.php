@@ -27,6 +27,7 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('panel/calendar'     , 'CalendarController');
     Route::resource('panel/company'      , 'CompanyController');
     Route::resource('company'            , 'CompanyController');
+    Route::resource('minute'             , 'MinuteController');
 
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('panel/changepassword'      , 'ChangePasswordController@index')->name('password.change.form');

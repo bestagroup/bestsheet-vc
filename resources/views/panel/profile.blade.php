@@ -271,5 +271,23 @@
 
 
             </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    let activeInputId = null;
+                    document.querySelectorAll('.file-selector').forEach(input => {
+                        input.addEventListener('click', function () {
+                            const recordId = this.dataset.recordId;
+                            activeInputId = this.dataset.inputId;
+
+                            window.open(`{{ route('selectfile') }}?record_id=${recordId}`, 'FileManager', 'width=800,height=600');
+                        });
+                    });
+                    window.setFileUrl = function (url) {
+                        if (activeInputId) {
+                            document.getElementById(activeInputId).value = url;
+                        }
+                    };
+                });
+            </script>
     @endpush
 
