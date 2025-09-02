@@ -2,7 +2,7 @@
     $hasProfile = true;
 @endphp
 
-<div class="tab-pane fade justify-content-center" id="navs-co-profile-card" role="tabpanel">
+<div class="tab-pane fade justify-content-center" id="navs-project-profile-card" role="tabpanel">
     {{-- کارت اطلاعات شرکت --}}
     <div id="companyProfileCard" class="{{ $hasProfile ? '' : 'd-none' }}">
         <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius: 1.25rem;">
