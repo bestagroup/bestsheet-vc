@@ -102,7 +102,7 @@
                                 <select name="company_id" id="company_id" class="form-control">
                                     <option value="" selected>انتخاب کنید</option>
                                     @foreach($companies as $company)
-                                    <option value="{{$company->id}}">{{$company->company_name}}</option>
+                                    <option value="{{$company->id}}">{{$company->company_name}} - {{$company->commercial_name}} </option>
                                     @endforeach
                                 </select>
                             </div>
