@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('commitments', function (Blueprint $table) {
             $table->id();
+            $table->integer('title')->comment('عنوان');
+            $table->string('guarantee')->comment('تاریخ');
+            $table->unsignedInteger('status')->comment('وضعیت');
             $table->timestamps();
         });
     }

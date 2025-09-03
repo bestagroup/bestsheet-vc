@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Commitment;
 use App\Models\Company;
 use App\Models\MediaFile;
 use App\Models\Minute;
@@ -29,6 +30,7 @@ class ProfileController extends Controller
 
 
         $company        = Auth::user()->company;
+        $commitments    = Commitment::whereStatus(4)->get();
         if($company) {
             $projects       = Project::with('company')->where('company_id', $company->id)->get();
             $files          = MediaFile::where('company_id', $company->id)->whereRole(1)->get();
@@ -40,6 +42,6 @@ class ProfileController extends Controller
             $files          = null;
             $minutes        = null;
     }
-        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps' , 'files' , 'minutes'));
+        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps' , 'files' , 'minutes' , 'commitments'));
     }
 }
