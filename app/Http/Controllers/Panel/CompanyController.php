@@ -179,7 +179,9 @@ class CompanyController extends Controller
         $companies->ceo_name            = $request->input('ceo_name');
         $companies->ceo_national_code   = $request->input('ceo_national_code');
         $companies->address             = $request->input('address');
-
+        if ($request->input('user_id')) {
+            $companies->user_id = $request->input('user_id');
+        }
         $result = $companies->update();
 
         try{
