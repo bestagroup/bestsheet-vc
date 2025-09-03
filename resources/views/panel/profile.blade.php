@@ -1,10 +1,12 @@
 @extends('layouts.base')
 
-@section('title', 'پروفایل حساب کاربری')
+@section('title', ' حساب کاربری')
 
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+    <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto !important;word-wrap:break-word;white-space: nowrap;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
     <style>.nav-tabs .nav-link.active {border-bottom: 3px solid #7367f0 !important;}</style>
 @endsection
 
@@ -65,6 +67,105 @@
 
             </script>
             <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
+            <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
+            <script type="text/javascript">
+                var tableInitialized = false;
+                document.querySelector('button[data-bs-target="#navs-minutes-card"]')
+                    .addEventListener('shown.bs.tab', function () {
+                        if (!tableInitialized) {
+                            $('.yajra-datatable').DataTable({
+                                processing: true,
+                                serverSide: true,
+                                order: [[0, 'desc']],
+                                scrollX: true,
+                                scrollCollapse: true,
+                                ajax: {
+                                    url: "{{ route('minute.index') }}",
+                                    data: function (d) {
+                                        d.id = "{{ $company->id }}";
+                                    }
+                                },
+                                columns: [
+                                    {data: 'title'  , name: 'title'},
+                                    {data: 'date'   , name: 'date'},
+                                    {data: 'type'   , name: 'type'},
+                                    {data: 'file'   , name: 'file', orderable: true, searchable: true},
+                                ],
+                                language: {
+                                    url: "{{ asset('assets/vendor/js/fa.json') }}"
+                                }
+                            });
+                            tableInitialized = true;
+                        }
+                    });
+            </script>
+
+
+            <script>
+                jQuery(function($){
+                    function showToast(message, type = 'success') {
+                        toastr.options = {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: "toast-top-right",
+                            timeOut: 3000,
+                            rtl: true
+                        };
+
+                        if (toastr[type]) {
+                            toastr[type](message);
+                        } else {
+                            toastr.success(message);
+                        }
+                    }
+                    $('#submitaddminut').on('click', function(e){
+                        e.preventDefault();
+                        var $btn  = $(this);
+                        var $form = $('#addminuteform');
+                        var originalHtml = $btn.html();
+
+                        $btn.prop('disabled', true)
+                            .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                            }
+                        });
+
+                        $.ajax({
+                            url: "{{ route('minute.store') }}",
+                            method: 'POST',
+                            data: $form.serialize(),
+                            success: function (data) {
+                                if (data.success) {
+                                    const modalEl = document.getElementById('addMinutesModal');
+                                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+
+                                    modalEl.addEventListener('hidden.bs.modal', function handler(){
+                                        modalEl.removeEventListener('hidden.bs.modal', handler);
+                                        $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                                    }, { once: true });
+
+                                    modal.hide();
+                                    $('.modal-backdrop').remove();
+                                    $('body').removeClass('modal-open');
+                                    $('body').css('padding-right', '');
+                                    showToast('آیتم با موفقیت افزوده شد!', 'success');
+                                } else {
+                                    swal(data.subject, data.message, data.flag);
+                                }
+                            },
+                            error: function () {
+                                swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
+                            },
+                            complete: function () {
+                                $btn.prop('disabled', false).html(originalHtml);
+                            }
+                        });
+                    });
+                });
+            </script>
             <script>
                 jQuery(function($){
                     function showToast(message, type = 'success') {
@@ -255,15 +356,12 @@
                         let subjectId   = this.getAttribute('data-subject');
                         let title       = this.getAttribute('data-title');
 
-                        // مقداردهی به hidden input ها
                         document.getElementById('recordIdInput').value  = recordId;
                         document.getElementById('subjectIdInput').value = subjectId;
                         document.getElementById('fileTitleInput').value = title;
 
-                        // تغییر عنوان مودال
                         document.getElementById('uploadModalLabel').innerText = "بارگذاری فایل " + title;
 
-                        // نمایش مودال
                         let modal = new bootstrap.Modal(document.getElementById('uploadModal'));
                         modal.show();
                     });

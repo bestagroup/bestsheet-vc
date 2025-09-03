@@ -42,7 +42,11 @@ class Company extends Model
 
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->hasMany(Project::class , 'company_id');
+    }
+    public function minute()
+    {
+        return $this->hasMany(Minute::class , 'company_id');
     }
 
     public function MediaFile()
