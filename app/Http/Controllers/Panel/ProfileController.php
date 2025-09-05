@@ -31,11 +31,11 @@ class ProfileController extends Controller
 
         $company        = Auth::user()->company;
         $commitments    = Commitment::whereStatus(4)->get();
+        $investsteps    = DB::table('investsteps')->get();
         if($company) {
             $projects       = Project::with('company')->where('company_id', $company->id)->get();
             $files          = MediaFile::where('company_id', $company->id)->whereRole(1)->get();
             $minutes        = Minute::where('company_id', $company->id)->get();
-            $investsteps    = DB::table('investsteps')->get();
         }else{
             $projects       = null;
             $investsteps    = null;
