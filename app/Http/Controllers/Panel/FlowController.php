@@ -10,8 +10,10 @@ use App\Models\Investstep;
 use App\Models\MediaFile;
 use App\Models\MenuPanel;
 use App\Models\Project;
+use App\Models\Project_step;
 use App\Models\SubmenuPanel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -115,7 +117,42 @@ class FlowController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+        try {
+            $step = new Project_step();
+            $step->project_id   = $request->input('project_id');
+            $step->title        = $request->input('title');
+            $step->step_number  = $request->input('step_number');
+            $step->description  = $request->input('description');
+            $step->status       = $request->input('status');
+            $step->user_id      = Auth::user()->id;
+
+            $result = $step->save();
+
+            if ($result == true) {
+                $success = true;
+                $flag    = 'success';
+                $subject = 'عملیات موفق';
+                $message = 'اطلاعات زیرمنو با موفقیت ثبت شد';
+            }
+            elseif($result != true) {
+                $success = false;
+                $flag    = 'error';
+                $subject = 'عملیات نا موفق';
+                $message = 'اطلاعات زیرمنو ثبت نشد، لطفا مجددا تلاش نمایید';
+            }
+
+        } catch (Exception $e) {
+
+            $success = false;
+            $flag    = 'error';
+            $subject = 'خطا در ارتباط با سرور';
+            //$message = strchr($e);
+            $message = 'اطلاعات زیرمنو ثبت نشد،لطفا بعدا مجدد تلاش نمایید ';
+        }
+
+        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
+
     }
 
     /**
