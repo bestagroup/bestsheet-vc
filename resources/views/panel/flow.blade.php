@@ -354,27 +354,27 @@
                                                                         <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
-                                                                    <form action="{{ route('flow.store') }}" id="addform" method="POST" class="d-inline">
+                                                                    <form action="{{ route('flow.store') }}" id="addform-{{ $step->id }}" method="POST" class="d-inline">
                                                                         @csrf
-                                                                        <input type="hidden" name="project_id" id="project_id" value="{{ $project->id }}">
-                                                                        <input type="hidden" name="step_id" id="step_id" value="{{ $step->id }}">
-                                                                        <input type="hidden" name="status" id="status" value="approved">
-                                                                        <textarea name="description" class="form-control" cols="30" rows="10" id="description"></textarea>
-                                                                        <button type="button" id="submit" class="btn btn-md btn-success" style="min-width: 150px; margin: 5px auto;">
+                                                                        <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                                                        <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                                                        <input type="hidden" name="status" id="status">
+
+                                                                        <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+
+                                                                        <button type="button" class="btn btn-success" style="min-width:150px; margin:5px auto;"
+                                                                                onclick="document.getElementById('status').value='approved'; document.getElementById('submit').click();">
                                                                             تایید مرحله
                                                                         </button>
-                                                                    </form>
 
-                                                                    <form action="{{ route('flow.store') }}" id="addform" method="POST" class="d-inline">
-                                                                        @csrf
-                                                                        <input type="hidden" name="project_id" id="project_id" value="{{ $project->id }}">
-                                                                        <input type="hidden" name="step_id" id="step_id" value="{{ $step->id }}">
-                                                                        <input type="hidden" name="status" id="status" value="rejected">
-                                                                        <textarea name="description" class="form-control" cols="30" rows="10" id="description"></textarea>
-                                                                        <button type="button" id="submit" class="btn btn-md btn-success" style="min-width: 150px; margin: 5px auto;">
+                                                                        <button type="button" class="btn btn-danger" style="min-width:150px; margin:5px auto;"
+                                                                                onclick="document.getElementById('status').value='rejected'; document.getElementById('submit').click();">
                                                                             رد مرحله
                                                                         </button>
+                                                                        <button type="button" id="submit" style="display:none;"></button>
                                                                     </form>
+
+
                                                             @elseif($step->id == 2)
                                                                 <form action="{{ route('flow.store') }}" method="POST" class="d-inline">
                                                                     @csrf
@@ -1033,7 +1033,12 @@
             });
         });
     </script>
-
+    <script>
+        function disableBtnWithSpinner($btn) {
+            $btn.prop('disabled', true)
+                .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
+        }
+    </script>
     <script>
         jQuery(function($){
             function showToast(message, type = 'success') {
