@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -18,6 +19,18 @@ class CalendarController extends Controller
             'delete'  => 'حذف رویداد تقویم',
         ];
 
-        return view('panel.calendar')->with(compact('thispage'));
+        $users = User::select('id', 'name' , 'gender')->get();
+
+        return view('panel.calendar')->with(compact('thispage' , 'users'));
+    }
+
+    public function store(Request $request){
+
+        $success = true;
+        $flag    = 'success';
+        $subject = 'عملیات موفق';
+        $message = 'اطلاعات زیرمنو با موفقیت ثبت شد';
+
+        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
 }
