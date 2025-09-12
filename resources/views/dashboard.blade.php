@@ -381,96 +381,33 @@
                     </div>
                     <div class="card-body pt-2">
                         <ul class="p-0 m-0">
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="{{asset('assets/img/avatars/4.png')}}" alt="avatar" class="rounded">
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0 fw-semibold">جلسه با شرکت باینو</h6>
-                                        <small class="text-muted">
-                                            <i class="mdi mdi-calendar-blank-outline mdi-14px"></i>
-                                            <span>22 فروردین | 08:20-10:30</span>
-                                        </small>
+                            @foreach($calendars as $calendar)
+                                <li class="d-flex mb-4 pb-1">
+                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                        <div class="me-2">
+                                            <h6 class="mb-0 fw-semibold">{{$calendar->title}}</h6>
+                                            <small class="text-muted">
+                                                <i class="mdi mdi-calendar-blank-outline mdi-14px"></i>
+                                                <span>{{$calendar->start}}</span> --
+                                                <span>{{$calendar->location}}</span>
+                                            </small>
+                                        </div>
+                                        <div class="badge bg-label-primary rounded-pill">
+                                            @if($calendar->label === 'meeting')
+                                                جلسه
+                                            @elseif($calendar->label === 'session')
+                                                نشست
+                                            @elseif($calendar->label === 'event')
+                                                رویداد
+                                            @elseif($calendar->label === 'person')
+                                                شخصی
+                                            @elseif($calendar->label === 'other')
+                                                سایر
+                                            @endif
+                                        </div>
                                     </div>
-                                    <div class="badge bg-label-primary rounded-pill">داخلی</div>
-                                </div>
-                            </li>
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="{{asset('assets/img/avatars/5.png')}}" alt="avatar" class="rounded">
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0 fw-semibold">برگذاری کنفرانس</h6>
-                                        <small class="text-muted">
-                                            <i class="mdi mdi-calendar-blank-outline mdi-14px"></i>
-                                            <span>13 تیر | 08:20-10:30</span>
-                                        </small>
-                                    </div>
-                                    <div class="badge bg-label-warning rounded-pill">خارجی</div>
-                                </div>
-                            </li>
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="{{asset('assets/img/avatars/3.png')}}" alt="avatar" class="rounded">
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0 fw-semibold">ملاقات با مهدی</h6>
-                                        <small class="text-muted">
-                                            <i class="mdi mdi-calendar-blank-outline mdi-14px"></i>
-                                            <span>6 فروردین | 08:20-10:30</span>
-                                        </small>
-                                    </div>
-                                    <div class="badge bg-label-secondary rounded-pill">دورهمی</div>
-                                </div>
-                            </li>
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="{{asset('assets/img/avatars/8.png')}}" alt="avatar" class="rounded">
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0 fw-semibold">جلسه در اوپال</h6>
-                                        <small class="text-muted">
-                                            <i class="mdi mdi-calendar-blank-outline mdi-14px"></i>
-                                            <span>30 اردیبهشت | 08:20-10:30</span>
-                                        </small>
-                                    </div>
-                                    <div class="badge bg-label-danger rounded-pill">شام</div>
-                                </div>
-                            </li>
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="{{asset('assets/img/avatars/8.png')}}" alt="avatar" class="rounded">
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0 fw-semibold">تماس با مهندس</h6>
-                                        <small class="text-muted">
-                                            <i class="mdi mdi-calendar-blank-outline mdi-14px"></i>
-                                            <span>22 شهریور | 08:20-10:30</span>
-                                        </small>
-                                    </div>
-                                    <div class="badge bg-label-success rounded-pill">ورزش</div>
-                                </div>
-                            </li>
-                            <li class="d-flex">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <img src="{{asset('assets/img/avatars/8.png')}}" alt="avatar" class="rounded">
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0 fw-semibold">تماس با دکتر</h6>
-                                        <small class="text-muted">
-                                            <i class="mdi mdi-calendar-blank-outline mdi-14px"></i>
-                                            <span>11 فروردین | 08:20-10:30</span>
-                                        </small>
-                                    </div>
-                                    <div class="badge bg-label-primary rounded-pill">تجاری</div>
-                                </div>
-                            </li>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>

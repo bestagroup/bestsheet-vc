@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Calendar;
 use App\Models\Finance;
 use App\Models\MenuPanel;
 use App\Models\SubmenuPanel;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Morilog\Jalali\Jalalian;
@@ -20,7 +22,6 @@ class IndexController extends Controller
      */
     public function index()
     {
-
         $thispage       = [
             'list'    => 'داشبورد مدیریتی',
         ];
@@ -35,6 +36,8 @@ class IndexController extends Controller
             ->select('id', 'name', 'email', 'gender')
             ->get();
 
+        $calendars = Calendar::whereJsonContains('guests',  (string)Auth::id())->orderBy('start' , 'ASC')->get();
+
         $totalPaid = DB::table('finances')->sum('amount');
 
         $projects = DB::table('finances as f')
@@ -43,12 +46,6 @@ class IndexController extends Controller
             ->groupBy('p.title' , 'p.logo')
             ->having('total_amount', '>', 0)
             ->orderBy('total_amount', 'desc')
-            ->get();
-//        $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
-//        $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
-
-        $menupanels = MenuPanel::with(['submenus'])
-            ->where('status', 4)
             ->get();
 
 // فرض: سال شمسی انتخابی کاربر
@@ -101,7 +98,7 @@ class IndexController extends Controller
         $monthlyData = array_values($monthlyData);
 
 
-        return view('dashboard')->with(compact(['thispage' , 'projects' , 'totalPaid' ,'monthLabels', 'users','finances' , 'monthlyData']));
+        return view('dashboard')->with(compact(['thispage' , 'projects' , 'totalPaid' ,'monthLabels', 'users','finances' , 'monthlyData' , 'calendars']));
     }
 
     /**

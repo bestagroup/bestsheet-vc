@@ -128,7 +128,9 @@
                                 <label class="form-label" for="eventGuests">افزودن مهمانان</label>
                                 <select class="select2 select-event-guests form-select" id="eventGuests" name="eventGuests[]" multiple>
                                     @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        <option value="{{ $user->id }}" data-avatar="{{ $user->gender == 1 ? asset('assets/img/avatars/1.png') : ($user->gender == 2 ? asset('assets/img/avatars/2.png') : asset('assets/img/avatars/1.png')) }}">
+                                            {{ $user->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

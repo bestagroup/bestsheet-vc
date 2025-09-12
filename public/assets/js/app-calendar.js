@@ -92,9 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var $avatar =
                     "<div class='d-flex flex-wrap align-items-center'>" +
                     "<div class='avatar avatar-xs me-2'>" +
-                    "<img src='" + assetsPath + 'img/avatars/' + $(option.element).data('avatar') +
-                    "' alt='avatar' class='rounded-circle' />" +
-                    '</div>' + option.text + '</div>';
+                    "<img src='" + $(option.element).data('avatar') + "' alt='avatar' class='rounded-circle' />" + '</div>' + option.text + '</div>';
                 return $avatar;
             }
             eventGuests.wrap('<div class="position-relative"></div>').select2({
