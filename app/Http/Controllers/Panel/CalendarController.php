@@ -88,16 +88,52 @@ class CalendarController extends Controller
     }
 
 
-    public function update(Request $request, Calendar $calendar)
+    public function update(Request $request, $id)
     {
-        $calendar->update($request->all());
-        return response()->json($calendar);
+        $calendar = Calendar::findOrFail($id);
+
+
+        $start = $request->input('eventStartDate') ? Carbon::parse($request->input('eventStartDate')) : null;
+        $end   = $request->input('eventEndDate') ? Carbon::parse($request->input('eventEndDate')) : null;
+
+        $calendar->title       = $request->input('eventTitle', $calendar->title);
+        $calendar->label       = $request->input('eventLabel', $calendar->label);
+        $calendar->start       = $start ? $start->format('Y-m-d\TH:i:s') : $calendar->start;
+        $calendar->end         = $end ? $end->format('Y-m-d\TH:i:s') : $calendar->end;
+        $calendar->all_day     = $request->has('allDay') ? (bool) $request->input('allDay') : $calendar->all_day;
+        $calendar->url         = $request->input('eventURL', $calendar->url);
+        $calendar->location    = $request->input('eventLocation', $calendar->location);
+        $calendar->description = $request->input('eventDescription', $calendar->description);
+
+        $guests = $request->input('eventGuests', null);
+        if ($guests !== null) {
+            $calendar->guests = is_array($guests) ? $guests : json_decode($guests, true);
+        }
+
+        $calendar->save();
+
+        return response()->json([
+            'id' => $calendar->id,
+            'title' => $calendar->title,
+            'start' => $calendar->start,
+            'end' => $calendar->end,
+            'allDay' => (bool) $calendar->all_day,
+            'url' => $calendar->url,
+            'extendedProps' => [
+                'calendar' => $calendar->label,
+                'location' => $calendar->location,
+                'description' => $calendar->description,
+                'guests' => $calendar->guests,
+            ],
+        ]);
     }
 
-    // حذف
-    public function destroy(Calendar $calendar)
+    public function destroy($id)
     {
+        $calendar = Calendar::findOrFail($id);
         $calendar->delete();
-        return response()->json(['status' => 'deleted']);
+
+        return response()->json(['status' => 'deleted', 'id' => $id]);
     }
+
 }

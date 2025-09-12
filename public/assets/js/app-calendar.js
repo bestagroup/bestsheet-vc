@@ -203,28 +203,53 @@ document.addEventListener('DOMContentLoaded', function () {
         // ---------- Event click (kept mostly the same) ----------
         function eventClick(info) {
             eventToUpdate = info.event;
-            if (eventToUpdate.url) {
-                info.jsEvent.preventDefault();
-                window.open(eventToUpdate.url, '_blank');
-            }
+
+            // جلوگیری از باز شدن صفحه جدید در هر شرایطی
+            info.jsEvent.preventDefault();
+
+            // نمایش سایدبار (offcanvas)
             bsAddEventSidebar.show();
 
+            // دکمه‌ها
             btnAddEvent.classList.add('d-none');
             btnUpdateEvent.classList.remove('d-none');
-
-            if (offcanvasTitle) offcanvasTitle.innerHTML = 'به‌روزرسانی رویداد';
             btnDeleteEvent.classList.remove('d-none');
 
+            if (offcanvasTitle) offcanvasTitle.innerHTML = 'به‌روزرسانی رویداد';
+
+            // پر کردن فرم با اطلاعات event
             eventTitle.value = eventToUpdate.title;
+
             start.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
-            eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
-            eventToUpdate.end !== null ? end.setDate(new JDate(eventToUpdate.end), true, 'Y-m-d') : end.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
+            if (eventToUpdate.allDay === true) {
+                allDaySwitch.checked = true;
+            } else {
+                allDaySwitch.checked = false;
+            }
+
+            if (eventToUpdate.end !== null) {
+                end.setDate(new JDate(eventToUpdate.end), true, 'Y-m-d');
+            } else {
+                end.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
+            }
+
             eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
-            eventToUpdate.extendedProps.location !== undefined ? (eventLocation.value = eventToUpdate.extendedProps.location) : null;
-            eventToUpdate.extendedProps.guests !== undefined ? eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change') : null;
-            eventToUpdate.extendedProps.description !== undefined ? (eventDescription.value = eventToUpdate.extendedProps.description) : null;
+
+            if (eventToUpdate.extendedProps.location !== undefined) {
+                eventLocation.value = eventToUpdate.extendedProps.location;
+            }
+
+            if (eventToUpdate.extendedProps.guests !== undefined) {
+                eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change');
+            }
+
+            if (eventToUpdate.extendedProps.description !== undefined) {
+                eventDescription.value = eventToUpdate.extendedProps.description;
+            }
+
             eventUrl.value = eventToUpdate.url || '';
         }
+
 
         // Modify sidebar toggler (kept)
         function modifyToggler() {
@@ -438,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             $.ajax({
                 url: '/panel/calendar/update/' + eventToUpdate.id,
-                method: 'POST',
+                method: 'patch',
                 data: payload,
                 dataType: 'json',
                 success: function (res) {
@@ -462,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             $.ajax({
                 url: '/panel/calendar/delete/' + eventToUpdate.id,
-                method: 'POST',
+                method: 'delete',
                 data: { _method: 'DELETE' },
                 dataType: 'json',
                 success: function (res) {

@@ -5,9 +5,7 @@
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-calendar.css')}}" />
-    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
 @endsection
 @section('content')
     <div class="card app-calendar-wrapper">
@@ -102,12 +100,12 @@
 
                             <div class="mb-3">
                                 <label class="form-label" for="eventStartDate">تاریخ شروع</label>
-                                <input type="text" class="form-control" id="eventStartDate" name="eventStartDate" placeholder="تاریخ شروع">
+                                <input type="text" class="form-control" id="eventStartDate" name="eventStartDate">
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label" for="eventEndDate">تاریخ پایان</label>
-                                <input type="text" class="form-control" id="eventEndDate" name="eventEndDate" placeholder="تاریخ پایان">
+                                <input type="text" class="form-control" id="eventEndDate" name="eventEndDate">
                             </div>
 
                             <div class="mb-3">
