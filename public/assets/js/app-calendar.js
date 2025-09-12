@@ -1,590 +1,536 @@
 /**
  * App Calendar
- */
-
-/**
- * ! If both start and end dates are same Full calendar will nullify the end date value.
- * ! Full calendar will end the event on a day before at 12:00:00AM thus, event won't extend to the end date.
- * ! We are getting events from a separate file named app-calendar-events.js. You can add or remove events from there.
+ * Modified to use AJAX (GET/POST/PUT/DELETE) with Laravel routes:
+ *  - GET  /panel/calendar/events
+ *  - POST /panel/calendar/store
+ *  - POST /panel/calendar/update/{id}  (with _method=PUT)
+ *  - POST /panel/calendar/delete/{id}  (with _method=DELETE)
  *
- **/
+ * Keeps original DOM ids/classes (eventTitle, eventStartDate, btn-add-event, ...)
+ */
 
 'use strict';
 
 let direction = 'ltr';
-
 if (isRtl) {
-  direction = 'rtl';
+    direction = 'rtl';
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  (function () {
-    const calendarEl = document.getElementById('calendar'),
-      appCalendarSidebar = document.querySelector('.app-calendar-sidebar'),
-      addEventSidebar = document.getElementById('addEventSidebar'),
-      appOverlay = document.querySelector('.app-overlay'),
-      calendarsColor = {
-        Business: 'primary',
-        Holiday: 'success',
-        Personal: 'danger',
-        Family: 'warning',
-        ETC: 'info'
-      },
-      offcanvasTitle = document.querySelector('.offcanvas-title'),
-      btnToggleSidebar = document.querySelector('.btn-toggle-sidebar'),
-      btnAddEvent = document.querySelector('.btn-add-event'),
-      btnUpdateEvent = document.querySelector('.btn-update-event'),
-      btnDeleteEvent = document.querySelector('.btn-delete-event'),
-      btnCancel = document.querySelector('.btn-cancel'),
-      eventTitle = document.querySelector('#eventTitle'),
-      eventStartDate = document.querySelector('#eventStartDate'),
-      eventEndDate = document.querySelector('#eventEndDate'),
-      eventUrl = document.querySelector('#eventURL'),
-      eventLabel = $('#eventLabel'), // ! Using jquery vars due to select2 jQuery dependency
-      eventGuests = $('#eventGuests'), // ! Using jquery vars due to select2 jQuery dependency
-      eventLocation = document.querySelector('#eventLocation'),
-      eventDescription = document.querySelector('#eventDescription'),
-      allDaySwitch = document.querySelector('.allDay-switch'),
-      selectAll = document.querySelector('.select-all'),
-      filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
-      inlineCalendar = document.querySelector('.inline-calendar');
+    (function () {
+        const calendarEl = document.getElementById('calendar'),
+            appCalendarSidebar = document.querySelector('.app-calendar-sidebar'),
+            addEventSidebar = document.getElementById('addEventSidebar'),
+            appOverlay = document.querySelector('.app-overlay'),
+            calendarsColor = {
+                Business: 'primary',
+                Holiday: 'success',
+                Personal: 'danger',
+                Family: 'warning',
+                ETC: 'info'
+            },
+            offcanvasTitle = document.querySelector('.offcanvas-title'),
+            btnToggleSidebar = document.querySelector('.btn-toggle-sidebar'),
+            btnAddEvent = document.querySelector('.btn-add-event'),
+            btnUpdateEvent = document.querySelector('.btn-update-event'),
+            btnDeleteEvent = document.querySelector('.btn-delete-event'),
+            btnCancel = document.querySelector('.btn-cancel'),
+            eventTitle = document.querySelector('#eventTitle'),
+            eventStartDate = document.querySelector('#eventStartDate'),
+            eventEndDate = document.querySelector('#eventEndDate'),
+            eventUrl = document.querySelector('#eventURL'),
+            eventLabel = $('#eventLabel'), // select2
+            eventGuests = $('#eventGuests'), // select2
+            eventLocation = document.querySelector('#eventLocation'),
+            eventDescription = document.querySelector('#eventDescription'),
+            allDaySwitch = document.querySelector('.allDay-switch'),
+            selectAll = document.querySelector('.select-all'),
+            filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
+            inlineCalendar = document.querySelector('.inline-calendar');
 
-    let eventToUpdate,
-      currentEvents = events, // Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
-      isFormValid = false,
-      inlineCalInstance;
+        let eventToUpdate,
+            currentEvents = [], // we'll populate from server
+            isFormValid = false,
+            inlineCalInstance;
 
-    // Init event Offcanvas
-    const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
-
-    //! TODO: Update Event label and guest code to JS once select removes jQuery dependency
-    // Event Label (select2)
-    if (eventLabel.length) {
-      function renderBadges(option) {
-        if (!option.id) {
-          return option.text;
-        }
-        var $badge =
-          "<span class='badge badge-dot bg-" + $(option.element).data('label') + " me-2'> " + '</span>' + option.text;
-
-        return $badge;
-      }
-      eventLabel.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'انتخاب',
-        dropdownParent: eventLabel.parent(),
-        templateResult: renderBadges,
-        templateSelection: renderBadges,
-        minimumResultsForSearch: -1,
-        escapeMarkup: function (es) {
-          return es;
-        }
-      });
-    }
-
-    // Event Guests (select2)
-    if (eventGuests.length) {
-      function renderGuestAvatar(option) {
-        if (!option.id) {
-          return option.text;
-        }
-        var $avatar =
-          "<div class='d-flex flex-wrap align-items-center'>" +
-          "<div class='avatar avatar-xs me-2'>" +
-          "<img src='" +
-          assetsPath +
-          'img/avatars/' +
-          $(option.element).data('avatar') +
-          "' alt='avatar' class='rounded-circle' />" +
-          '</div>' +
-          option.text +
-          '</div>';
-
-        return $avatar;
-      }
-      eventGuests.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'انتخاب',
-        dropdownParent: eventGuests.parent(),
-        closeOnSelect: false,
-        templateResult: renderGuestAvatar,
-        templateSelection: renderGuestAvatar,
-        escapeMarkup: function (es) {
-          return es;
-        }
-      });
-    }
-    
-    // Event start (flatpicker)
-    if (eventStartDate) {
-      var start = eventStartDate.flatpickr({
-        enableTime: true,
-        altInput: true,
-        altFormat: 'Y/m/d - H:i',
-        onReady: function (selectedDates, dateStr, instance) {
-          if (instance.isMobile) {
-            instance.mobileInput.setAttribute('step', null);
-          }
-        },
-        locale: 'fa',
-        disableMobile: true
-      });
-    }
-
-    // Event end (flatpicker)
-    if (eventEndDate) {
-      var end = eventEndDate.flatpickr({
-        enableTime: true,
-        altInput: true,
-        altFormat: 'Y/m/d - H:i',
-        onReady: function (selectedDates, dateStr, instance) {
-          if (instance.isMobile) {
-            instance.mobileInput.setAttribute('step', null);
-          }
-        },
-        locale: 'fa',
-        disableMobile: true
-      });
-    }
-
-    // Inline sidebar calendar (flatpicker)
-    if (inlineCalendar) {
-      inlineCalInstance = inlineCalendar.flatpickr({
-        monthSelectorType: 'static',
-        inline: true,
-        locale: 'fa',
-        disableMobile: true
-      });
-    }
-
-    // Event click function
-    function eventClick(info) {
-      eventToUpdate = info.event;
-      if (eventToUpdate.url) {
-        info.jsEvent.preventDefault();
-        window.open(eventToUpdate.url, '_blank');
-      }
-      bsAddEventSidebar.show();
-
-      btnAddEvent.classList.add('d-none');
-      btnUpdateEvent.classList.remove('d-none');
-
-      // For update event set offcanvas title text: Update Event
-      if (offcanvasTitle) {
-        offcanvasTitle.innerHTML = 'به‌روزرسانی رویداد';
-      }
-      btnDeleteEvent.classList.remove('d-none');
-
-      eventTitle.value = eventToUpdate.title;
-      start.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
-      eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
-      eventToUpdate.end !== null
-        ? end.setDate(new JDate(eventToUpdate.end), true, 'Y-m-d')
-        : end.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
-      eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
-      eventToUpdate.extendedProps.location !== undefined
-        ? (eventLocation.value = eventToUpdate.extendedProps.location)
-        : null;
-      eventToUpdate.extendedProps.guests !== undefined
-        ? eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change')
-        : null;
-      eventToUpdate.extendedProps.description !== undefined
-        ? (eventDescription.value = eventToUpdate.extendedProps.description)
-        : null;
-
-      // // Call removeEvent function
-      // btnDeleteEvent.addEventListener('click', e => {
-      //   removeEvent(parseInt(eventToUpdate.id));
-      //   // eventToUpdate.remove();
-      //   bsAddEventSidebar.hide();
-      // });
-    }
-
-    // Modify sidebar toggler
-    function modifyToggler() {
-      const fcSidebarToggleButton = document.querySelector('.fc-sidebarToggle-button');
-      fcSidebarToggleButton.classList.remove('fc-button-primary');
-      fcSidebarToggleButton.classList.add('d-lg-none', 'd-inline-block', 'ps-0');
-      while (fcSidebarToggleButton.firstChild) {
-        fcSidebarToggleButton.firstChild.remove();
-      }
-      fcSidebarToggleButton.setAttribute('data-bs-toggle', 'sidebar');
-      fcSidebarToggleButton.setAttribute('data-overlay', '');
-      fcSidebarToggleButton.setAttribute('data-target', '#app-calendar-sidebar');
-      fcSidebarToggleButton.insertAdjacentHTML('beforeend', '<i class="bx bx-menu bx-sm"></i>');
-    }
-
-    // Filter events by calender
-    function selectedCalendars() {
-      let selected = [],
-        filterInputChecked = [].slice.call(document.querySelectorAll('.input-filter:checked'));
-
-      filterInputChecked.forEach(item => {
-        selected.push(item.getAttribute('data-value'));
-      });
-
-      return selected;
-    }
-
-    // --------------------------------------------------------------------------------------------------
-    // AXIOS: fetchEvents
-    // * This will be called by fullCalendar to fetch events. Also this can be used to refetch events.
-    // --------------------------------------------------------------------------------------------------
-    function fetchEvents(info, successCallback) {
-      // Fetch Events from API endpoint reference
-      /* $.ajax(
-        {
-          url: '../../../app-assets/data/app-calendar-events.js',
-          type: 'GET',
-          success: function (result) {
-            // Get requested calendars as Array
-            var calendars = selectedCalendars();
-
-            return [result.events.filter(event => calendars.includes(event.extendedProps.calendar))];
-          },
-          error: function (error) {
-            console.log(error);
-          }
-        }
-      ); */
-
-      let calendars = selectedCalendars();
-      // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
-      // You should make an API call, look into above commented API call for reference
-      let selectedEvents = currentEvents.filter(function (event) {
-        // console.log(event.extendedProps.calendar.toLowerCase());
-        return calendars.includes(event.extendedProps.calendar.toLowerCase());
-      });
-      // if (selectedEvents.length > 0) {
-      successCallback(selectedEvents);
-      // }
-    }
-
-    // Init FullCalendar
-    // ------------------------------------------------
-    let { dayGrid, interaction, timeGrid, list } = calendarPlugins;
-    let calendar = new Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      events: fetchEvents,
-      plugins: [interaction, dayGrid, timeGrid, list],
-      editable: true,
-      dragScroll: true,
-      dayMaxEvents: 2,
-      eventResizableFromStart: true,
-      customButtons: {
-        sidebarToggle: {
-          text: 'نوار کناری'
-        }
-      },
-      headerToolbar: {
-        start: 'sidebarToggle, prev,next, title',
-        end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-      },
-      direction: direction,
-      initialDate: new Date(),
-      navLinks: true, // can click day/week names to navigate views
-      eventClassNames: function ({ event: calendarEvent }) {
-        const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar];
-        // Background Color
-        return ['fc-event-' + colorName];
-      },
-      dateClick: function (info) {
-        let date = new JDate(info.date);
-        resetValues();
-        bsAddEventSidebar.show();
-
-        // For new event set offcanvas title text: Add Event
-        if (offcanvasTitle) {
-          offcanvasTitle.innerHTML = 'افزودن رویداد';
-        }
-
-        btnAddEvent.classList.remove('d-none');
-        btnUpdateEvent.classList.add('d-none');
-        btnDeleteEvent.classList.add('d-none');
-        start.setDate(date, true, 'Y-m-d');
-        end.setDate(date, true, 'Y-m-d');
-      },
-      eventClick: function (info) {
-        eventClick(info);
-      },
-      datesSet: function () {
-        modifyToggler();
-      },
-      viewDidMount: function () {
-        modifyToggler();
-      },
-
-      // Locale
-      locale: 'fa',
-      firstDay: 6,
-      buttonText: {
-        today: 'امروز',
-        month: 'ماه',
-        week: 'هفته',
-        day: 'روز',
-        list: 'لیست'
-      },
-      weekText: 'هفته',
-      allDayText: 'تمام روز',
-      moreLinkText: function(n) {
-        return '+' + n + ' مورد دیگر';
-      },
-      noEventsText: 'رویدادی برای نمایش وجود ندارد'
-    });
-
-    // Render calendar
-    calendar.render();
-    // Modify sidebar toggler
-    modifyToggler();
-
-    const eventForm = document.getElementById('eventForm');
-    const fv = FormValidation.formValidation(eventForm, {
-      fields: {
-        eventTitle: {
-          validators: {
-            notEmpty: {
-              message: 'لطفا عنوان رویداد را وارد کنید '
-            }
-          }
-        },
-        eventStartDate: {
-          validators: {
-            notEmpty: {
-              message: 'لطفا تاریخ شروع را وارد کنید '
-            }
-          }
-        },
-        eventEndDate: {
-          validators: {
-            notEmpty: {
-              message: 'لطفا تاریخ پایان را وارد کنید '
-            }
-          }
-        }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          // Use this for enabling/changing valid/invalid class
-          eleValidClass: '',
-          rowSelector: function (field, ele) {
-            // field is the field name & ele is the field element
-            return '.mb-3';
-          }
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        // Submit the form when all fields are valid
-        // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function () {
-      // Jump to the next step when all fields in the current step are valid
-      isFormValid = true;
-    });
-
-    // Sidebar Toggle Btn
-    if (btnToggleSidebar) {
-      btnToggleSidebar.addEventListener('click', e => {
-        btnCancel.classList.remove('d-none');
-      });
-    }
-
-    // Add Event
-    // ------------------------------------------------
-    function addEvent(eventData) {
-      // ? Add new event data to current events object and refetch it to display on calender
-      // ? You can write below code to AJAX call success response
-
-      currentEvents.push(eventData);
-      calendar.refetchEvents();
-
-      // ? To add event directly to calender (won't update currentEvents object)
-      // calendar.addEvent(eventData);
-    }
-
-    // Update Event
-    // ------------------------------------------------
-    function updateEvent(eventData) {
-      // ? Update existing event data to current events object and refetch it to display on calender
-      // ? You can write below code to AJAX call success response
-      eventData.id = parseInt(eventData.id);
-      currentEvents[currentEvents.findIndex(el => el.id === eventData.id)] = eventData; // Update event by id
-      calendar.refetchEvents();
-
-      // ? To update event directly to calender (won't update currentEvents object)
-      // let propsToUpdate = ['id', 'title', 'url'];
-      // let extendedPropsToUpdate = ['calendar', 'guests', 'location', 'description'];
-
-      // updateEventInCalendar(eventData, propsToUpdate, extendedPropsToUpdate);
-    }
-
-    // Remove Event
-    // ------------------------------------------------
-
-    function removeEvent(eventId) {
-      // ? Delete existing event data to current events object and refetch it to display on calender
-      // ? You can write below code to AJAX call success response
-      currentEvents = currentEvents.filter(function (event) {
-        return event.id != eventId;
-      });
-      calendar.refetchEvents();
-
-      // ? To delete event directly to calender (won't update currentEvents object)
-      // removeEventInCalendar(eventId);
-    }
-
-    // (Update Event In Calendar (UI Only)
-    // ------------------------------------------------
-    const updateEventInCalendar = (updatedEventData, propsToUpdate, extendedPropsToUpdate) => {
-      const existingEvent = calendar.getEventById(updatedEventData.id);
-
-      // --- Set event properties except date related ----- //
-      // ? Docs: https://fullcalendar.io/docs/Event-setProp
-      // dateRelatedProps => ['start', 'end', 'allDay']
-      // eslint-disable-next-line no-plusplus
-      for (var index = 0; index < propsToUpdate.length; index++) {
-        var propName = propsToUpdate[index];
-        existingEvent.setProp(propName, updatedEventData[propName]);
-      }
-
-      // --- Set date related props ----- //
-      // ? Docs: https://fullcalendar.io/docs/Event-setDates
-      existingEvent.setDates(updatedEventData.start, updatedEventData.end, {
-        allDay: updatedEventData.allDay
-      });
-
-      // --- Set event's extendedProps ----- //
-      // ? Docs: https://fullcalendar.io/docs/Event-setExtendedProp
-      // eslint-disable-next-line no-plusplus
-      for (var index = 0; index < extendedPropsToUpdate.length; index++) {
-        var propName = extendedPropsToUpdate[index];
-        existingEvent.setExtendedProp(propName, updatedEventData.extendedProps[propName]);
-      }
-    };
-
-    // Remove Event In Calendar (UI Only)
-    // ------------------------------------------------
-    function removeEventInCalendar(eventId) {
-      calendar.getEventById(eventId).remove();
-    }
-
-    // Add new event
-    // ------------------------------------------------
-    btnAddEvent.addEventListener('click', e => {
-      if (isFormValid) {
-        let newEvent = {
-          id: calendar.getEvents().length + 1,
-          title: eventTitle.value,
-          start: new JDate(eventStartDate.value)['_date'],
-          end: new JDate(eventEndDate.value)['_date'],
-          startStr: eventStartDate.value,
-          endStr: eventEndDate.value,
-          display: 'block',
-          extendedProps: {
-            location: eventLocation.value,
-            guests: eventGuests.val(),
-            calendar: eventLabel.val(),
-            description: eventDescription.value
-          }
-        };
-        if (eventUrl.value) {
-          newEvent.url = eventUrl.value;
-        }
-        if (allDaySwitch.checked) {
-          newEvent.allDay = true;
-        }
-        addEvent(newEvent);
-        bsAddEventSidebar.hide();
-      }
-    });
-
-    // Update event
-    // ------------------------------------------------
-    btnUpdateEvent.addEventListener('click', e => {
-      if (isFormValid) {
-        let eventData = {
-          id: eventToUpdate.id,
-          title: eventTitle.value,
-          start: new JDate(eventStartDate.value)['_date'],
-          end: new JDate(eventEndDate.value)['_date'],
-          url: eventUrl.value,
-          extendedProps: {
-            location: eventLocation.value,
-            guests: eventGuests.val(),
-            calendar: eventLabel.val(),
-            description: eventDescription.value
-          },
-          display: 'block',
-          allDay: allDaySwitch.checked ? true : false
-        };
-
-        updateEvent(eventData);
-        bsAddEventSidebar.hide();
-      }
-    });
-
-    // Call removeEvent function
-    btnDeleteEvent.addEventListener('click', e => {
-      removeEvent(parseInt(eventToUpdate.id));
-      // eventToUpdate.remove();
-      bsAddEventSidebar.hide();
-    });
-
-    // Reset event form inputs values
-    // ------------------------------------------------
-    function resetValues() {
-      eventEndDate.value = '';
-      eventUrl.value = '';
-      eventStartDate.value = '';
-      eventTitle.value = '';
-      eventLocation.value = '';
-      allDaySwitch.checked = false;
-      eventGuests.val('').trigger('change');
-      eventDescription.value = '';
-    }
-
-    // When modal hides reset input values
-    addEventSidebar.addEventListener('hidden.bs.offcanvas', function () {
-      resetValues();
-    });
-
-    // Hide left sidebar if the right sidebar is open
-    btnToggleSidebar.addEventListener('click', e => {
-      btnDeleteEvent.classList.add('d-none');
-      btnUpdateEvent.classList.add('d-none');
-      btnAddEvent.classList.remove('d-none');
-      appCalendarSidebar.classList.remove('show');
-      appOverlay.classList.remove('show');
-    });
-
-    // Calender filter functionality
-    // ------------------------------------------------
-    if (selectAll) {
-      selectAll.addEventListener('click', e => {
-        if (e.currentTarget.checked) {
-          document.querySelectorAll('.input-filter').forEach(c => (c.checked = 1));
+        // CSRF setup for jQuery ajax (requires meta tag in head)
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        if (csrfMeta) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfMeta.getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
         } else {
-          document.querySelectorAll('.input-filter').forEach(c => (c.checked = 0));
+            console.warn('CSRF meta tag not found. Add <meta name="csrf-token" content="{{ csrf_token() }}"> to your layout head.');
         }
-        calendar.refetchEvents();
-      });
-    }
 
-    if (filterInput) {
-      filterInput.forEach(item => {
-        item.addEventListener('click', () => {
-          document.querySelectorAll('.input-filter:checked').length < document.querySelectorAll('.input-filter').length
-            ? (selectAll.checked = false)
-            : (selectAll.checked = true);
-          calendar.refetchEvents();
+        // Init event Offcanvas
+        const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
+
+        // ---------- select2 inits (kept from original) ----------
+        if (eventLabel.length) {
+            function renderBadges(option) {
+                if (!option.id) return option.text;
+                var $badge = "<span class='badge badge-dot bg-" + $(option.element).data('label') + " me-2'> " + '</span>' + option.text;
+                return $badge;
+            }
+            eventLabel.wrap('<div class="position-relative"></div>').select2({
+                placeholder: 'انتخاب',
+                dropdownParent: eventLabel.parent(),
+                templateResult: renderBadges,
+                templateSelection: renderBadges,
+                minimumResultsForSearch: -1,
+                escapeMarkup: function (es) { return es; }
+            });
+        }
+
+        if (eventGuests.length) {
+            function renderGuestAvatar(option) {
+                if (!option.id) return option.text;
+                var $avatar =
+                    "<div class='d-flex flex-wrap align-items-center'>" +
+                    "<div class='avatar avatar-xs me-2'>" +
+                    "<img src='" + assetsPath + 'img/avatars/' + $(option.element).data('avatar') +
+                    "' alt='avatar' class='rounded-circle' />" +
+                    '</div>' + option.text + '</div>';
+                return $avatar;
+            }
+            eventGuests.wrap('<div class="position-relative"></div>').select2({
+                placeholder: 'انتخاب',
+                dropdownParent: eventGuests.parent(),
+                closeOnSelect: false,
+                templateResult: renderGuestAvatar,
+                templateSelection: renderGuestAvatar,
+                escapeMarkup: function (es) { return es; }
+            });
+        }
+
+        // ---------- flatpickr inits (kept from original) ----------
+        let start, end;
+        if (eventStartDate) {
+            start = eventStartDate.flatpickr({
+                enableTime: true,
+                altInput: true,
+                altFormat: 'Y/m/d - H:i',
+                onReady: function (selectedDates, dateStr, instance) {
+                    if (instance.isMobile) instance.mobileInput.setAttribute('step', null);
+                },
+                locale: 'fa',
+                disableMobile: true
+            });
+        }
+        if (eventEndDate) {
+            end = eventEndDate.flatpickr({
+                enableTime: true,
+                altInput: true,
+                altFormat: 'Y/m/d - H:i',
+                onReady: function (selectedDates, dateStr, instance) {
+                    if (instance.isMobile) instance.mobileInput.setAttribute('step', null);
+                },
+                locale: 'fa',
+                disableMobile: true
+            });
+        }
+        if (inlineCalendar) {
+            inlineCalInstance = inlineCalendar.flatpickr({
+                monthSelectorType: 'static',
+                inline: true,
+                locale: 'fa',
+                disableMobile: true
+            });
+        }
+
+        // ---------- helper utilities ----------
+        function pad(n) { return n < 10 ? '0' + n : n; }
+        // format JS Date -> "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss" (no timezone)
+        function formatDateForServer(dateObj, allDay = false) {
+            if (!dateObj) return null;
+            const y = dateObj.getFullYear();
+            const m = pad(dateObj.getMonth() + 1);
+            const d = pad(dateObj.getDate());
+            if (allDay) return `${y}-${m}-${d}`;
+            const hh = pad(dateObj.getHours());
+            const mm = pad(dateObj.getMinutes());
+            const ss = pad(dateObj.getSeconds());
+            return `${y}-${m}-${d}T${hh}:${mm}:${ss}`;
+        }
+
+        function getDateFromInput(fpInstance, inputValue) {
+            try {
+                if (fpInstance && fpInstance.selectedDates && fpInstance.selectedDates.length) {
+                    return fpInstance.selectedDates[0];
+                }
+                // fallback to JDate parsing (your code uses JDate)
+                return new JDate(inputValue)['_date'];
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function normalizeServerEvent(e) {
+            // Accept different server shapes and normalize to FullCalendar shape expected by this script
+            let guests = [];
+            if (e.guests) {
+                try {
+                    guests = (typeof e.guests === 'string') ? JSON.parse(e.guests) : e.guests;
+                } catch (err) {
+                    guests = Array.isArray(e.guests) ? e.guests : [];
+                }
+            } else if (e.extendedProps && e.extendedProps.guests) {
+                guests = e.extendedProps.guests;
+            }
+
+            const label = (e.label || e.calendar || (e.extendedProps && e.extendedProps.calendar) || '').toString();
+
+            return {
+                id: e.id,
+                title: e.title || e.name || '',
+                start: e.start || e.start_date || e.start_date_time || null,
+                end: e.end || e.end_date || e.end_date_time || null,
+                allDay: (e.allDay !== undefined) ? !!e.allDay : !!e.all_day,
+                url: e.url || null,
+                extendedProps: {
+                    description: e.description || (e.extendedProps && e.extendedProps.description) || '',
+                    location: e.location || (e.extendedProps && e.extendedProps.location) || '',
+                    guests: guests || [],
+                    calendar: label
+                }
+            };
+        }
+
+        // ---------- Event click (kept mostly the same) ----------
+        function eventClick(info) {
+            eventToUpdate = info.event;
+            if (eventToUpdate.url) {
+                info.jsEvent.preventDefault();
+                window.open(eventToUpdate.url, '_blank');
+            }
+            bsAddEventSidebar.show();
+
+            btnAddEvent.classList.add('d-none');
+            btnUpdateEvent.classList.remove('d-none');
+
+            if (offcanvasTitle) offcanvasTitle.innerHTML = 'به‌روزرسانی رویداد';
+            btnDeleteEvent.classList.remove('d-none');
+
+            eventTitle.value = eventToUpdate.title;
+            start.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
+            eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
+            eventToUpdate.end !== null ? end.setDate(new JDate(eventToUpdate.end), true, 'Y-m-d') : end.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
+            eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
+            eventToUpdate.extendedProps.location !== undefined ? (eventLocation.value = eventToUpdate.extendedProps.location) : null;
+            eventToUpdate.extendedProps.guests !== undefined ? eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change') : null;
+            eventToUpdate.extendedProps.description !== undefined ? (eventDescription.value = eventToUpdate.extendedProps.description) : null;
+            eventUrl.value = eventToUpdate.url || '';
+        }
+
+        // Modify sidebar toggler (kept)
+        function modifyToggler() {
+            const fcSidebarToggleButton = document.querySelector('.fc-sidebarToggle-button');
+            if (!fcSidebarToggleButton) return;
+            fcSidebarToggleButton.classList.remove('fc-button-primary');
+            fcSidebarToggleButton.classList.add('d-lg-none', 'd-inline-block', 'ps-0');
+            while (fcSidebarToggleButton.firstChild) fcSidebarToggleButton.firstChild.remove();
+            fcSidebarToggleButton.setAttribute('data-bs-toggle', 'sidebar');
+            fcSidebarToggleButton.setAttribute('data-overlay', '');
+            fcSidebarToggleButton.setAttribute('data-target', '#app-calendar-sidebar');
+            fcSidebarToggleButton.insertAdjacentHTML('beforeend', '<i class="bx bx-menu bx-sm"></i>');
+        }
+
+        // Filter events by calendar (kept)
+        function selectedCalendars() {
+            let selected = [], filterInputChecked = [].slice.call(document.querySelectorAll('.input-filter:checked'));
+            filterInputChecked.forEach(item => selected.push(item.getAttribute('data-value')));
+            return selected;
+        }
+
+        // ---------- fetchEvents: call server ----------
+        function fetchEvents(info, successCallback, failureCallback) {
+            // send start/end range and selected calendars (optional)
+            const params = {
+                start: info.startStr || null,
+                end: info.endStr || null,
+                calendars: selectedCalendars().join(',')
+            };
+
+            $.ajax({
+                url: '/panel/calendar/events',
+                type: 'GET',
+                data: params,
+                dataType: 'json',
+                success: function (res) {
+                    // res expected as array
+                    if (!Array.isArray(res)) {
+                        console.warn('Expected array from /panel/calendar/events, got:', res);
+                        successCallback([]);
+                        return;
+                    }
+                    // normalize
+                    currentEvents = res.map(normalizeServerEvent);
+
+                    // apply client-side filter (based on checkboxes)
+                    const calendars = selectedCalendars();
+                    const filtered = currentEvents.filter(function (ev) {
+                        // if no filters selected, show all
+                        if (!calendars || calendars.length === 0) return true;
+                        const evCal = (ev.extendedProps && ev.extendedProps.calendar) ? ev.extendedProps.calendar.toString().toLowerCase() : '';
+                        return calendars.includes(evCal);
+                    });
+
+                    successCallback(filtered);
+                },
+                error: function (err) {
+                    console.error('خطا در دریافت رویدادها', err);
+                    if (typeof failureCallback === 'function') failureCallback(err);
+                }
+            });
+        }
+
+        // ---------- Init FullCalendar (kept mostly same) ----------
+        let { dayGrid, interaction, timeGrid, list } = calendarPlugins;
+        let calendar = new Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: fetchEvents,
+            plugins: [interaction, dayGrid, timeGrid, list],
+            editable: true,
+            dragScroll: true,
+            dayMaxEvents: 2,
+            eventResizableFromStart: true,
+            customButtons: {
+                sidebarToggle: { text: 'نوار کناری' }
+            },
+            headerToolbar: {
+                start: 'sidebarToggle, prev,next, title',
+                end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            direction: direction,
+            initialDate: new Date(),
+            navLinks: true,
+            eventClassNames: function ({ event: calendarEvent }) {
+                const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar];
+                return ['fc-event-' + colorName];
+            },
+            dateClick: function (info) {
+                let date = new JDate(info.date);
+                resetValues();
+                bsAddEventSidebar.show();
+                if (offcanvasTitle) offcanvasTitle.innerHTML = 'افزودن رویداد';
+                btnAddEvent.classList.remove('d-none');
+                btnUpdateEvent.classList.add('d-none');
+                btnDeleteEvent.classList.add('d-none');
+                start.setDate(date, true, 'Y-m-d');
+                end.setDate(date, true, 'Y-m-d');
+            },
+            eventClick: function (info) { eventClick(info); },
+            datesSet: function () { modifyToggler(); },
+            viewDidMount: function () { modifyToggler(); },
+            locale: 'fa',
+            firstDay: 6,
+            buttonText: { today: 'امروز', month: 'ماه', week: 'هفته', day: 'روز', list: 'لیست' },
+            weekText: 'هفته',
+            allDayText: 'تمام روز',
+            moreLinkText: function(n) { return '+' + n + ' مورد دیگر'; },
+            noEventsText: 'رویدادی برای نمایش وجود ندارد'
         });
-      });
-    }
 
-    // Jump to date on sidebar(inline) calendar change
-    inlineCalInstance.config.onChange.push(function (date) {
-      calendar.changeView(calendar.view.type, moment(date[0]['_date']).format('YYYY-MM-DD'));
-      modifyToggler();
-      appCalendarSidebar.classList.remove('show');
-      appOverlay.classList.remove('show');
-    });
-  })();
+        calendar.render();
+        modifyToggler();
+
+        // ---------- Form validation (kept) ----------
+        const eventForm = document.getElementById('eventForm');
+        const fv = FormValidation.formValidation(eventForm, {
+            fields: {
+                eventTitle: { validators: { notEmpty: { message: 'لطفا عنوان رویداد را وارد کنید ' } } },
+                eventStartDate: { validators: { notEmpty: { message: 'لطفا تاریخ شروع را وارد کنید ' } } },
+                eventEndDate: { validators: { notEmpty: { message: 'لطفا تاریخ پایان را وارد کنید ' } } }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    rowSelector: function (field, ele) { return '.mb-3'; }
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () { isFormValid = true; });
+
+        if (btnToggleSidebar) {
+            btnToggleSidebar.addEventListener('click', e => { btnCancel.classList.remove('d-none'); });
+        }
+
+        // ---------- Local helpers (kept) ----------
+        function addEventLocal(eventData) {
+            currentEvents.push(eventData);
+            calendar.refetchEvents();
+        }
+
+        function updateEventLocal(eventData) {
+            eventData.id = parseInt(eventData.id);
+            const idx = currentEvents.findIndex(el => String(el.id) === String(eventData.id));
+            if (idx !== -1) currentEvents[idx] = eventData;
+            calendar.refetchEvents();
+        }
+
+        function removeEventLocal(eventId) {
+            currentEvents = currentEvents.filter(function (event) { return String(event.id) !== String(eventId); });
+            calendar.refetchEvents();
+        }
+
+        // ---------- Add new event (AJAX -> store) ----------
+        btnAddEvent.addEventListener('click', e => {
+            if (!isFormValid) return;
+
+            const startDateObj = getDateFromInput(start, eventStartDate.value);
+            const endDateObj = getDateFromInput(end, eventEndDate.value);
+            const payload = {
+                eventTitle: eventTitle.value,
+                eventLabel: eventLabel.val() || null,
+                eventStartDate: formatDateForServer(startDateObj, allDaySwitch.checked),
+                eventEndDate: formatDateForServer(endDateObj, allDaySwitch.checked),
+                allDay: allDaySwitch.checked ? 1 : 0,
+                eventURL: eventUrl.value || null,
+                eventLocation: eventLocation.value || null,
+                eventDescription: eventDescription.value || null,
+                'eventGuests[]': eventGuests.val() || [] // send as array for Laravel
+            };
+
+            $.ajax({
+                url: '/panel/calendar/store',
+                method: 'POST',
+                data: payload,
+                dataType: 'json',
+                success: function (res) {
+                    // expect server returns created object
+                    const normalized = normalizeServerEvent(res);
+                    addEventLocal(normalized);
+                    bsAddEventSidebar.hide();
+                    resetValues();
+                    isFormValid = false;
+                },
+                error: function (xhr) {
+                    console.error('خطا در ذخیره رویداد:', xhr.responseText || xhr.statusText);
+                    alert('خطا در ذخیره‌سازی. کنسول را چک کنید.');
+                }
+            });
+        });
+
+        // ---------- Update event (AJAX -> update) ----------
+        btnUpdateEvent.addEventListener('click', e => {
+            if (!isFormValid || !eventToUpdate) return;
+
+            const startDateObj = getDateFromInput(start, eventStartDate.value);
+            const endDateObj = getDateFromInput(end, eventEndDate.value);
+            const payload = {
+                _method: 'PUT',
+                eventTitle: eventTitle.value,
+                eventLabel: eventLabel.val() || null,
+                eventStartDate: formatDateForServer(startDateObj, allDaySwitch.checked),
+                eventEndDate: formatDateForServer(endDateObj, allDaySwitch.checked),
+                allDay: allDaySwitch.checked ? 1 : 0,
+                eventURL: eventUrl.value || null,
+                eventLocation: eventLocation.value || null,
+                eventDescription: eventDescription.value || null,
+                'eventGuests[]': eventGuests.val() || []
+            };
+
+            $.ajax({
+                url: '/panel/calendar/update/' + eventToUpdate.id,
+                method: 'POST',
+                data: payload,
+                dataType: 'json',
+                success: function (res) {
+                    const normalized = normalizeServerEvent(res);
+                    updateEventLocal(normalized);
+                    bsAddEventSidebar.hide();
+                    resetValues();
+                    isFormValid = false;
+                },
+                error: function (xhr) {
+                    console.error('خطا در بروزرسانی رویداد:', xhr.responseText || xhr.statusText);
+                    alert('خطا در بروزرسانی. کنسول را چک کنید.');
+                }
+            });
+        });
+
+        // ---------- Delete event (AJAX -> delete) ----------
+        btnDeleteEvent.addEventListener('click', e => {
+            if (!eventToUpdate) return;
+            if (!confirm('آیا از حذف این رویداد مطمئن هستید؟')) return;
+
+            $.ajax({
+                url: '/panel/calendar/delete/' + eventToUpdate.id,
+                method: 'POST',
+                data: { _method: 'DELETE' },
+                dataType: 'json',
+                success: function (res) {
+                    removeEventLocal(eventToUpdate.id);
+                    bsAddEventSidebar.hide();
+                    resetValues();
+                },
+                error: function (xhr) {
+                    console.error('خطا در حذف رویداد:', xhr.responseText || xhr.statusText);
+                    alert('خطا در حذف. کنسول را چک کنید.');
+                }
+            });
+        });
+
+        // ---------- Reset form ----------
+        function resetValues() {
+            try {
+                if (end) end.clear();
+                if (start) start.clear();
+            } catch (e) {}
+            eventUrl.value = '';
+            eventTitle.value = '';
+            eventLocation.value = '';
+            if (allDaySwitch) allDaySwitch.checked = false;
+            if (eventGuests && eventGuests.val) eventGuests.val('').trigger('change');
+            eventDescription.value = '';
+        }
+
+        addEventSidebar.addEventListener('hidden.bs.offcanvas', function () {
+            resetValues();
+        });
+
+        // ---------- Sidebar toggle behaviour ----------
+        btnToggleSidebar.addEventListener('click', e => {
+            btnDeleteEvent.classList.add('d-none');
+            btnUpdateEvent.classList.add('d-none');
+            btnAddEvent.classList.remove('d-none');
+            appCalendarSidebar.classList.remove('show');
+            appOverlay.classList.remove('show');
+        });
+
+        // ---------- Filter checkboxes ----------
+        if (selectAll) {
+            selectAll.addEventListener('click', e => {
+                if (e.currentTarget.checked) document.querySelectorAll('.input-filter').forEach(c => (c.checked = 1));
+                else document.querySelectorAll('.input-filter').forEach(c => (c.checked = 0));
+                calendar.refetchEvents();
+            });
+        }
+        if (filterInput) {
+            filterInput.forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.input-filter:checked').length < document.querySelectorAll('.input-filter').length
+                        ? (selectAll.checked = false)
+                        : (selectAll.checked = true);
+                    calendar.refetchEvents();
+                });
+            });
+        }
+
+        // ---------- inline calendar change ----------
+        if (inlineCalInstance) {
+            inlineCalInstance.config.onChange.push(function (date) {
+                calendar.changeView(calendar.view.type, moment(date[0]['_date']).format('YYYY-MM-DD'));
+                modifyToggler();
+                appCalendarSidebar.classList.remove('show');
+                appOverlay.classList.remove('show');
+            });
+        }
+    })();
 });

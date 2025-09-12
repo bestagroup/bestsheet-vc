@@ -24,11 +24,17 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('panel/paidmanage'   , 'PaidController');
     Route::resource('panel/receivemanage', 'ReceiveController');
     Route::resource('panel/account'      , 'AccountController');
-    Route::resource('panel/calendar'     , 'CalendarController');
     Route::resource('panel/company'      , 'CompanyController');
     Route::resource('company'            , 'CompanyController');
     Route::resource('minute'             , 'MinuteController');
-    Route::resource('panel/flow'        , 'FlowController');
+    Route::resource('panel/flow'         , 'FlowController');
+
+
+    Route::get('panel/calendar'               , 'CalendarController@index')->name('calendar.index');
+    Route::get('panel/calendar/events'        , 'CalendarController@getEvents')->name('calendar.events');
+    Route::post('panel/calendar/store'        , 'CalendarController@store')->name('calendar.store');
+    Route::post('panel/calendar/update/{id}'  , 'CalendarController@update')->name('calendar.update');
+    Route::post('panel/calendar/delete/{id}'  , 'CalendarController@destroy')->name('calendar.destroy');
 
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('panel/changepassword'      , 'ChangePasswordController@index')->name('password.change.form');

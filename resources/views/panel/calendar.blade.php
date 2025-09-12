@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-calendar.css')}}" />
     <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 @endsection
 @section('content')
     <div class="card app-calendar-wrapper">
@@ -81,12 +83,12 @@
                         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
-                        <form class="event-form pt-0" id="addform" onsubmit="return false">
-                            @csrf
+                        <form class="event-form pt-0" id="eventForm" onsubmit="return false">
                             <div class="mb-3">
                                 <label class="form-label" for="eventTitle">عنوان</label>
                                 <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="عنوان رویداد">
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label" for="eventLabel">برچسب</label>
                                 <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
@@ -97,50 +99,61 @@
                                     <option data-label="info" value="other">سایر</option>
                                 </select>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label" for="eventStartDate">تاریخ شروع</label>
                                 <input type="text" class="form-control" id="eventStartDate" name="eventStartDate" placeholder="تاریخ شروع">
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label" for="eventEndDate">تاریخ پایان</label>
                                 <input type="text" class="form-control" id="eventEndDate" name="eventEndDate" placeholder="تاریخ پایان">
                             </div>
+
                             <div class="mb-3">
                                 <label class="switch">
                                     <input type="checkbox" class="switch-input allDay-switch">
                                     <span class="switch-toggle-slider">
-                                        <span class="switch-on"></span>
-                                        <span class="switch-off"></span>
-                                    </span>
-                                    <span class="switch-label">هر روز</span>
+                        <span class="switch-on"></span>
+                        <span class="switch-off"></span>
+                    </span>
+                                    <span class="switch-label">تمام روز</span>
                                 </label>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label" for="eventURL">آدرس URL رویداد</label>
-                                <input type="url" style="direction: ltr" class="form-control" id="eventURL" name="eventURL" placeholder="https://site.ir">
+                                <input type="url" class="form-control" id="eventURL" name="eventURL" placeholder="https://www.google.com/">
                             </div>
+
                             <div class="mb-3 select2-primary">
                                 <label class="form-label" for="eventGuests">افزودن مهمانان</label>
-                                <select class="select2 select-event-guests form-select" id="eventGuests" name="eventGuests" multiple>
+                                <select class="select2 select-event-guests form-select" id="eventGuests" name="eventGuests[]" multiple>
                                     @foreach($users as $user)
-                                        <option @if($user->gender == 1) data-avatar="{{ asset('assets/img/avatars/1.png') }}" @elseif($user->gender == 2)  data-avatar="{{ asset('assets/img/avatars/8.png') }}" @else  data-avatar="{{ asset('assets/img/avatars/1.png') }}" @endif value="{{$user->name}}">{{$user->name}}</option>
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label" for="eventLocation">مکان</label>
                                 <input type="text" class="form-control" id="eventLocation" name="eventLocation" placeholder="مکان رویداد">
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label" for="eventDescription">شرح</label>
                                 <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
                             </div>
+
                             <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
                                 <div>
                                     <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">افزودن</button>
+                                    <button type="submit" class="btn btn-primary btn-update-event d-none me-sm-3 me-1">به‌روزرسانی</button>
                                     <button type="reset" class="btn btn-label-secondary btn-cancel me-sm-0 me-1" data-bs-dismiss="offcanvas">انصراف</button>
                                 </div>
-                                <div><button class="btn btn-label-danger btn-delete-event d-none">حذف</button></div>
+                                <div>
+                                    <button class="btn btn-label-danger btn-delete-event d-none">حذف</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -154,68 +167,5 @@
 @push('scripts')
     <script src="{{ asset('assets/js/app-calendar-events.js') }}"></script>
     <script src="{{ asset('assets/js/app-calendar.js') }}"></script>
-
-    <script>
-        jQuery(function($){
-            function showToast(message, type = 'success') {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-right",
-                    timeOut: 3000,
-                    rtl: true
-                };
-                if (toastr[type]) {
-                    toastr[type](message);
-                } else {
-                    toastr.success(message);
-                }
-            }
-
-            $('.btn-add-event').on('click', function(e){
-                e.preventDefault();
-                var $btn  = $(this);
-                var $form = $('#addform');
-                var originalHtml = $btn.html();
-
-                $btn.prop('disabled', true)
-                    .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
-
-                $.ajax({
-                    url: "{{ route('calendar.store') }}",
-                    method: 'POST',
-                    data: $form.serialize(),
-                    success: function (data) {
-                        if (data.success) {
-                            // بستن offcanvas + ریست فرم با دکمه انصراف
-                            $('.btn-cancel[data-bs-dismiss="offcanvas"]').trigger('click');
-
-                            // رفرش جدول
-                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
-
-                            // پیام موفقیت
-                            showToast('آیتم با موفقیت افزوده شد!', 'success');
-                        } else {
-                            swal(data.subject, data.message, data.flag);
-                        }
-                    },
-                    error: function () {
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
-                        $btn.prop('disabled', false).html(originalHtml);
-                    }
-                });
-            });
-        });
-    </script>
-
-
 @endpush
 
