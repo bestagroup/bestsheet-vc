@@ -210,4 +210,31 @@ class FilemanagerController extends Controller
 
         return response()->json(['message' => 'Deleted successfully']);
     }
+
+    public function filestatus(Request $request)
+    {
+        dd($request->all());
+        try{
+        $file = MediaFile::whereId($request->input('id'))->first();
+        $file->status = $request->input('status');
+        $result = $file->save();
+        if ($result) {
+            $success = true;
+            $flag = 'success';
+            $subject = 'عملیات موفق';
+            $message = 'اطلاعات با موفقیت پاک شد';
+        }elseif($result != true) {
+            $success = false;
+            $flag    = 'error';
+            $subject = 'عملیات نا موفق';
+            $message = 'اطلاعات زیرمنو ثبت نشد، لطفا مجددا تلاش نمایید';
+        }
+    } catch (Exception $e) {
+        $success = false;
+        $flag    = 'error';
+        $subject = 'خطا در ارتباط با سرور';
+        $message = 'اطلاعات پاک نشد،لطفا بعدا مجدد تلاش نمایید ';
+        }
+    return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
+    }
 }

@@ -30,16 +30,17 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('panel/flow'         , 'FlowController');
 
 
-    Route::get('panel/calendar'               , 'CalendarController@index')->name('calendar.index');
-    Route::get('panel/calendar/events'        , 'CalendarController@getEvents')->name('calendar.events');
-    Route::post('panel/calendar/store'        , 'CalendarController@store')->name('calendar.store');
-    Route::patch('panel/calendar/update/{id}'  , 'CalendarController@update')->name('calendar.update');
+    Route::get('panel/calendar'                 , 'CalendarController@index')->name('calendar.index');
+    Route::get('panel/calendar/events'          , 'CalendarController@getEvents')->name('calendar.events');
+    Route::post('panel/calendar/store'          , 'CalendarController@store')->name('calendar.store');
+    Route::patch('panel/calendar/update/{id}'   , 'CalendarController@update')->name('calendar.update');
     Route::delete('panel/calendar/delete/{id}'  , 'CalendarController@destroy')->name('calendar.destroy');
 
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('panel/changepassword'      , 'ChangePasswordController@index')->name('password.change.form');
     Route::post('panel/changepassword'     , 'ChangePasswordController@change')->name('password.change.submit');
 
+    Route::post('panel/filestatus'         , 'FilemanagerController@filestatus')->name('filestatus');
     Route::post('panel/store'              , 'FilemanagerController@store')     ->name('storemedia');
     Route::get('panel/selectfile'          , 'FilemanagerController@selectfile')->name('selectfile');
     Route::delete('panel/deletefile'       , 'FilemanagerController@deletefile')->name('deletefile');

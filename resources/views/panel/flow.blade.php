@@ -350,8 +350,11 @@
                                                             <p class="text-muted">{{ $step->description }}</p>
                                                             @if($step->id == 1)
                                                                 @foreach($files as $file)
-                                                                    @if($file->subject_id == 4)
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                    @if($file->subject_id == 4 && $file->project_id == $project->id)
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
+                                                                            <button id="send-btn" data-id="{{ $file->id }}" data-status="accept" class="btn btn-primary">تایید</button>
+                                                                            <button id="send-btn" data-id="{{ $file->id }}" data-status="reject" class="btn btn-delete">رد</button>
+                                                                        </div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" id="addform-{{ $step->id }}" method="POST" class="d-inline">
@@ -1277,4 +1280,30 @@
             };
         });
     </script>
+    <script>
+        document.getElementById('send-btn').addEventListener('click', function () {
+            let id       = this.getAttribute('data-id');
+            let status   = this.getAttribute('data-status');
+
+            fetch("{{ route('filestatus') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    id: id,
+                    status: status
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("پاسخ سرور:", data);
+                })
+                .catch(error => {
+                    console.error("خطا:", error);
+                });
+        });
+    </script>
+
 @endsection
