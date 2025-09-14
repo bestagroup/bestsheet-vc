@@ -213,11 +213,10 @@ class FilemanagerController extends Controller
 
     public function filestatus(Request $request)
     {
-        dd($request->all());
         try{
-        $file = MediaFile::whereId($request->input('id'))->first();
-        $file->status = $request->input('status');
-        $result = $file->save();
+        $file           = MediaFile::whereId($request->input('id'))->first();
+        $file->status   = $request->input('status');
+        $result         = $file->save();
         if ($result) {
             $success = true;
             $flag = 'success';

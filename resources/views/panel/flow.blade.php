@@ -351,32 +351,37 @@
                                                             @if($step->id == 1)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 4 && $file->project_id == $project->id)
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
-                                                                            <button id="send-btn" data-id="{{ $file->id }}" data-status="accept" class="btn btn-primary">تایید</button>
-                                                                            <button id="send-btn" data-id="{{ $file->id }}" data-status="reject" class="btn btn-delete">رد</button>
-                                                                        </div>
+                                                                        @if($file->status  == 4)
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
+                                                                                <span style="color: green; font-weight: bold;">✔ تایید شد</span>
+                                                                            </div>
+                                                                       @elseif($file->status == null)
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
+                                                                                <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
+                                                                                <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                                            </div>
+                                                                       @endif
                                                                     @endif
                                                                 @endforeach
-                                                                    <form action="{{ route('flow.store') }}" id="addform-{{ $step->id }}" method="POST" class="d-inline">
+                                                                    <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
                                                                         <input type="hidden" name="project_id" value="{{ $project->id }}">
                                                                         <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                                        <input type="hidden" name="status" id="status">
+                                                                        <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                                                        <input type="hidden" name="status" class="status-input">
 
                                                                         <textarea name="description" class="form-control mb-2" rows="4"></textarea>
 
-                                                                        <button type="button" class="btn btn-success" style="min-width:150px; margin:5px auto;"
-                                                                                onclick="document.getElementById('status').value='approved'; document.getElementById('submit').click();">
+                                                                        <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
                                                                             تایید مرحله
                                                                         </button>
 
-                                                                        <button type="button" class="btn btn-danger" style="min-width:150px; margin:5px auto;"
-                                                                                onclick="document.getElementById('status').value='rejected'; document.getElementById('submit').click();">
+                                                                        <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
                                                                             رد مرحله
                                                                         </button>
-                                                                        <button type="button" id="submit" style="display:none;"></button>
-                                                                    </form>
 
+                                                                        <button type="submit" class="btn-submit d-none"></button>
+                                                                    </form>
 
                                                             @elseif($step->id == 2)
                                                                 <form action="{{ route('flow.store') }}" method="POST" class="d-inline">
@@ -1052,36 +1057,38 @@
                     timeOut: 3000,
                     rtl: true
                 };
-
-                if (toastr[type]) {
-                    toastr[type](message);
-                } else {
-                    toastr.success(message);
-                }
+                toastr[type] ? toastr[type](message) : toastr.success(message);
             }
-            $('#submit').on('click', function(e){
+
+            // ست کردن وضعیت و کلیک روی submit
+            $(document).on('click', '.approve-btn', function(){
+                const $form = $(this).closest('form');
+                $form.find('.status-input').val('approved');
+                $form.find('.btn-submit').trigger('click');
+            });
+
+            $(document).on('click', '.reject-btn', function(){
+                const $form = $(this).closest('form');
+                $form.find('.status-input').val('rejected');
+                $form.find('.btn-submit').trigger('click');
+            });
+
+            // هندل ارسال فرم
+            $(document).on('submit', '.flow-form', function(e){
                 e.preventDefault();
-                const $btn  = $(this);
-                const $form = $('#addform');
-
-                const url = $form.attr('action');
+                const $form = $(this);
+                const url   = $form.attr('action');
+                const $btn  = $form.find('.btn-submit');
                 const originalHtml = $btn.html();
-                disableBtnWithSpinner($btn);
 
-                $btn.prop('disabled', true)
-                    .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
+                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال ارسال...');
 
                 $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
                 });
 
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: $form.serialize(),
-                    success: function (data) {
+                $.post(url, $form.serialize())
+                    .done(function(data){
                         if (data.success) {
                             const modalEl = document.getElementById('addModal');
                             const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
@@ -1093,22 +1100,21 @@
 
                             modal.hide();
                             $('.modal-backdrop').remove();
-                            $('body').removeClass('modal-open');
-                            $('body').css('padding-right', '');
+                            $('body').removeClass('modal-open').css('padding-right', '');
                             showToast('آیتم با موفقیت افزوده شد!', 'success');
                         } else {
                             swal(data.subject, data.message, data.flag);
                         }
-                    },
-                    error: function () {
+                    })
+                    .fail(function(){
                         swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
+                    })
+                    .always(function(){
                         $btn.prop('disabled', false).html(originalHtml);
-                    }
-                });
+                    });
             });
         });
+
     </script>
 
     <script>
@@ -1280,30 +1286,51 @@
             };
         });
     </script>
-    <script>
-        document.getElementById('send-btn').addEventListener('click', function () {
-            let id       = this.getAttribute('data-id');
-            let status   = this.getAttribute('data-status');
 
-            fetch("{{ route('filestatus') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({
-                    id: id,
-                    status: status
+    <script>
+        document.querySelectorAll('.send-btn').forEach(function(button) {
+            button.addEventListener('click', function () {
+                let recordId = this.getAttribute('data-id');
+                let status   = this.getAttribute('data-status');
+                let parent   = this.closest('.record-box'); // 👈 امن‌تر
+
+                fetch("{{ route('filestatus') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        id: recordId,
+                        status: status
+                    })
                 })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("پاسخ سرور:", data);
-                })
-                .catch(error => {
-                    console.error("خطا:", error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("پاسخ سرور:", data);
+
+                        if (status === "5") {
+                            // ❌ حذف کل رکورد
+                            parent.remove();
+                        } else if (status === "4") {
+                            // ✅ حذف دکمه‌ها و نمایش متن تایید شد
+                            parent.querySelectorAll('.send-btn').forEach(btn => btn.remove());
+
+                            let msg = document.createElement('span');
+                            msg.textContent = "✔ تایید شد";
+                            msg.style.color = "green";
+                            msg.style.fontWeight = "bold";
+
+                            parent.appendChild(msg);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("خطا:", error);
+                    });
+            });
         });
     </script>
+
+
 
 @endsection

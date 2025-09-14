@@ -31,6 +31,7 @@ class FlowController extends Controller
         $companies      = Company::all();
         $investsteps    = Investstep::all();
         $files          = MediaFile::all();
+
         $commitments    = Commitment::whereStatus(4)->get();
 
         $thispage       = [
@@ -117,17 +118,20 @@ class FlowController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         try {
             $step = new Project_step();
             $step->project_id   = $request->input('project_id');
-            $step->title        = $request->input('title');
-            $step->step_number  = $request->input('step_number');
+            $step->title        = $request->input('step_title');
+            $step->step_number  = $request->input('step_id');
             $step->description  = $request->input('description');
             $step->status       = $request->input('status');
             $step->user_id      = Auth::user()->id;
 
             $result = $step->save();
+
+            $project = Project::whereId($request->input('project_id'))->first();
+            $project->invest_step = intval($request->input('step_id')) + 1;
+            $project->save();
 
             if ($result == true) {
                 $success = true;
