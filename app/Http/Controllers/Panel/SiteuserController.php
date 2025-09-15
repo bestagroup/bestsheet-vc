@@ -24,7 +24,7 @@ class SiteuserController extends Controller
         $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'submenu' , 'class' , 'controller')->get();
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
         $typeusers      = TypeUser::all();
-        $companies      = Company::select('id' , 'company_name','commercial_name' , 'user_id')->whereNull('user_id')->orderBy('company_name' , 'ASC')->get();
+        $companies      = Company::select('id' , 'company_name','commercial_name' , 'user_id')->orderBy('company_name' , 'ASC')->get();
         $users          = User::select('users.id' , 'users.name' , 'users.email' , 'users.phone' , 'users.status' , 'users.level' , 'users.birthday' , 'users.national_id' , 'users.role_id' , 'roles.title_fa', 'users.gender')
             ->leftjoin('role_user' , 'role_user.user_id' , '=' , 'users.id')
             ->leftjoin('roles' , 'roles.id' , '=' , 'role_user.role_id')
