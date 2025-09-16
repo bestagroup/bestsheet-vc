@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Commitment;
 use App\Models\Company;
 use App\Models\MediaFile;
@@ -27,6 +28,7 @@ class ProfileController extends Controller
             'delete'  => 'حذف حساب کاربری',
         ];
         $states         = State::select('id' , 'title')->whereStatus(4)->orderBy('title')->get();
+        $cities         = City::select('id' , 'title')->whereStatus(4)->orderBy('title')->get();
         $company        = Auth::user()->company;
         $commitments    = Commitment::whereStatus(4)->get();
         $investsteps    = DB::table('investsteps')->get();
@@ -40,6 +42,6 @@ class ProfileController extends Controller
             $files          = null;
             $minutes        = null;
     }
-        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps' , 'files' , 'minutes' , 'commitments','states'));
+        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps' , 'files' , 'minutes' , 'commitments','states' , 'cities'));
     }
 }

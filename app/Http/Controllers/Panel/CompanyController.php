@@ -94,12 +94,6 @@ class CompanyController extends Controller
         return view('panel.company')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'companies' , 'finances' , 'users']));
     }
 
-    public function create()
-    {
-        //
-    }
-
-
     public function store(Request $request)
     {
         try {
@@ -142,19 +136,6 @@ class CompanyController extends Controller
 
     }
 
-
-    public function show(string $id)
-    {
-        //
-    }
-
-
-    public function edit(string $id)
-    {
-        //
-    }
-
-
     public function update(Request $request, $id)
     {
         if (Auth::user()->level == 'admin'){
@@ -163,7 +144,7 @@ class CompanyController extends Controller
             $companyId = Auth::user()->company->id;
             $companies = Company::findOrfail($companyId);
         }
-
+        try{
         $companies->company_name        = $request->input('company_name');
         $companies->commercial_name     = $request->input('commercial_name');
         $companies->registration_number = $request->input('registration_number');
@@ -173,7 +154,7 @@ class CompanyController extends Controller
         $companies->phone               = $request->input('phone');
         $companies->email               = $request->input('email');
         $companies->website             = $request->input('website');
-        $companies->province            = $request->input('province');
+        $companies->province            = $request->input('state');
         $companies->city                = $request->input('city');
         $companies->postal_code         = $request->input('postal_code');
         $companies->ceo_name            = $request->input('ceo_name');
@@ -184,7 +165,7 @@ class CompanyController extends Controller
         }
         $result = $companies->update();
 
-        try{
+
             if ($result == true) {
                 $success = true;
                 $flag    = 'success';
