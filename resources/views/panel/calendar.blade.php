@@ -98,6 +98,15 @@
             padding-left: 1.3rem;
         }
 
+        /* نمایش صحیح inline داخل سایدبار */
+        .app-calendar-sidebar .inline-calendar .flatpickr-calendar {
+            box-shadow: none;
+            border: 0;
+            width: 100%;
+            background: transparent;
+        }
+        .app-calendar-sidebar .inline-calendar { display:block; }
+
     </style>
 @endsection
 @section('content')
@@ -117,8 +126,10 @@
                 <div class="p-4">
                     <!-- inline calendar -->
                     <div class="ms-n2">
-                        <div class="inline-calendar"></div>
+                        <div class="inline-calendar"></div>  <!-- همین کلاس لازم است -->
                     </div>
+
+
 
                     <hr class="container-m-nx my-4">
 

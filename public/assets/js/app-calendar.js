@@ -146,12 +146,25 @@ document.addEventListener('DOMContentLoaded', function () {
 // نخستین بار اینیت
         initStartEndPickers();
 
+
+
 // تغییر حالت "تمام‌روز" → destroy & reinit
         if (allDaySwitch) {
             allDaySwitch.addEventListener('change', function () {
                 try { if (start) start.destroy(); } catch (e) {}
                 try { if (end) end.destroy(); } catch (e) {}
                 initStartEndPickers();
+            });
+        }
+
+        // ---------- inline calendar init ----------
+        if (inlineCalendar) {
+            // روی DIV بهتره ورژن تابعی را صدا بزنیم
+            inlineCalInstance = flatpickr(inlineCalendar, {
+                inline: true,
+                monthSelectorType: 'static',
+                locale: 'fa',
+                disableMobile: true
             });
         }
 
