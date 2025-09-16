@@ -89,7 +89,7 @@
       bg: "#f8d3ff",
     },
     donut: {
-      series1: "#fee802",
+      series1: "#dc9536",
       series2: "#3fd0bd",
       series3: "#826bf8",
       series4: "#2b9bf4",
@@ -486,7 +486,7 @@
         strokeWidth: 7,
         strokeOpacity: 1,
         strokeColors: [config.colors.white],
-        colors: [config.colors.warning],
+        colors: [config.colors.primary],
       },
       dataLabels: {
         enabled: false,

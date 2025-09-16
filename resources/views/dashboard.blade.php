@@ -10,6 +10,74 @@
     <div class="alert alert-info"> {{Auth::user()->name}} خوش آمدید به داشبورد مدیریت 👋</div>
 
     </div>
+
+    <!-- Radar Chart -->
+    <div class="col-md-12 col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">شاخص کلیدی عملکرد</h5>
+                <div class="dropdown primary-font">
+                    <button class="btn px-0" type="button" id="heatChartDd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="heatChartDd1">
+                        <a class="dropdown-item" href="javascript:void(0);">28 روز اخیر</a>
+                        <a class="dropdown-item" href="javascript:void(0);">ماه قبل</a>
+                        <a class="dropdown-item" href="javascript:void(0);">سال قبل</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="radarChart"></div>
+            </div>
+        </div>
+    </div>
+    <!-- /Radar Chart -->
+
+    <!-- Line Area Chart -->
+    <div class="col-12 mt-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div>
+                    <h5 class="card-title mb-1">آخرین به‌روزرسانی‌ها</h5>
+                    <small class="text-muted primary-font">شبکه‌های تجاری</small>
+                </div>
+                <div class="dropdown primary-font">
+                    <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bx bx-calendar"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">امروز</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">دیروز</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">7 روز اخیر</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">30 روز اخیر</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">این ماه</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">ماه قبل</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="lineAreaChart"></div>
+            </div>
+        </div>
+    </div>
+    <!-- /Line Area Chart -->
+
     <div class="row gy-4 mb-4">
 
         <div class="row gy-4 mb-4">
@@ -22,7 +90,6 @@
                                     <i class="mdi mdi-chart-box mdi-24px"></i>
                                 </div>
                             </div>
-
                         </div>
                         <div class="card-info mt-4 pt-1">
                             <p class="text-muted">تعداد کاربران</p>
@@ -126,7 +193,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="row gy-4">
@@ -443,5 +509,6 @@
 
 @push('scripts')
     <script src="{{ asset('assets/js/timeline-chart.js') }}"></script>
+    <script src="{{ asset('assets/js/charts-apex.js') }}"></script>
 @endpush
 
