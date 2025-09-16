@@ -39,7 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
             eventStartDate = document.querySelector('#eventStartDate'),
             eventEndDate = document.querySelector('#eventEndDate'),
             eventUrl = document.querySelector('#eventURL'),
-            eventLabel = $('#eventLabel'), // select2
+            eventLabel = $('#eventLabel'),
+            // select2
             eventGuests = $('#eventGuests'), // select2
             eventLocation = document.querySelector('#eventLocation'),
             eventDescription = document.querySelector('#eventDescription'),
@@ -340,7 +341,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 sidebarToggle: { text: 'نوار کناری' }
             },
             headerToolbar: {
-                start: 'sidebarToggle, prev,next, title',
+                start: '',
+                center: 'prev title next',
                 end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
             direction: direction,
@@ -350,6 +352,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar];
                 return ['fc-event-' + colorName];
             },
+            eventContent: function(arg) {
+                // اگر ساعت داشته باشه (allDay نیست) → نمایش ساعت + خط تیره + عنوان
+                let timeText = arg.timeText ? `<span class="me-1">${arg.timeText}</span>` : '';
+                let separator = arg.timeText ? `<span class="mx-1">-</span>` : '';
+                let title = `<span>${arg.event.title}</span>`;
+
+                return { html: timeText + separator + title };
+            },
+
             dateClick: function (info) {
                 let date = new JDate(info.date);
                 resetValues();

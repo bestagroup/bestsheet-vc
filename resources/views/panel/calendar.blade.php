@@ -19,6 +19,85 @@
             color: #eee;
         }
 
+        .fc .fc-view-harness .fc-event {
+            color: var(--bs-primary-bg-subtle);
+            background-color: var(--bs-primary);
+            border-radius: 4px;
+        }
+
+        .fc .fc-toolbar .fc-button.fc-prev-button,
+        .fc .fc-toolbar .fc-button.fc-next-button {
+            color: var(--bs-primary) !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .fc .fc-toolbar .fc-button.fc-prev-button:hover,
+        .fc .fc-toolbar .fc-button.fc-next-button:hover {
+            color: #fff !important;
+            background-color: var(--bs-primary) !important;
+        }
+
+        .fc .fc-toolbar-title {
+            margin-inline: 1rem;
+            padding-right: 8px;
+            padding-left: 8px;
+            font-size: 1.05rem;
+        }
+        /* استایل کلی انتخاب مهمانان */
+        .select2-container--default .select2-selection--multiple {
+            border: 1px solid var(--bs-border-color, #dee2e6);
+            border-radius: 0.375rem; /* مثل فرم‌های بوت‌استرپ */
+            min-height: 42px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* استایل هر تگ (pill) */
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: var(--bs-primary);
+            border: none;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 20px;
+            padding: 4px 10px;
+            margin: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* آیکون × داخل تگ */
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #fff;
+            margin-right: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+            color: crimson; /* تغییر رنگ موقع hover */
+        }
+
+        /* متن انتخاب (placeholder) در حالت multiple */
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* متن سمت راست در RTL */
+            padding-right: 6px;          /* کمی فاصله از دیواره راست */
+            gap: 6px;                    /* فاصله بین آیتم‌ها وقتی انتخاب می‌شن */
+            min-height: 34px;
+            font-size: 0.9rem;
+            color: #6c757d; /* رنگ placeholder مثل فرم‌های Bootstrap */
+        }
+
+        [dir=rtl] .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            padding-left: 1.3rem;
+        }
+
     </style>
 @endsection
 @section('content')
