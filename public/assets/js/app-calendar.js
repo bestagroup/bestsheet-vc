@@ -107,38 +107,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // ---------- flatpickr inits (kept from original) ----------
         let start, end;
-        if (eventStartDate) {
-            start = eventStartDate.flatpickr({
-                enableTime: true,
+        function initStartEndPickers() {
+            const isAllDay = allDaySwitch && allDaySwitch.checked;
+
+            const common = {
                 altInput: true,
-                altFormat: 'Y/m/d - H:i',
+                locale: 'fa',
+                disableMobile: true,
+                appendTo: addEventSidebar,   // ⬅️ خیلی مهم: تقویم داخل Offcanvas رندر بشه
+                static: true,                // ⬅️ کمک می‌کنه درست پوزیشن بگیره
                 onReady: function (selectedDates, dateStr, instance) {
                     if (instance.isMobile) instance.mobileInput.setAttribute('step', null);
-                },
-                locale: 'fa',
-                disableMobile: true
+                }
+            };
+
+            if (eventStartDate) {
+                start = eventStartDate.flatpickr(Object.assign({}, common, {
+                    enableTime: !isAllDay,
+                    altFormat: isAllDay ? 'Y/m/d' : 'Y/m/d - H:i',
+                    onChange: function (sel) {
+                        if (end && sel && sel[0]) end.set('minDate', sel[0]);
+                    }
+                }));
+            }
+
+            if (eventEndDate) {
+                end = eventEndDate.flatpickr(Object.assign({}, common, {
+                    enableTime: !isAllDay,
+                    altFormat: isAllDay ? 'Y/m/d' : 'Y/m/d - H:i',
+                    onChange: function (sel) {
+                        if (start && sel && sel[0]) start.set('maxDate', sel[0]);
+                    }
+                }));
+            }
+        }
+
+// نخستین بار اینیت
+        initStartEndPickers();
+
+// تغییر حالت "تمام‌روز" → destroy & reinit
+        if (allDaySwitch) {
+            allDaySwitch.addEventListener('change', function () {
+                try { if (start) start.destroy(); } catch (e) {}
+                try { if (end) end.destroy(); } catch (e) {}
+                initStartEndPickers();
             });
         }
-        if (eventEndDate) {
-            end = eventEndDate.flatpickr({
-                enableTime: true,
-                altInput: true,
-                altFormat: 'Y/m/d - H:i',
-                onReady: function (selectedDates, dateStr, instance) {
-                    if (instance.isMobile) instance.mobileInput.setAttribute('step', null);
-                },
-                locale: 'fa',
-                disableMobile: true
-            });
-        }
-        if (inlineCalendar) {
-            inlineCalInstance = inlineCalendar.flatpickr({
-                monthSelectorType: 'static',
-                inline: true,
-                locale: 'fa',
-                disableMobile: true
-            });
-        }
+
 
         // ---------- helper utilities ----------
         function pad(n) { return n < 10 ? '0' + n : n; }

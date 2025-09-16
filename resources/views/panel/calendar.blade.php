@@ -6,6 +6,20 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-calendar.css')}}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .flatpickr-calendar {
+            background-color: #fff !important;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000 !important;
+        }
+        html[data-theme="dark"] .flatpickr-calendar {
+            background-color: #2c2c2c !important;
+            border-color: #444;
+            color: #eee;
+        }
+
+    </style>
 @endsection
 @section('content')
     <div class="card app-calendar-wrapper">
@@ -100,13 +114,21 @@
 
                             <div class="mb-3">
                                 <label class="form-label" for="eventStartDate">تاریخ شروع</label>
-                                <input type="text" class="form-control" id="eventStartDate" name="eventStartDate">
+                                <div class="input-group w-100">
+                                    <input type="text" class="form-control flatpickr-input" id="eventStartDate" name="eventStartDate" placeholder="انتخاب تاریخ شروع">
+                                    <span class="mdi mdi-calendar-month-outline"></span>
+                                </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label" for="eventEndDate">تاریخ پایان</label>
-                                <input type="text" class="form-control" id="eventEndDate" name="eventEndDate">
+                                <div class="input-group w-100">
+                                    <input type="text" class="form-control flatpickr-input" id="eventEndDate" name="eventEndDate" placeholder="انتخاب تاریخ پایان">
+                                    <span class="mdi mdi-calendar-month-outline"></span>
+                                </div>
                             </div>
+
+
 
                             <div class="mb-3">
                                 <label class="switch">
