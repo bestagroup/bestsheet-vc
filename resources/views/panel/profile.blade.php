@@ -387,5 +387,28 @@
                     };
                 });
             </script>
+            <script>
+                document.getElementById("province_{{$company->id}}").addEventListener("change", function() {
+                    let provinceId = this.value;
+                    let citySelect = document.getElementById("city_{{$company->id}}");
+                    citySelect.innerHTML = '<option value="">در حال بارگذاری...</option>';
+
+                    if(provinceId){
+                        fetch(`/api/cities/${provinceId}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                citySelect.innerHTML = '<option value="">انتخاب کنید</option>';
+                                data.forEach(city => {
+                                    let opt = document.createElement('option');
+                                    opt.value = city.id;
+                                    opt.textContent = city.title;
+                                    citySelect.appendChild(opt);
+                                });
+                            });
+                    } else {
+                        citySelect.innerHTML = '<option value="">انتخاب کنید</option>';
+                    }
+                });
+            </script>
     @endpush
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(function () {
     Route::get('/'                         , 'IndexController@index')->name('dashboard');
     Route::get('dashboard'                 , 'IndexController@index')->name('dashboard');
+    Route::post('panel/getcities'          , 'IndexController@getcities')->name('getcities');
     Route::resource('panel/finance'      , 'FinancialController');
     Route::resource('panel/owner'        , 'OwnerController');
     Route::resource('panel/menupanel'    , 'MenupanelController');

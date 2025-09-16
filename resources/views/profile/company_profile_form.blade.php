@@ -3,37 +3,37 @@
                     @method('PATCH')
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="company_name_{{$company->id}}" name="company_name"
+                            <input required type="text" class="form-control" id="company_name_{{$company->id}}" name="company_name"
                                    placeholder="نام شرکت" value="{{ $company->company_name }}">
                             <label for="company_name">نام شرکت</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="commercial_name_{{$company->id}}" name="commercial_name"
-                                   placeholder="نام تجاری شرکت" value="{{ $company->commercial_name }}">
-                            <label for="commercial_name">نام تجاری شرکت</label>
+                            <input required type="text" class="form-control" id="commercial_name_{{$company->id}}" name="commercial_name"
+                                   placeholder="برند شرکت" value="{{ $company->commercial_name }}">
+                            <label for="commercial_name">برند شرکت</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="registration_number_{{$company->id}}" name="registration_number"
+                            <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="registration_number_{{$company->id}}" name="registration_number"
                                    placeholder="شماره ثبت" value="{{ $company->registration_number }}">
                             <label for="registration_number">شماره ثبت</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="national_id_{{$company->id}}" name="national_id"
-                                   placeholder="شناسه ملی" value="{{ $company->national_id }}">
-                            <label for="national_id">شناسه ملی</label>
+                            <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="national_id_{{$company->id}}" name="national_id"
+                                   placeholder="شناسه ملی شرکت" value="{{ $company->national_id }}">
+                            <label for="national_id">شناسه ملی شرکت</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="economic_code_{{$company->id}}" name="economic_code"
-                                   placeholder="کد اقتصادی" value="{{ $company->economic_code }}">
-                            <label for="economic_code">کد اقتصادی</label>
+                            <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="economic_code_{{$company->id}}" name="economic_code"
+                                   placeholder="کد اقتصادی شرکت" value="{{ $company->economic_code }}">
+                            <label for="economic_code">کد اقتصادی شرکت</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="email" class="form-control" id="email_{{$company->id}}" name="email"
+                            <input inputmode="numeric" pattern="^\d{10}$" maxlength="10" minlength="10" type="email" class="form-control" id="email_{{$company->id}}" name="email"
                                    placeholder="ایمیل شرکت" value="{{ $company->email }}">
                             <label for="email">ایمیل شرکت</label>
                         </div>
@@ -72,25 +72,32 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="province_{{$company->id}}" name="province"
-                                   placeholder="استان" value="{{ $company->province }}">
-                            <label for="province">استان</label>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="city_{{$company->id}}" name="city"
-                                   placeholder="شهرستان" value="{{ $company->city }}">
-                            <label for="city">شهرستان</label>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-floating form-floating-outline">
                             <input type="text" class="form-control" id="postal_code_{{$company->id}}" name="postal_code"
                                    placeholder="کد پستی" value="{{ $company->postal_code }}">
                             <label for="postal_code">کد پستی</label>
                         </div>
                     </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating form-floating-outline">
+                            <select name="province" id="province_{{$company->id}}" class="form-control">
+                                <option value="" selected>انتخاب کنید</option>
+                                @foreach($states as $state)
+                                    <option value="{{$state->id}}" {{$company->state == $state->id ? 'selected' : ''}}>
+                                        {{$state->title}}</option>
+                                @endforeach
+                            </select>
+                            <label for="province">استان</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-floating form-floating-outline">
+                            <select name="city" id="city_{{$company->id}}" class="form-control">
+                                <option value="" selected>انتخاب کنید</option>
+                            </select>
+                            <label for="city">شهرستان</label>
+                        </div>
+                    </div>
+
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
                             <input type="text" class="form-control" id="ceo_name_{{$company->id}}" name="ceo_name"
