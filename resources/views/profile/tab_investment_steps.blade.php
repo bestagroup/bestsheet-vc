@@ -71,7 +71,7 @@
                                 </div>
                                 @foreach($files as $file)
                                     @if($file->subject_id == 4)
-                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                        <div class="alert alert-info">فایل {{$step->title}} بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                     @endif
                                 @endforeach
                             @elseif($step->id == 2)
@@ -106,7 +106,11 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 5 || $file->subject_id == 6)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 5)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 6)
@@ -153,6 +157,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if(in_array($file->subject_id, [7,8,9,10,11,12,13,14,15,16]))
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 7)
                                 <div  class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 8)
@@ -183,6 +192,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 19)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 10)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 11)
@@ -212,6 +226,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 20)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 12)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 13)
@@ -265,6 +284,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 21 || $file->subject_id == 18)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 15)
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="22" data-title="مستندات شاخص کلیدی دوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی دوم</button>
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
@@ -293,6 +317,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 18 || $file->subject_id == 22)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 16)
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="23" data-title="مستندات شاخص کلیدی سوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی سوم</button>
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
@@ -321,6 +350,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 18 || $file->subject_id == 23)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 17)
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="24" data-title="مستندات شاخص کلیدی چهارم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی چهارم</button>
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
@@ -349,6 +383,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @foreach($files as $file)
+                                    @if($file->subject_id == 18 || $file->subject_id == 24)
+                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                    @endif
+                                @endforeach
                             @elseif($step->id == 18)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 19)

@@ -26,9 +26,6 @@ class ProfileController extends Controller
             'delete'  => 'حذف حساب کاربری',
         ];
 
-
-
-
         $company        = Auth::user()->company;
         $commitments    = Commitment::whereStatus(4)->get();
         $investsteps    = DB::table('investsteps')->get();
