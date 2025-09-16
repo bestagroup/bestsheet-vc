@@ -77,26 +77,28 @@
                             <label for="postal_code">کد پستی</label>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-floating form-floating-outline">
-                            <select name="province" id="province_{{$company->id}}" class="form-control">
-                                <option value="" selected>انتخاب کنید</option>
-                                @foreach($states as $state)
-                                    <option value="{{$state->id}}" {{$company->state == $state->id ? 'selected' : ''}}>
-                                        {{$state->title}}</option>
-                                @endforeach
-                            </select>
-                            <label for="province">استان</label>
-                        </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-floating form-floating-outline">
+                        <select name="state" id="state_{{$company->id}}" class="form-control select2">
+                            <option value="" selected>انتخاب کنید</option>
+                            @foreach($states as $state)
+                                <option value="{{$state->id}}" {{$company->state == $state->id ? 'selected' : ''}}>
+                                    {{$state->title}}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label for="state">استان</label>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-floating form-floating-outline">
-                            <select name="city" id="city_{{$company->id}}" class="form-control">
-                                <option value="" selected>انتخاب کنید</option>
-                            </select>
-                            <label for="city">شهرستان</label>
-                        </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="form-floating form-floating-outline">
+                        <select name="city" id="city_{{$company->id}}" class="form-control select2">
+                            <option value="" selected>انتخاب کنید</option>
+                        </select>
+                        <label for="city">شهرستان</label>
                     </div>
+                </div>
 
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">

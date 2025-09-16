@@ -98,9 +98,9 @@ class IndexController extends Controller
 
         return view('dashboard')->with(compact(['thispage' , 'projects' , 'totalPaid' ,'monthLabels', 'users','finances' , 'monthlyData' , 'calendars']));
     }
-    public function state($id)
+    public function getcities($stateId)
     {
-        $cities = City::where('state_id', $id)->select('id', 'title')->orderBy('title')->get();
+        $cities = City::where('state_id', $stateId)->select('id', 'title')->orderBy('title')->get();
 
         return response()->json($cities);
 
