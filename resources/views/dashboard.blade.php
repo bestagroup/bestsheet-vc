@@ -442,6 +442,6 @@
 
 
 @push('scripts')
-    <script src="{{ asset('assets/js/dashboards-crm.js') }}"></script>
+    <script src="{{ asset('assets/js/timeline-chart.js') }}"></script>
 @endpush
 
