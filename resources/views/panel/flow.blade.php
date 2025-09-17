@@ -372,13 +372,9 @@
 
                                                                         <textarea name="description" class="form-control mb-2" rows="4"></textarea>
 
-                                                                        <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                                            تایید مرحله
-                                                                        </button>
+                                                                        <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">تایید مرحله</button>
 
-                                                                        <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                                            رد مرحله
-                                                                        </button>
+                                                                        <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">رد مرحله</button>
 
                                                                         <button type="submit" class="btn-submit d-none"></button>
                                                                     </form>

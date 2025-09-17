@@ -70,7 +70,7 @@
                                 </div>
                                 @foreach($files as $file)
                                     @if($file->subject_id == 4)
-                                        <div class="alert alert-info">فایل {{$step->title}} بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                        <div class="alert alert-info"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                     @endif
                                 @endforeach
                             @elseif($step->id == 2)
