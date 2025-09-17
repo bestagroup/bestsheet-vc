@@ -352,11 +352,11 @@
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 4 && $file->project_id == $project->id)
                                                                         @if($file->status  == 4)
-                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
                                                                                 <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                                             </div>
                                                                        @elseif($file->status == null)
-                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
                                                                                 <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
                                                                                 <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
                                                                             </div>
@@ -426,7 +426,7 @@
                                                             @elseif($step->id == 4)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 5 || $file->subject_id == 6 )
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -471,7 +471,7 @@
                                                             @elseif($step->id == 6)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [7,8,9,10,11,12,13,14,15,16]))
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -536,7 +536,7 @@
                                                             @elseif($step->id == 9)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 19)
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -581,7 +581,7 @@
                                                             @elseif($step->id == 11)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 20)
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -667,7 +667,7 @@
                                                             @elseif($step->id == 14)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,21]))
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -692,7 +692,7 @@
                                                             @elseif($step->id == 15)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,22]))
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -717,7 +717,7 @@
                                                             @elseif($step->id == 16)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,23]))
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -742,7 +742,7 @@
                                                             @elseif($step->id == 17)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,24]))
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
