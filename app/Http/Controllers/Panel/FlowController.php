@@ -30,7 +30,7 @@ class FlowController extends Controller
         $finances       = Finance::all();
         $companies      = Company::all();
         $investsteps    = Investstep::all();
-        $files          = MediaFile::all();
+        $files          = MediaFile::where('status' ,'!=' , 5)->get();
 
         $commitments    = Commitment::whereStatus(4)->get();
 
