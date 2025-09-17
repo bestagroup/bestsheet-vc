@@ -145,7 +145,7 @@ class SiteuserController extends Controller
         $user->email        = $request->input('email');
         $user->gender       = $request->input('gender');
         if ($request->input('password')) {
-            $user->password     = Hash::$request->input('password');
+            $user->password     = Hash::make($request->input('password'));
         }
 
         $result = $user->update();
