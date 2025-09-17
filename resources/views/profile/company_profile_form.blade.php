@@ -13,8 +13,8 @@
                         <div class="form-floating form-floating-outline">
                             <input required type="text" class="form-control" id="commercial_name_{{$company->id}}" name="commercial_name"
                                    placeholder="برند شرکت" value="{{ $company->commercial_name }}">
-                            <label for="commercial_name">برند شرکت</label>
-                            <div class="invalid-feedback" id="commercial_nameFeedback">نام برند طرح/شرکت اجباری می باشد.</div>
+                            <label for="commercial_name">نام طرح</label>
+                            <div class="invalid-feedback" id="commercial_nameFeedback">نام طرح اجباری می باشد.</div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
