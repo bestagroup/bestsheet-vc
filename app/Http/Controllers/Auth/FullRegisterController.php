@@ -41,7 +41,7 @@ class FullRegisterController extends Controller
             ]);
 
             $companies = Company::create([
-                'commercial_name' => $request->title,
+                'company_name'    => $request->title,
                 'ceo_name'        => $request->CEO,
                 'user_id'         => $user->id,
             ]);
