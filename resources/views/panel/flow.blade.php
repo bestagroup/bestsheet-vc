@@ -355,7 +355,7 @@
                                                                             <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
                                                                                 <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                                             </div>
-                                                                       @elseif($file->status == null)
+                                                                       @elseif($file->status <> 5)
                                                                             <div class="alert alert-info record-box" id="record-{{ $file->id }}">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} --
                                                                                 <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
                                                                                 <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
