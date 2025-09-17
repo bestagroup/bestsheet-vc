@@ -106,6 +106,14 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
+        // امروز در ابتدای روز (بدون ساعت) برای مقایسه دقیق
+        function startOfToday() {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        }
+        const MIN_DATE = startOfToday();
+
+
         // ---------- flatpickr inits (kept from original) ----------
         let start, end;
         function initStartEndPickers() {
@@ -115,8 +123,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 altInput: true,
                 locale: 'fa',
                 disableMobile: true,
-                appendTo: addEventSidebar,   // ⬅️ خیلی مهم: تقویم داخل Offcanvas رندر بشه
-                static: true,                // ⬅️ کمک می‌کنه درست پوزیشن بگیره
+                appendTo: addEventSidebar,
+                static: true,
+                minDate: MIN_DATE,
                 onReady: function (selectedDates, dateStr, instance) {
                     if (instance.isMobile) instance.mobileInput.setAttribute('step', null);
                 }
@@ -170,6 +179,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         // ---------- helper utilities ----------
+        function isBeforeToday(dateObj) {
+            if (!dateObj) return false;
+            const onlyDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+            return onlyDate < MIN_DATE; // فقط تاریخ، نه ساعت
+        }
         function pad(n) { return n < 10 ? '0' + n : n; }
         // format JS Date -> "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss" (no timezone)
         function formatDateForServer(dateObj, allDay = false) {
@@ -375,6 +389,13 @@ document.addEventListener('DOMContentLoaded', function () {
             },
 
             dateClick: function (info) {
+                // اگر روز انتخابی قبل از امروز است، نذار فرم باز شود
+                if (info.date < MIN_DATE) {
+                    // اگر Toast داری از همون استفاده کن؛ فعلاً alert ساده:
+                    alert('امکان افزودن رویداد در روزهای گذشته وجود ندارد.');
+                    return;
+                }
+
                 let date = new JDate(info.date);
                 resetValues();
                 bsAddEventSidebar.show();
@@ -385,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 start.setDate(date, true, 'Y-m-d');
                 end.setDate(date, true, 'Y-m-d');
             },
+
             eventClick: function (info) { eventClick(info); },
             datesSet: function () { modifyToggler(); },
             viewDidMount: function () { modifyToggler(); },
@@ -447,6 +469,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const startDateObj = getDateFromInput(start, eventStartDate.value);
             const endDateObj = getDateFromInput(end, eventEndDate.value);
+
+            if (!startDateObj || isBeforeToday(startDateObj)) {
+                alert('امکان ثبت رویداد با تاریخ شروع گذشته از امروز وجود ندارد.');
+                return;
+            }
+
+            if (endDateObj && endDateObj < startDateObj) {
+                alert('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');
+                return;
+            }
+
             const payload = {
                 eventTitle: eventTitle.value,
                 eventLabel: eventLabel.val() || null,
