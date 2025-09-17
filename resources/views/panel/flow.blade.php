@@ -352,11 +352,11 @@
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 4 && $file->project_id == $project->id)
                                                                         @if($file->status  == 4)
-                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} -
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
                                                                                 <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                                             </div>
                                                                        @elseif($file->status <> 5)
-                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}} -
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
                                                                                 <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
                                                                                 <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
                                                                             </div>
