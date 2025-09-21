@@ -31,7 +31,8 @@ class FilemanagerController extends Controller
         $mediafiles     = MediaFile::all();
 
         if ($request->ajax()) {
-            $data = MediaFile::all();
+            $data = MediaFile::leftjoin('projects', 'projects.id', '=', 'media_files.project_id')
+                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title')->get();
 
             return Datatables::of($data)
                 ->addColumn('file_path', function ($data) {
@@ -49,6 +50,9 @@ class FilemanagerController extends Controller
                 })
                 ->addColumn('name', function ($data) {
                     return ($data->name);
+                })
+                ->addColumn('title', function ($data) {
+                    return ($data->title);
                 })
                 ->addColumn('type', function ($data) {
                     return match ($data->type) {
@@ -80,8 +84,13 @@ class FilemanagerController extends Controller
                     return (jdate($data->updated_at)->format('Y/m/d'));
                 })
                 ->editColumn('action', function ($data) {
-                    $actionBtn = '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary" ><i class="mdi mdi-pencil-outline"></i></button>
-                    <button class="btn btn-sm btn-icon btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal'.$data->id.'" id="#deletesubmit_'.$data->id.'" data-id="#deletesubmit_'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
+                    $actionBtn = '';
+                    if (auth()->user()->can('can-access', ['project', 'edit'])) {
+                        $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary mx-1"><i class="mdi mdi-pencil-outline"></i></button>';
+                    }
+                    if (auth()->user()->can('can-access', ['project', 'delete'])) {
+                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
+                    }
                     return $actionBtn;
                 })
                 ->rawColumns(['action' ,'file_path'])
@@ -235,5 +244,10 @@ class FilemanagerController extends Controller
         $message = 'اطلاعات پاک نشد،لطفا بعدا مجدد تلاش نمایید ';
         }
     return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
+    }
+
+    public function update(Request $request)
+    {
+        $file = MediaFile::where('id', $request->input('record_id'))->first();
     }
 }

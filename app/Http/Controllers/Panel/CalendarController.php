@@ -7,6 +7,7 @@ use App\Models\Calendar;
 use Morilog\Jalali\Jalalian;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -28,8 +29,7 @@ class CalendarController extends Controller
     }
     public function getEvents()
     {
-        $calendars = Calendar::all();
-
+        $calendars = Calendar::whereJsonContains('guests', (string) Auth::user()->id)->get();
         $events = $calendars->map(function ($calendar) {
             $start = Jalalian::fromFormat('Y-m-d H:i:s', $calendar->start)->toCarbon(); // شمسی -> Carbon (میلادی)
             $end   = Jalalian::fromFormat('Y-m-d H:i:s', $calendar->end)->toCarbon();

@@ -3,10 +3,7 @@
 <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
 <link href="{{'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css'}}" rel="stylesheet">
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css"/>
 @section('content')
     <div class="card">
         <div class="card-body">
@@ -24,6 +21,7 @@
                         <th>نوع فایل</th>
                         <th>سایز فایل</th>
                         <th>تاریخ آپلود</th>
+                        <th>پروژه</th>
                         <th>عملیات</th>
                     </tr>
                     </thead>
@@ -114,6 +112,7 @@
                     {data: 'type'           , name: 'type'      },
                     {data: 'size'           , name: 'size'      },
                     {data: 'date'           , name: 'date'      },
+                    {data: 'title'          , name: 'title'      },
                     {data: 'action'         , name: 'action', orderable: true, searchable: true},
                 ],
                 language: {
@@ -243,7 +242,6 @@
             };
         });
     </script>
-
 
     <script>
         jQuery(document).ready(function(){
