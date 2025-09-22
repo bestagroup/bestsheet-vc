@@ -18,6 +18,7 @@
                     <tr class="table-light">
                         <th> فایل</th>
                         <th>نام فایل</th>
+                        <th>نام اصلی فایل</th>
                         <th>نوع فایل</th>
                         <th>سایز فایل</th>
                         <th>تاریخ آپلود</th>
@@ -47,6 +48,40 @@
                     <div class="modal-footer justify-content-center">
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
                         <button type="button" class="btn btn-danger" id="deletesubmit_{{$mediafile->id}}" data-id="{{$mediafile->id}}">حذف</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    @foreach($mediafiles as $mediafile)
+        <div class="modal fade" id="editModal{{$mediafile->id}}" tabindex="-1" aria-labelledby="editModalLabel{{$mediafile->id}}" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel{{$mediafile->id}}">{{$thispage['edit']}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editform_{{ $mediafile->id }}" method="POST" action="{{ route(request()->segment(2).'.update', $mediafile->id) }}">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="menu_id" id="menu_id_{{$mediafile->id}}" value="{{$mediafile->id}}" />
+                            <div class="row mb-3 ">
+                                <div class="col-md-4">
+                                    <label class="form-label">انتخاب نوع فایل</label>
+                                    <select name="subject_id" id="subject_id_{{$mediafile->id}}" class="form-control select-lg select2">
+                                        <option value="">انتخاب نوع فایل</option>
+                                        @foreach($subject_files as $subject_file)
+                                            <option value="{{$subject_file->id}}" {{$mediafile->subject_id == $subject_file->id ? 'selected' : '' }}>{{$subject_file->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" id="editsubmit_{{$mediafile->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -109,6 +144,7 @@
                 columns: [
                     {data: 'file_path'      , name: 'file_path' },
                     {data: 'name'           , name: 'name'     },
+                    {data: 'original_name'  , name: 'original_name'     },
                     {data: 'type'           , name: 'type'      },
                     {data: 'size'           , name: 'size'      },
                     {data: 'date'           , name: 'date'      },
@@ -240,6 +276,79 @@
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 4000);
             };
+        });
+    </script>
+
+    <script>
+        jQuery(function($){
+            function showToast(message, type = 'success') {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-center",
+                    timeOut: 3000,
+                    rtl: true
+                };
+
+                if (toastr[type]) {
+                    toastr[type](message);
+                } else {
+                    toastr.success(message);
+                }
+            }
+
+            $(document).on('click', '[id^=editsubmit_]', function(e){
+                e.preventDefault();
+                const $btn = $(this);
+                const id = this.id.split('_')[1];
+                const $form = $('#editform_' + id);
+
+                if (!$form.length) {
+                    console.error('فرم editform_' + id + ' پیدا نشد!');
+                    return;
+                }
+
+                const url = $form.attr('action'); // استفاده از URL داینامیک
+                const originalHtml = $btn.html();
+                disableBtnWithSpinner($btn);
+
+                $.ajax({
+                    url: url,
+                    method: 'PATCH',
+                    data: $form.serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            const modalEl = document.getElementById('editModal' + id);
+                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                            modalEl.addEventListener('hidden.bs.modal', function handler(){
+                                modalEl.removeEventListener('hidden.bs.modal', handler);
+                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                                showToast('آیتم با موفقیت ویرایش شد!', 'success');
+                            }, { once: true });
+                            modal.hide();
+                            $('.modal-backdrop').remove();
+                            $('body').removeClass('modal-open').css('padding-right', '');
+                        } else {
+                            swal(data.subject, data.message, data.flag);
+                        }
+                    },
+                    error: function () {
+                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
+                    },
+                    complete: function () {
+                        restoreBtn($btn, originalHtml);
+                    }
+                });
+            });
+
+            function disableBtnWithSpinner($btn){
+                $btn.prop('disabled', true).html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
+                );
+            }
+            function restoreBtn($btn, html){
+                $btn.prop('disabled', false).html(html);
+            }
         });
     </script>
 

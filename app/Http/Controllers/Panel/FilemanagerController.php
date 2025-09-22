@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\MediaFile;
 use App\Models\MenuPanel;
+use App\Models\subject_file;
 use App\Models\SubmenuPanel;
 use Exception;
 use Illuminate\Http\Request;
@@ -29,10 +30,11 @@ class FilemanagerController extends Controller
         $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
         $mediafiles     = MediaFile::all();
+        $subject_files  = subject_file::all();
 
         if ($request->ajax()) {
             $data = MediaFile::leftjoin('projects', 'projects.id', '=', 'media_files.project_id')
-                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title')->get();
+                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.original_name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title')->get();
 
             return Datatables::of($data)
                 ->addColumn('file_path', function ($data) {
@@ -45,11 +47,14 @@ class FilemanagerController extends Controller
                     } elseif ($data->type === 'videos') {
                         return '<video width="160" height="90" controls><source src="' . $fileUrl . '" type="video/mp4">مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.</video>';
                     } else {
-                        return 'نامشخص';
+                        return '<a href="' . $fileUrl . '">' . $data->original_name . '</a>';
                     }
                 })
                 ->addColumn('name', function ($data) {
                     return ($data->name);
+                })
+                ->addColumn('original_name', function ($data) {
+                    return ($data->original_name);
                 })
                 ->addColumn('title', function ($data) {
                     return ($data->title);
@@ -96,7 +101,7 @@ class FilemanagerController extends Controller
                 ->rawColumns(['action' ,'file_path'])
                 ->make(true);
         }
-        return view('panel.file_manager')->with(compact(['menupanels' , 'submenupanels' , 'mediafiles','thispage']));
+        return view('panel.file_manager')->with(compact(['menupanels' , 'submenupanels' , 'mediafiles','thispage' , 'subject_files']));
     }
 
     public function store(Request $request)
