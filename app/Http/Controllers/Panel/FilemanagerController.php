@@ -251,8 +251,36 @@ class FilemanagerController extends Controller
     return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request , $id)
     {
-        $file = MediaFile::where('id', $request->input('record_id'))->first();
+        $result = MediaFile::whereId($id)->update([
+            'subject_id' => $request->input('subject_id'),
+        ]);
+
+        try{
+            if ($result == true) {
+                $success = true;
+                $flag    = 'success';
+                $subject = 'عملیات موفق';
+                $message = 'اطلاعات با موفقیت ثبت شد';
+            }
+            else {
+                $success = false;
+                $flag    = 'error';
+                $subject = 'عملیات نا موفق';
+                $message = 'اطلاعات ثبت نشد، لطفا مجددا تلاش نمایید';
+            }
+
+        } catch (Exception $e) {
+
+            $success = false;
+            $flag    = 'error';
+            $subject = 'خطا در ارتباط با سرور';
+            //$message = strchr($e);
+            $message = 'اطلاعات ثبت نشد،لطفا بعدا مجدد تلاش نمایید ';
+        }
+
+        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
+
     }
 }

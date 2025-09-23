@@ -66,7 +66,7 @@
                         <form id="editform_{{ $mediafile->id }}" method="POST" action="{{ route(request()->segment(2).'.update', $mediafile->id) }}">
                             @csrf
                             @method('PATCH')
-                            <input type="hidden" name="menu_id" id="menu_id_{{$mediafile->id}}" value="{{$mediafile->id}}" />
+{{--                            <input type="hidden" name="menu_id" id="menu_id_{{$mediafile->id}}" value="{{$mediafile->id}}" />--}}
                             <div class="row mb-3 ">
                                 <div class="col-md-4">
                                     <label class="form-label">انتخاب نوع فایل</label>
