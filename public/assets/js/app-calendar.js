@@ -108,10 +108,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // امروز در ابتدای روز (بدون ساعت) برای مقایسه دقیق
         function startOfToday() {
-            const now = new Date();
+            const now = new JDate();
             return new Date(now.getFullYear(), now.getMonth(), now.getDate());
         }
         const MIN_DATE = startOfToday();
+
+        function isBeforeToday(dateObj) {
+            if (!dateObj) return false;
+            const only = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+            return only < MIN_DATE; // فقط قبل از امروز ممنوع؛ امروز و بعدش آزاد
+        }
 
 
         // ---------- flatpickr inits (kept from original) ----------
@@ -176,39 +182,63 @@ document.addEventListener('DOMContentLoaded', function () {
                 disableMobile: true
             });
         }
-
-
         // ---------- helper utilities ----------
-        function isBeforeToday(dateObj) {
-            if (!dateObj) return false;
-            const onlyDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
-            return onlyDate < MIN_DATE; // فقط تاریخ، نه ساعت
-        }
+
         function pad(n) { return n < 10 ? '0' + n : n; }
         // format JS Date -> "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss" (no timezone)
         function formatDateForServer(dateObj, allDay = false) {
             if (!dateObj) return null;
+            const pad = n => (n < 10 ? '0' + n : n);
             const y = dateObj.getFullYear();
             const m = pad(dateObj.getMonth() + 1);
             const d = pad(dateObj.getDate());
-            if (allDay) return `${y}-${m}-${d}`;
+            if (allDay) return `${y}-${m}-${d}`; // DATE
             const hh = pad(dateObj.getHours());
             const mm = pad(dateObj.getMinutes());
             const ss = pad(dateObj.getSeconds());
-            return `${y}-${m}-${d}T${hh}:${mm}:${ss}`;
+            return `${y}-${m}-${d} ${hh}:${mm}:${ss}`; // DATETIME با فاصله
         }
 
+
+// REPLACE: getDateFromInput
         function getDateFromInput(fpInstance, inputValue) {
             try {
+                // 1) اگر flatpickr اینستنس داریم و selectedDates پر است، همان را برگردان
                 if (fpInstance && fpInstance.selectedDates && fpInstance.selectedDates.length) {
                     return fpInstance.selectedDates[0];
                 }
-                // fallback to JDate parsing (your code uses JDate)
-                return new JDate(inputValue)['_date'];
+
+                // 2) اگر اینستنس داریم ولی selectedDates خالی است، از parser خودش استفاده کن
+                if (fpInstance) {
+                    const raw = fpInstance.input ? fpInstance.input.value : (inputValue || '');
+                    if (raw) {
+                        // فرمت پایه flatpickr وقتی altInput روشن است، value خود input به فرمت ISO یکنواخت است
+                        const fmt = fpInstance.config.enableTime ? 'Y-m-d H:i' : 'Y-m-d';
+                        const parsed = fpInstance.parseDate(raw, fmt);
+                        if (parsed instanceof Date && !isNaN(parsed)) return parsed;
+                    }
+                }
+
+                // 3) اگر رشته میلادی استاندارد بود، مستقیم Date بزن
+                if (typeof inputValue === 'string' && /^\d{4}-\d{2}-\d{2}/.test(inputValue)) {
+                    const d = new Date(inputValue.replace('T', ' ')); // سازگاری
+                    if (!isNaN(d)) return d;
+                }
+
+                // 4) فقط اگر نشانه‌های شمسی دارد (اسلش یا ارقام فارسی)، JDate را امتحان کن
+                const looksJalali = typeof inputValue === 'string' && (inputValue.includes('/') || /[۰-۹]/.test(inputValue));
+                if (looksJalali) {
+                    const jd = new JDate(inputValue);
+                    const d = jd && jd['_date'];
+                    if (d instanceof Date && !isNaN(d)) return d;
+                }
+
+                return null;
             } catch (e) {
                 return null;
             }
         }
+
 
         function normalizeServerEvent(e) {
             // Accept different server shapes and normalize to FullCalendar shape expected by this script
@@ -327,26 +357,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: params,
                 dataType: 'json',
                 success: function (res) {
-                    // res expected as array
-                    if (!Array.isArray(res)) {
-                        console.warn('Expected array from /panel/calendar/events, got:', res);
-                        successCallback([]);
-                        return;
-                    }
-                    // normalize
+                    // JSON خام از سرور:
+                    console.group('GET /panel/calendar/events → RAW');
+                    console.log('query:', params);
+                    console.log('raw:', res);
+                    try { console.table(Array.isArray(res) ? res : []); } catch(_) {}
+                    console.groupEnd();
+
+                    // نگه‌داشتن آخرین پاسخ برای بررسی بعدی:
+                    window._lastEventsRaw = res;
+
+                    if (!Array.isArray(res)) { successCallback([]); return; }
+
+                    // نرمال‌سازی خودت:
                     currentEvents = res.map(normalizeServerEvent);
 
-                    // apply client-side filter (based on checkboxes)
+                    // خروجی نهایی که به FullCalendar می‌دهی:
+                    console.group('GET /panel/calendar/events → NORMALIZED');
+                    console.table(currentEvents.map(e => ({
+                        id: e.id, title: e.title, start: e.start, end: e.end,
+                        allDay: e.allDay, calendar: e.extendedProps?.calendar
+                    })));
+                    console.groupEnd();
+
+                    window._lastEventsNormalized = currentEvents;
+
                     const calendars = selectedCalendars();
                     const filtered = currentEvents.filter(function (ev) {
-                        // if no filters selected, show all
                         if (!calendars || calendars.length === 0) return true;
-                        const evCal = (ev.extendedProps && ev.extendedProps.calendar) ? ev.extendedProps.calendar.toString().toLowerCase() : '';
+                        const evCal = (ev.extendedProps?.calendar || 'etc').toString().toLowerCase();
                         return calendars.includes(evCal);
                     });
 
                     successCallback(filtered);
                 },
+
                 error: function (err) {
                     console.error('خطا در دریافت رویدادها', err);
                     if (typeof failureCallback === 'function') failureCallback(err);
@@ -358,6 +403,9 @@ document.addEventListener('DOMContentLoaded', function () {
         let { dayGrid, interaction, timeGrid, list } = calendarPlugins;
         let calendar = new Calendar(calendarEl, {
             initialView: 'dayGridMonth',
+            validRange: function(nowDate) {
+                return { start: nowDate };
+            },
             events: fetchEvents,
             plugins: [interaction, dayGrid, timeGrid, list],
             editable: true,
@@ -387,7 +435,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 return { html: timeText + separator + title };
             },
-
             dateClick: function (info) {
                 // اگر روز انتخابی قبل از امروز است، نذار فرم باز شود
                 if (info.date < MIN_DATE) {
@@ -406,7 +453,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 start.setDate(date, true, 'Y-m-d');
                 end.setDate(date, true, 'Y-m-d');
             },
-
+            eventAllow: function(dropInfo, draggedEvent) {
+                // dropInfo.start = تاریخ جدید
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                return dropInfo.start >= today; // فقط امروز و بعد از اون مجازه
+            },
             eventClick: function (info) { eventClick(info); },
             datesSet: function () { modifyToggler(); },
             viewDidMount: function () { modifyToggler(); },
@@ -464,17 +516,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // ---------- Add new event (AJAX -> store) ----------
-        btnAddEvent.addEventListener('click', e => {
-            if (!isFormValid) return;
+        // جایگزین هندلر فعلی btnAddEvent
+        btnAddEvent.addEventListener('click', async e => {
+            const status = await fv.validate(); //
+
+
+
+            if (status !== 'Valid') return;
 
             const startDateObj = getDateFromInput(start, eventStartDate.value);
-            const endDateObj = getDateFromInput(end, eventEndDate.value);
+            const endDateObj   = getDateFromInput(end, eventEndDate.value);
+
 
             if (!startDateObj || isBeforeToday(startDateObj)) {
                 alert('امکان ثبت رویداد با تاریخ شروع گذشته از امروز وجود ندارد.');
                 return;
             }
-
             if (endDateObj && endDateObj < startDateObj) {
                 alert('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');
                 return;
@@ -484,13 +541,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 eventTitle: eventTitle.value,
                 eventLabel: eventLabel.val() || null,
                 eventStartDate: formatDateForServer(startDateObj, allDaySwitch.checked),
-                eventEndDate: formatDateForServer(endDateObj, allDaySwitch.checked),
+                eventEndDate:   formatDateForServer(endDateObj,   allDaySwitch.checked),
                 allDay: allDaySwitch.checked ? 1 : 0,
                 eventURL: eventUrl.value || null,
                 eventLocation: eventLocation.value || null,
                 eventDescription: eventDescription.value || null,
-                'eventGuests[]': eventGuests.val() || [] // send as array for Laravel
+                'eventGuests[]': eventGuests.val() || []
             };
+            // این دو خط کمک می‌کنند واضح ببینی چی میره
+            console.group('POST /panel/calendar/store');
+            console.table(payload);       // نمای جدولی
+            console.log(payload);         // آبجکت کامل
+            console.groupEnd();
+
+// برای دسترسی بعدی در کنسول:
+            window._lastCreateEventPayload = payload;
 
             $.ajax({
                 url: '/panel/calendar/store',
@@ -498,12 +563,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: payload,
                 dataType: 'json',
                 success: function (res) {
-                    // expect server returns created object
                     const normalized = normalizeServerEvent(res);
                     addEventLocal(normalized);
                     bsAddEventSidebar.hide();
                     resetValues();
-                    isFormValid = false;
                 },
                 error: function (xhr) {
                     console.error('خطا در ذخیره رویداد:', xhr.responseText || xhr.statusText);
@@ -513,17 +576,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // ---------- Update event (AJAX -> update) ----------
-        btnUpdateEvent.addEventListener('click', e => {
-            if (!isFormValid || !eventToUpdate) return;
+// جایگزین هندلر فعلی btnUpdateEvent
+        btnUpdateEvent.addEventListener('click', async e => {
+            if (!eventToUpdate) return;
+
+            const status = await fv.validate(); // اجرای صریح ولیدیشن
+            if (status !== 'Valid') return;
 
             const startDateObj = getDateFromInput(start, eventStartDate.value);
-            const endDateObj = getDateFromInput(end, eventEndDate.value);
+            const endDateObj   = getDateFromInput(end, eventEndDate.value);
+
+            if (!startDateObj || isBeforeToday(startDateObj)) {
+                alert('امکان ثبت رویداد با تاریخ شروع گذشته از امروز وجود ندارد.');
+                return;
+            }
+            if (endDateObj && endDateObj < startDateObj) {
+                alert('تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.');
+                return;
+            }
+
             const payload = {
                 _method: 'PUT',
                 eventTitle: eventTitle.value,
                 eventLabel: eventLabel.val() || null,
                 eventStartDate: formatDateForServer(startDateObj, allDaySwitch.checked),
-                eventEndDate: formatDateForServer(endDateObj, allDaySwitch.checked),
+                eventEndDate:   formatDateForServer(endDateObj,   allDaySwitch.checked),
                 allDay: allDaySwitch.checked ? 1 : 0,
                 eventURL: eventUrl.value || null,
                 eventLocation: eventLocation.value || null,
@@ -541,7 +618,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateEventLocal(normalized);
                     bsAddEventSidebar.hide();
                     resetValues();
-                    isFormValid = false;
                 },
                 error: function (xhr) {
                     console.error('خطا در بروزرسانی رویداد:', xhr.responseText || xhr.statusText);
