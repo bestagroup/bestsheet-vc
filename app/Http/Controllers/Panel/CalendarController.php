@@ -29,7 +29,9 @@ class CalendarController extends Controller
     }
     public function getEvents()
     {
-        $calendars = Calendar::whereJsonContains('guests', (string) Auth::user()->id)->get();
+        $nowGregorian = Carbon::now();
+        $nowJalali = Jalalian::fromCarbon($nowGregorian)->format('Y-m-d H:i:s');
+        $calendars = Calendar::whereJsonContains('guests', (string) Auth::user()->id)->where('start', '>=', $nowJalali)->get();
         $events = $calendars->map(function ($calendar) {
             $start = Jalalian::fromFormat('Y-m-d H:i:s', $calendar->start)->toCarbon(); // شمسی -> Carbon (میلادی)
             $end   = Jalalian::fromFormat('Y-m-d H:i:s', $calendar->end)->toCarbon();

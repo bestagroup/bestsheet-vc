@@ -91,9 +91,58 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-info mt-4 pt-1">
+                        <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#usersModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد کاربران</p>
-                            <h5 class="mb-2">{{DB::table('users')->whereLevel('applicant')->count()}}</h5>
+                            <h5 class="mb-2">{{ DB::table('users')->whereLevel('applicant')->count() }}</h5>
+                        </div>
+                        <div class="modal fade" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="usersModalLabel">لیست کاربران</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive rounded-3">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                                    <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
+                                                    <tr>
+                                                        <th class="py-3">تصویر </th>
+                                                        <th class="py-3">نام کاربری </th>
+                                                        <th class="py-3">ایمیل</th>
+                                                        <th class="py-3">نقش</th>
+                                                        <th class="py-3">وضعیت</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($users as $user)
+                                                        <tr>
+                                                            <td>
+                                                                @if($user->gender == 1)
+                                                                    <img src="{{ asset('assets/img/avatars/1.png') }}" class="w-px-40 h-auto rounded-circle" />
+                                                                @elseif($user->gender == 2)
+                                                                    <img src="{{ asset('assets/img/avatars/8.png') }}" class="w-px-40 h-auto rounded-circle" />
+                                                                @else
+                                                                    <img src="{{ asset('assets/img/avatars/1.png') }}" class="w-px-40 h-auto rounded-circle" />
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $user->name }}</td>
+                                                            <td>{{ $user->email }}</td>
+                                                            <td>{{ $user->level == 'admin' ? 'مدیر' : ($user->level == 'applicant' ? 'سرمایه‌پذیر' : 'نامشخص') }}</td>
+                                                            <td>فعال</td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,11 +161,49 @@
                             {{--    <i class="mdi mdi-chevron-up text-success"></i>--}}
                             {{--</div>--}}
                         </div>
-                        <div class="card-info mt-4 pt-1">
+                        <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#totalprojectsModal" style="cursor: pointer;">
                             <p class="text-muted"> تعداد کل طرح </p>
                             <h5 class="mb-2">{{DB::table('projects')->count()}}</h5>
-
                             {{--<div class="badge bg-label-secondary rounded-pill">4 ماه پیش</div>--}}
+                        </div>
+                        <div class="modal fade" id="totalprojectsModal" tabindex="-1" aria-labelledby="totalprojectsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="totalprojectsModalLabel"> تعداد کل طرح</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive rounded-3">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                                    <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
+                                                    <tr>
+                                                        <th class="py-3">نام طرح </th>
+                                                        <th class="py-3">نام مدیرعامل </th>
+                                                        <th class="py-3">درصد پیشرفت</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($projectis as $project)
+                                                        <tr>
+                                                            <td>
+                                                               {{$project->title}}
+                                                            </td>
+                                                            <td>{{ $project->CEO }}</td>
+                                                            <td>{{round(($project->invest_step * 100) / 20)}} %</td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,10 +219,49 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-info mt-4 pt-1">
+                        <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#activeprojectsModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد طرح جاری</p>
                             <h5 class="mb-2">{{DB::table('projects')->whereFlow_level('درحال انجام تعهدات')->count()}}</h5>
                         </div>
+                        <div class="modal fade" id="activeprojectsModal" tabindex="-1" aria-labelledby="activeprojectsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="activeprojectsModalLabel">تعداد طرح جاری</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive rounded-3">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                                    <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
+                                                    <tr>
+                                                        <th class="py-3">نام طرح </th>
+                                                        <th class="py-3">نام مدیرعامل </th>
+                                                        <th class="py-3">درصد پیشرفت</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($projectis as $project)
+                                                            @if($project->flow_level == 'درحال انجام تعهدات')
+                                                                <tr>
+                                                                    <td>{{$project->title}}</td>
+                                                                    <td>{{ $project->CEO }}</td>
+                                                                    <td>{{round(($project->invest_step * 100) / 20)}} %</td>
+                                                                </tr>
+                                                            @endif
+                                                      @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -150,10 +276,49 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-info mt-4 pt-1">
+                        <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#endprojectsModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد طرح خاتمه یافته</p>
                             <h5 class="mb-2">{{DB::table('projects')->where('flow_level', 'پایان قرارداد')->orWhere('flow_level', 'خروج کامل')->count()}}</h5>
                         </div>
+                        <div class="modal fade" id="endprojectsModal" tabindex="-1" aria-labelledby="endprojectsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="endprojectsModalLabel">تعداد طرح جاری</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive rounded-3">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                                    <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
+                                                    <tr>
+                                                        <th class="py-3">نام طرح </th>
+                                                        <th class="py-3">نام مدیرعامل </th>
+                                                        <th class="py-3">درصد پیشرفت</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($projectis as $project)
+                                                        @if($project->flow_level == 'پایان قرارداد' || $project->flow_level == 'خروج کامل')
+                                                            <tr>
+                                                                <td>{{$project->title}}</td>
+                                                                <td>{{ $project->CEO }}</td>
+                                                                <td>{{round(($project->invest_step * 100) / 20)}} %</td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -168,9 +333,48 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-info mt-4 pt-1">
+                        <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#rejectprojectsModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد طرح رد شده</p>
                             <h5 class="mb-2">{{DB::table('projects')->where('flow_level', 'رد طرح')->count()}}</h5>
+                        </div>
+                        <div class="modal fade" id="rejectprojectsModal" tabindex="-1" aria-labelledby="rejectprojectsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="rejectprojectsModalLabel">تعداد طرح رد شده</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive rounded-3">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                                    <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
+                                                    <tr>
+                                                        <th class="py-3">نام طرح </th>
+                                                        <th class="py-3">نام مدیرعامل </th>
+                                                        <th class="py-3">درصد پیشرفت</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($projectis as $project)
+                                                        @if($project->flow_level == 'رد طرح')
+                                                            <tr>
+                                                                <td>{{$project->title}}</td>
+                                                                <td>{{ $project->CEO }}</td>
+                                                                <td>{{round(($project->invest_step * 100) / 20)}} %</td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -363,47 +567,48 @@
             <div class="col-lg-12 col-md-12 col-12">
                 <div class="card" style="max-height: 509px">
                     <div class="table-responsive rounded-3">
-                        <table class="datatables-crm table table-sm">
-                            <thead class="table-light">
-                            <tr>
-                                <th class="py-3">تصویر </th>
-                                <th class="py-3">نام کاربری </th>
-                                <th class="py-3">ایمیل</th>
-                                <th class="py-3">نقش</th>
-                                <th class="py-3">وضعیت</th>
-                                <th class="py-3">اخرین ورود</th>
-                            </tr>
-                            </thead>
-                            <tbody class="table-border-bottom-0">
-                            @foreach($users as $user)
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
                                 <tr>
-                                    <td>
-                                        @if($user->gender == 1)
-                                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
-                                        @elseif($user->gender == 2)
-                                            <img src="{{ asset('assets/img/avatars/8.png') }}" alt class="w-px-40 h-auto rounded-circle" />
-                                        @else
-                                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
-                                        @endif
-                                    </td>
-                                    <td>{{$user->name}}</td>
-                                    <td>{{$user->email}}</td>
-                                    <td>مدیر</td>
-                                    <td>فعال</td>
-                                    <td>@if($user->lastLogin && $user->lastLogin->created_at)
-                                            {{ jdate($user->lastLogin->created_at)->format('Y/m/d ساعت H:i') }}
-                                        @else
-                                            ورود ثبت نشده
-                                        @endif
-                                    </td>
+                                    <th class="py-3">تصویر </th>
+                                    <th class="py-3">نام کاربری </th>
+                                    <th class="py-3">ایمیل</th>
+                                    <th class="py-3">نقش</th>
+                                    <th class="py-3">وضعیت</th>
+                                    <th class="py-3">اخرین ورود</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>
+                                            @if($user->gender == 1)
+                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                            @elseif($user->gender == 2)
+                                                <img src="{{ asset('assets/img/avatars/8.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                            @else
+                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                            @endif
+                                        </td>
+                                        <td>{{$user->name}}</td>
+                                        <td>{{$user->email}}</td>
+                                        <td>{{ $user->level == 'admin' ? 'مدیر' : ($user->level == 'applicant' ? 'سرمایه‌پذیر' : 'نامشخص') }}</td>
+                                        <td>فعال</td>
+                                        <td>@if($user->lastLogin && $user->lastLogin->created_at)
+                                                {{ jdate($user->lastLogin->created_at)->format('Y/m/d ساعت H:i') }}
+                                            @else
+                                                ورود ثبت نشده
+                                            @endif
+                                        </td>
+                                    </tr>
+                              @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-4 col-md-6 col-12">
                 <div class="card h-100">
                     <div class="card-header pb-1">

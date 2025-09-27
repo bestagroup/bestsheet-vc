@@ -220,6 +220,14 @@
                                         <label for="amount_commitment_fifth_stage">مبلغ تعهد مرحله  پنجم</label>
                                     </div>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="logo" class="form-control" value="{{ $project->logo }}" id="logo_{{ $project->id }}" readonly placeholder="انتخاب فایل برای پروژه {{ $project->id }}">
+                                        <button class="btn btn-outline-secondary file-selector" type="button" data-record-id="{{ $project->id }}" data-input-id="logo_{{ $project->id }}">
+                                            انتخاب فایل
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="col-12 col-md-12">
                                     <div class="form-floating form-floating-outline">
                                         <textarea name="description" class="form-control" id="description_{{$project->id}}" style="height: 220px" placeholder="معرفی طرح" >{{ $project->description }}</textarea>

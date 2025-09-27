@@ -7,6 +7,7 @@ use App\Models\Calendar;
 use App\Models\City;
 use App\Models\Finance;
 use App\Models\MenuPanel;
+use App\Models\Project;
 use App\Models\SubmenuPanel;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Morilog\Jalali\Jalalian;
+use Carbon\Carbon;
 use function Laravel\Prompts\select;
 
 class IndexController extends Controller
@@ -33,15 +35,18 @@ class IndexController extends Controller
         $users = User::with('lastLogin')
             ->select('id', 'name', 'email', 'gender')
             ->get();
-
-        $calendars = Calendar::whereJsonContains('guests',  (string)Auth::id())->orderBy('start' , 'ASC')->get();
+        $nowGregorian = Carbon::now();
+        $nowJalali = Jalalian::fromCarbon($nowGregorian)->format('Y-m-d H:i:s');
+        $calendars = Calendar::whereJsonContains('guests',(string)Auth::id())->where('start', '>=', $nowJalali)->orderBy('start' , 'ASC')->get();
 
         $totalPaid = DB::table('finances')->sum('amount');
 
+        $projectis = Project::select('CEO' ,'company_name' , 'title' , 'invest_step' , 'flow_level')->orderBy('invest_step' , 'DESC')->get();
+
         $projects = DB::table('finances as f')
             ->leftjoin('projects as p', 'f.project_id', '=', 'p.id')
-            ->select('p.title', DB::raw('SUM(f.amount) as total_amount') , 'p.logo')
-            ->groupBy('p.title' , 'p.logo')
+            ->select('p.CEO','p.title', DB::raw('SUM(f.amount) as total_amount') , 'p.logo')
+            ->groupBy('p.title','p.logo','p.CEO')
             ->having('total_amount', '>', 0)
             ->orderBy('total_amount', 'desc')
             ->get();
@@ -96,7 +101,7 @@ class IndexController extends Controller
         $monthlyData = array_values($monthlyData);
 
 
-        return view('dashboard')->with(compact(['thispage' , 'projects' , 'totalPaid' ,'monthLabels', 'users','finances' , 'monthlyData' , 'calendars']));
+        return view('dashboard')->with(compact(['thispage' , 'projects' , 'totalPaid' ,'monthLabels', 'users','finances' , 'monthlyData' , 'calendars' , 'projectis']));
     }
     public function getcities($stateId)
     {
