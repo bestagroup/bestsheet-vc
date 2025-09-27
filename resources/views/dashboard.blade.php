@@ -465,40 +465,39 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive text-nowrap" style="max-height: 400px">
-                        <table class="table table-borderless">
-                            <thead>
-                            <tr>
-                                <th class="text-capitalize text-body fw-medium fs-6">شرکت </th>
-                                <th class="text-capitalize text-body fw-medium fs-6">تاریخ</th>
-                                <th class="text-end text-capitalize text-body fw-medium fs-6">مبلغ (ریال)</th>
-                            </tr>
-                            </thead>
-                            <tbody class="border-top">
-
-                            @foreach($finances as $finance)
+                    <div class="table-responsive rounded-3" style="margin: 0 5px">
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
                                 <tr>
-                                    <td class="d-flex">
-                                        <div class="rounded bg-lighter d-flex align-items-center h-px-30">
-                                            <img src="{{asset('storage/'.$finance->logo)}}" alt="credit-card" width="30">
-                                        </div>
-                                        <div class="ms-2">
-                                            {{--                                        <h6 class="mb-0 fw-semibold">*4399</h6>--}}
-                                            <small class="text-muted">{{$finance->title}}</small>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted small">{{$finance->date}}</td>
-
-                                    <td class="text-end">
-                                        <div class="ms-2">
-                                            <h6 class="mb-0 fw-semibold">{{number_format($finance->amount)}}</h6>
-                                            <small class="text-muted">{{number_format($finance->amount)}}</small>
-                                        </div>
-                                    </td>
+                                    <th class="py-3">شرکت </th>
+                                    <th class="py-3">تاریخ واریز </th>
+                                    <th class="py-3">مبلغ واریز</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($finances as $finance)
+                                    <tr>
+                                        <td class="d-flex">
+                                            <div class="rounded bg-lighter d-flex align-items-center h-px-30">
+                                                <img src="{{asset('storage/'.$finance->logo)}}" alt="credit-card" width="30">
+                                            </div>
+                                            <div class="ms-2">
+                                                <small class="text-muted">{{$finance->title}}</small>
+                                            </div>
+                                        </td>
+                                        <td class="text-muted small">{{$finance->date}}</td>
+                                        <td class="text-end">
+                                            <div class="ms-2">
+                                                <h6 class="mb-0 fw-semibold">{{number_format($finance->amount)}}</h6>
+                                                <small class="text-muted">{{number_format($finance->amount)}}</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -518,55 +517,39 @@
                             </div>
                         </div>
                     </div>
-                    {{--                    <div class="card-body">--}}
-                    {{--                        <div class="mt-1">--}}
-                    {{--                            <div class="d-flex align-items-center">--}}
-                    {{--                                <p> میلیون ریال</p>--}}
-                    {{--                                <h6 class="mb-0 me-3 display-3 float-left">--}}
-                    {{--                                    {{ number_format(--}}
-                    {{--                                        DB::table('finances')--}}
-                    {{--                                            ->join('projects', 'finances.project_id', '=', 'projects.id')--}}
-                    {{--                                            ->where('projects.flow_level', 'درحال انجام تعهدات')--}}
-                    {{--                                            ->sum('finances.amount') / 1000000, 0--}}
-                    {{--                                    ) }}--}}
-                    {{--                                </h6>--}}
-
-                    {{--                            </div>--}}
-                    {{--                            <small class="text-muted mt-1">مجموع سرمایه گذاری ها ( میلیون ریال )</small>--}}
-                    {{--                        </div>--}}
-                    {{--                    </div>--}}
-                    <div class="table-responsive text-nowrap border-top" style="max-height: 400px">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th class="text-capitalize text-body fw-medium fs-6">شرکت </th>
-                                <th class="text-capitalize text-body fw-medium fs-6">مبلغ ( ریال)</th>
-                                <th class="text-end text-capitalize text-body fw-medium fs-6">درصد از کل</th>
-                            </tr>
-                            </thead>
-                            <tbody class="table-border-bottom-0">
-                            @foreach($projects as $project)
+                    <div class="table-responsive rounded-3" style="margin: 0 5px">
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-sm table-bordered" style="border-collapse: collapse;">
+                                <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
                                 <tr>
-                                    <td class="pe-5"><span class="text-heading">{{$project->title}}</span></td>
-                                    <td class="ps-5 d-flex justify-content-end"><span class="text-heading fw-semibold">{{number_format($project->total_amount)}}  </span></td>
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-end">
-                                            <span class="text-heading fw-semibold me-2">{{round(($project->total_amount / $totalPaid) * 100)}}%</span>
-                                            <i class="mdi  mdi-20px {{round(($project->total_amount / $totalPaid) * 100) >= 10 ? 'mdi-chevron-up text-success' : 'mdi-chevron-down text-danger'}} "></i>
-                                        </div>
-                                    </td>
+                                    <th class="py-3">شرکت </th>
+                                    <th class="py-3">مبلغ کل </th>
+                                    <th class="py-3">سهم از کل پوتفو</th>
                                 </tr>
-                            @endforeach
-
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($projects as $project)
+                                    <tr>
+                                        <td class="pe-5"><span class="text-heading">{{$project->title}}</span></td>
+                                        <td class="ps-5 d-flex justify-content-end"><span class="text-heading fw-semibold">{{number_format($project->total_amount)}}  </span></td>
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-end">
+                                                <span class="text-heading fw-semibold me-2">{{round(($project->total_amount / $totalPaid) * 100)}}%</span>
+                                                <i class="mdi  mdi-20px {{round(($project->total_amount / $totalPaid) * 100) >= 10 ? 'mdi-chevron-up text-success' : 'mdi-chevron-down text-danger'}} "></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-12 col-md-12 col-12">
                 <div class="card" style="max-height: 509px">
-                    <div class="table-responsive rounded-3">
+                    <div class="table-responsive rounded-3" style="margin: 0 5px">
                         <div style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-sm table-bordered" style="border-collapse: collapse;">
                                 <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
