@@ -48,11 +48,10 @@ class ProjectController extends Controller
                 ->leftJoinSub($financeSub, 'f', function ($join) {
                     $join->on('p.id', '=', 'f.project_id');
                 })
-                ->leftJoin('companies as c', 'p.company_id', '=', 'c.id')
                 ->select(
                     'p.id',
-                    'c.commercial_name',
-                    'c.ceo_name as CEO',
+                    'p.title',
+                    'p.CEO',
                     'p.portfo_status',
                     'p.flow_level',
                     'p.progress_percentage',
@@ -74,7 +73,7 @@ class ProjectController extends Controller
                 ->get();
             return Datatables::of($data)
                 ->addColumn('commercial_name', function ($data) {
-                    return ($data->commercial_name);
+                    return ($data->title);
                 })
                 ->addColumn('CEO', function ($data) {
                     return ($data->CEO);
@@ -143,7 +142,7 @@ class ProjectController extends Controller
                     }
                         $actionBtn .= '<button class="btn btn-sm btn-icon btn-eye mx-1" data-bs-toggle="modal" data-bs-target="#showModal'.$data->id.'"><i class="mdi mdi-eye"></i></button>';
 
-                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="'.$data->id.'"><i class="mdi mdi-file-document-multiple-outline"></i></button>';
+//                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="'.$data->id.'"><i class="mdi mdi-file-document-multiple-outline"></i></button>';
 
                     return $actionBtn;
                 })

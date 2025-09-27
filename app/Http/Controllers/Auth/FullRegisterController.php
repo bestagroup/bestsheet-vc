@@ -40,14 +40,13 @@ class FullRegisterController extends Controller
                 'password'        => Hash::make($request->password),
             ]);
 
-            $companies = Company::create([
-                'company_name'    => $request->title,
-                'ceo_name'        => $request->CEO,
-                'user_id'         => $user->id,
-            ]);
+//            $companies = Company::create([
+//                'company_name'    => $request->title,
+//                'ceo_name'        => $request->CEO,
+//                'user_id'         => $user->id,
+//            ]);
 
             $project = Project::create([
-                'company_id'   => $companies->id,
                 'title'        => $request->title,
                 'CEO'          => $request->CEO,
                 'user_id'      => $user->id,

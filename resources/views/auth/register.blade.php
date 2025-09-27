@@ -39,35 +39,23 @@
                         @csrf
 
                         <div class="form-floating form-floating-outline mb-3">
-                            <input type="text"
-                                   class="form-control @error('title') is-invalid @enderror"
-                                   id="title" name="title"
-                                   placeholder="نام شرکت / نام طرح"
-                                   value="{{ old('title') }}" required>
-                            <label for="title">نام شرکت / نام طرح</label>
+                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" placeholder=" نام طرح" value="{{ old('title') }}" required>
+                            <label for="title"> نام طرح</label>
                             @error('title')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-floating form-floating-outline mb-3">
-                            <input type="text"
-                                   class="form-control @error('CEO') is-invalid @enderror"
-                                   id="CEO" name="CEO"
-                                   placeholder="نام رابط / نام مدیرعامل"
-                                   value="{{ old('CEO') }}" required>
-                            <label for="CEO">نام رابط / نام مدیرعامل</label>
+                            <input type="text" class="form-control @error('CEO') is-invalid @enderror" id="CEO" name="CEO" placeholder=" نام مدیرعامل" value="{{ old('CEO') }}" required>
+                            <label for="CEO"> نام مدیرعامل</label>
                             @error('CEO')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-floating form-floating-outline mb-3">
-                            <input type="text"
-                                   class="form-control @error('phone') is-invalid @enderror"
-                                   id="phone" name="phone"
-                                   placeholder="شماره همراه"
-                                   value="{{ old('phone') }}" required>
+                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="شماره همراه" value="{{ old('phone') }}" required>
                             <label for="phone">شماره همراه</label>
                             @error('phone')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -75,11 +63,7 @@
                         </div>
 
                         <div class="form-floating form-floating-outline mb-3">
-                            <input type="email"
-                                   class="form-control @error('email') is-invalid @enderror"
-                                   id="email" name="email"
-                                   placeholder="آدرس ایمیل"
-                                   value="{{ old('email') }}" required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="آدرس ایمیل" value="{{ old('email') }}" required>
                             <label for="email">آدرس ایمیل</label>
                             @error('email')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -90,10 +74,7 @@
                             <div class="form-password-toggle">
                                 <div class="input-group input-group-merge">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="password"
-                                               class="form-control @error('password') is-invalid @enderror"
-                                               id="password" name="password"
-                                               placeholder="رمز عبور" required>
+                                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="رمز عبور" required>
                                         <label for="password">رمز عبور</label>
                                         @error('password')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -108,10 +89,7 @@
                             <div class="form-password-toggle">
                                 <div class="input-group input-group-merge">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="password"
-                                               class="form-control @error('password_confirmation') is-invalid @enderror"
-                                               id="password_confirmation" name="password_confirmation"
-                                               placeholder="تأیید رمز عبور" required>
+                                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" name="password_confirmation" placeholder="تأیید رمز عبور" required>
                                         <label for="password_confirmation">تکرار رمز عبور</label>
                                         @error('password_confirmation')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -124,9 +102,7 @@
 
                         <div class="mb-3 d-flex justify-content-between">
                             <div class="form-check">
-                                <input class="form-check-input @error('terms_accepted') is-invalid @enderror"
-                                       type="checkbox" id="terms-accepted" name="terms_accepted"
-                                       {{ old('terms_accepted') ? 'checked' : '' }} required>
+                                <input class="form-check-input @error('terms_accepted') is-invalid @enderror" type="checkbox" id="terms-accepted" name="terms_accepted" {{ old('terms_accepted') ? 'checked' : '' }} required>
                                 <label class="form-check-label" for="terms-accepted">
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">شرایط و قوانین</a> را با دقت مطالعه نموده‌ام.
                                 </label>

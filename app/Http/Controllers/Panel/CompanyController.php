@@ -38,20 +38,20 @@ class CompanyController extends Controller
 
         if ($request->ajax()) {
 
-            $data = Company::all();
+            $data = project::all();
 
             return Datatables::of($data)
 
                 ->addColumn('logo', function ($data) {
                     if ($data->logo) {
                         $fileUrl = asset('storage/' . $data->logo);
-                        return '<img src="' . $fileUrl . '" alt="' . $data->commercial_name . '" style="width: 80px; height: auto;">';
+                        return '<img src="' . $fileUrl . '" alt="' . $data->title . '" style="width: 80px; height: auto;">';
                     }else{
                         return '';
                     }
                 })
                 ->addColumn('commercial_name', function ($data) {
-                    return ($data->commercial_name);
+                    return ($data->title);
                 })
                 ->addColumn('company_name', function ($data) {
                     return ($data->company_name);
@@ -97,16 +97,23 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         try {
-            $company = new Company();
-            $company->commercial_name       = $request->input('commercial_name');
+            $company = new Project();
+            $company->title                 = $request->input('title');
             $company->company_name          = $request->input('company_name');
-            $company->ceo_name              = $request->input('ceo_name');
             $company->registration_number   = $request->input('registration_number');
             $company->national_id           = $request->input('national_id');
             $company->registration_date     = $request->input('registration_date');
             $company->economic_code         = $request->input('economic_code');
             $company->legal_type            = $request->input('legal_type');
+            $company->tel                   = $request->input('tel');
+            $company->email                 = $request->input('email');
             $company->website               = $request->input('website');
+            $company->postal_code           = $request->input('postal_code');
+            $company->state                 = $request->input('state');
+            $company->city                  = $request->input('city');
+            $company->CEO                   = $request->input('CEO');
+            $company->ceo_national_code     = $request->input('ceo_national_code');
+            $company->address               = $request->input('address');
 
             $result = $company->save();
 
@@ -139,32 +146,32 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         if (Auth::user()->level == 'admin'){
-            $companies = Company::findOrfail($id);
+            $companies = Project::findOrfail($id);
         }elseif(Auth::user()->level == 'applicant'){
-            $companyId = Auth::user()->company->id;
-            $companies = Company::findOrfail($companyId);
+            $companyId = Auth::user()->project->id;
+            $companies = Project::findOrfail($companyId);
         }
         try{
-        $companies->company_name        = $request->input('company_name');
-        $companies->commercial_name     = $request->input('commercial_name');
-        $companies->registration_number = $request->input('registration_number');
-        $companies->national_id         = $request->input('national_id');
-        $companies->economic_code       = $request->input('economic_code');
-        $companies->legal_type          = $request->input('legal_type');
-        $companies->phone               = $request->input('phone');
-        $companies->email               = $request->input('email');
-        $companies->website             = $request->input('website');
-        $companies->province            = $request->input('state');
-        $companies->city                = $request->input('city');
-        $companies->postal_code         = $request->input('postal_code');
-        $companies->ceo_name            = $request->input('ceo_name');
-        $companies->ceo_national_code   = $request->input('ceo_national_code');
-        $companies->address             = $request->input('address');
+            $companies->title                 = $request->input('title');
+            $companies->company_name          = $request->input('company_name');
+            $companies->registration_number   = $request->input('registration_number');
+            $companies->national_id           = $request->input('national_id');
+            $companies->registration_date     = $request->input('registration_date');
+            $companies->economic_code         = $request->input('economic_code');
+            $companies->legal_type            = $request->input('legal_type');
+            $companies->tel                   = $request->input('tel');
+            $companies->email                 = $request->input('email');
+            $companies->website               = $request->input('website');
+            $companies->postal_code           = $request->input('postal_code');
+            $companies->state                 = $request->input('state');
+            $companies->city                  = $request->input('city');
+            $companies->CEO                   = $request->input('CEO');
+            $companies->ceo_national_code     = $request->input('ceo_national_code');
+            $companies->address               = $request->input('address');
         if ($request->input('user_id')) {
             $companies->user_id = $request->input('user_id');
         }
         $result = $companies->update();
-
 
             if ($result == true) {
                 $success = true;
@@ -174,7 +181,7 @@ class CompanyController extends Controller
                 $data    =[
                     'registration_number' => $companies->registration_number,
                     'national_id'         => $companies->national_id,
-                    'phone'               => $companies->phone,
+                    'tel'                 => $companies->tel,
                     'email'               => $companies->email,
                     'address'             => $companies->address,
                 ];
@@ -202,7 +209,7 @@ class CompanyController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $company = Company::findOrfail($request->input('id'));
+            $company = Project::findOrfail($request->input('id'));
             $result = $company->delete();
 
             if ($result == true) {

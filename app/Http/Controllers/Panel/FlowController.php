@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Commitment;
-use App\Models\Company;
 use App\Models\Finance;
 use App\Models\Investstep;
 use App\Models\MediaFile;
@@ -28,7 +27,6 @@ class FlowController extends Controller
         $menupanels     = Menupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
         $projects       = Project::all();
         $finances       = Finance::all();
-        $companies      = Company::all();
         $investsteps    = Investstep::all();
         $files          = MediaFile::where('status' ,'!=' , 5)->get();
 
@@ -46,11 +44,10 @@ class FlowController extends Controller
 
         if ($request->ajax()) {
             $data = DB::table('projects as p')
-                ->leftJoin('companies as c', 'p.company_id', '=', 'c.id')
                 ->select(
                     'p.id',
                     'p.title',
-                    'c.ceo_name as CEO',
+                    'p.CEO',
                     'p.portfo_status',
                     DB::raw('(SELECT i.title FROM investsteps i WHERE i.id = p.invest_step LIMIT 1) as flow_level'),
                     'p.start_date',
@@ -102,7 +99,7 @@ class FlowController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'projects' , 'finances' , 'companies' , 'investsteps' , 'files' , 'commitments']));
+        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'projects' , 'finances' , 'investsteps' , 'files' , 'commitments']));
     }
 
     /**

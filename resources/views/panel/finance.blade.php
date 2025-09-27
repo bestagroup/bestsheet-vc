@@ -145,6 +145,7 @@
                 serverSide: true,
                 ajax: "{{route(request()->segment(2).'.index')}}",
                 columns: [
+                    {data: 'title'        , name: 'title'},
                     {data: 'company_name' , name: 'company_name'},
                     {data: 'serial'       , name: 'serial'    },
                     {data: 'docserial'    , name: 'docserial' },

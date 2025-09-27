@@ -29,19 +29,19 @@ class ProfileController extends Controller
         ];
         $states         = State::select('id' , 'title')->whereStatus(4)->orderBy('title')->get();
         $cities         = City::select('id' , 'title')->whereStatus(4)->orderBy('title')->get();
-        $company        = Auth::user()->company;
+        //$company        = Auth::user()->project;
         $commitments    = Commitment::whereStatus(4)->get();
         $investsteps    = DB::table('investsteps')->get();
-        if($company) {
-            $projects       = Project::with('company')->where('company_id', $company->id)->first();
-            $files          = MediaFile::where('company_id', $company->id)->whereRole(1)->get();
-            $minutes        = Minute::where('company_id', $company->id)->get();
+        if(Auth::user()->project) {
+            $project        = Auth::user()->project;
+            $files          = MediaFile::where('project_id', $project->id)->whereRole(1)->get();
+            $minutes        = Minute::where('project_id', $project->id)->get();
         }else{
-            $projects       = null;
+            $project       = null;
             $investsteps    = null;
             $files          = null;
             $minutes        = null;
     }
-        return view('panel.profile')->with(compact('thispage' , 'projects' , 'company' , 'investsteps' , 'files' , 'minutes' , 'commitments','states' , 'cities'));
+        return view('panel.profile')->with(compact('thispage' , 'project' , 'investsteps' , 'files' , 'minutes' , 'commitments','states' , 'cities'));
     }
 }

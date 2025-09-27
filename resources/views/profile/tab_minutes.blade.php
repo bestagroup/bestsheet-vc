@@ -15,7 +15,7 @@
                     <div class="modal-body">
                     <form id="addminuteform" method="POST" class="row g-4 mb-4" action="{{route('minute.store')}}">
                     @csrf
-                        <input type="hidden" name="project_id" value="{{ $company->id }}">
+                        <input type="hidden" name="project_id" value="{{ $project->id }}">
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
                             <input type="text" class="form-control" id="title" name="title" placeholder="عنوان">
@@ -39,8 +39,8 @@
                     </div>
                         <div class="col-12 col-md-6">
                             <div class="input-group">
-                                <input type="text" name="file_path" class="form-control" id="file_{{ $company->id }}" readonly placeholder="انتخاب فایل">
-                                <button class="btn btn-outline-secondary file-selector" type="button" data-record-id="{{ $company->id }}" data-input-id="file_{{ $company->id }}">
+                                <input type="text" name="file_path" class="form-control" id="file_{{ $project->id }}" readonly placeholder="انتخاب فایل">
+                                <button class="btn btn-outline-secondary file-selector" type="button" data-record-id="{{ $project->id }}" data-input-id="file_{{ $project->id }}">
                                     انتخاب فایل
                                 </button>
                             </div>

@@ -641,7 +641,7 @@
                                                                         </thead>
                                                                         <tbody>
                                                                         <tr>
-                                                                            <td>قرارداد سرمایه گذاری {{$company->company_name}} </td>
+                                                                            <td>قرارداد سرمایه گذاری {{$project->company_name}} </td>
                                                                             <td>33556644</td>
                                                                             <td>1404/03/01</td>
                                                                             <td><a href="{{ asset('#') }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="mdi mdi-eye"></i></a></td>

@@ -31,13 +31,16 @@ class FinancialController extends Controller
         if ($request->ajax()) {
             $data = DB::table('finances as f')
                 ->leftJoin('projects as p', 'p.id', '=', 'f.project_id')
-                ->select('f.serial','f.docserial','f.id as id', 'f.amount', 'f.date', 'p.id as project_id', 'p.company_name')
+                ->select('f.serial','f.docserial','f.id as id', 'f.amount', 'f.date', 'p.id as project_id', 'p.company_name','p.title')
                 ->orderBy('f.serial', 'asc')
                 ->where('f.amount' ,'>' ,0)
                 ->get();
 
             return Datatables::of($data)
 
+                ->addColumn('title', function ($data) {
+                    return ($data->title);
+                })
                 ->addColumn('company_name', function ($data) {
                     return ($data->company_name);
                 })

@@ -13,8 +13,8 @@
                             <i class="mdi mdi-domain" style="font-size:2rem; color:#696cff"></i>
                         </div>
                         <div>
-                            <div class="fw-bold mb-1" style="font-size:1.2rem;">{{ $company->company_name }}</div>
-                            <div class="small text-secondary" dir="ltr" style="font-size:0.95rem;">{{ $company->website }}</div>
+                            <div class="fw-bold mb-1" style="font-size:1.2rem;">{{ $project->company_name }}</div>
+                            <div class="small text-secondary" dir="ltr" style="font-size:0.95rem;">{{ $project->website }}</div>
                         </div>
                     </div>
                     <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="toggleEdituserMode()" style="font-size:.98rem">
@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-12 d-flex border-top pt-3">
                         <dt class="col-5 text-start text-muted">آدرس:</dt>
-                        <dd id="company-address" class="col-7 text-dark mb-0">{{ $company->address }}</dd>
+                        <dd id="company-address" class="col-7 text-dark mb-0">{{ $project->address }}</dd>
                     </div>
                 </dl>
             </div>

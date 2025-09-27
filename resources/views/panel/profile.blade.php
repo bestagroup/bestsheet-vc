@@ -82,7 +82,7 @@
                                 ajax: {
                                     url: "{{ route('minute.index') }}",
                                     data: function (d) {
-                                        d.id = "{{ $company->id }}";
+                                        d.id = "{{ $project->id }}";
                                     }
                                 },
                                 columns: [
@@ -400,9 +400,9 @@
                             }
                         }
                     });
-                    $('#state_{{$company->id}}').on('change', function () {
+                    $('#state_{{$project->id}}').on('change', function () {
                         let stateId = $(this).val();
-                        let $citySelect = $('#city_{{$company->id}}');
+                        let $citySelect = $('#city_{{$project->id}}');
                         $citySelect.html('<option value="">در حال بارگذاری...</option>').trigger('change');
 
                         if (stateId) {
