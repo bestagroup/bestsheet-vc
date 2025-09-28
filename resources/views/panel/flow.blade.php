@@ -436,7 +436,7 @@
                                                                 </form>
                                                             @elseif($step->id == 4)
                                                                 @foreach($files as $file)
-                                                                    @if($file->subject_id == 4 && $file->project_id == $project->id)
+                                                                    @if($file->subject_id == 2 && $file->project_id == $project->id)
                                                                     <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
