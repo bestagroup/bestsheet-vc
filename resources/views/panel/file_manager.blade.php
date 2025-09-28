@@ -20,6 +20,7 @@
                         <th>نام فایل</th>
                         <th>نام اصلی فایل</th>
                         <th>نوع فایل</th>
+                        <th>مرحله</th>
                         <th>سایز فایل</th>
                         <th>تاریخ آپلود</th>
                         <th>پروژه</th>
@@ -146,6 +147,7 @@
                     {data: 'name'           , name: 'name'     },
                     {data: 'original_name'  , name: 'original_name'     },
                     {data: 'type'           , name: 'type'      },
+                    {data: 'step'           , name: 'step'      },
                     {data: 'size'           , name: 'size'      },
                     {data: 'date'           , name: 'date'      },
                     {data: 'title'          , name: 'title'      },
