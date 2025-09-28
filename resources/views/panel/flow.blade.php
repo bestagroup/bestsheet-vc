@@ -436,8 +436,8 @@
                                                                 </form>
                                                             @elseif($step->id == 4)
                                                                 @foreach($files as $file)
-                                                                    @if($file->subject_id == 5 || $file->subject_id == 6 )
-                                                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
+                                                                    @if(($file->subject_id == 5 || $file->subject_id == 6) && $file->project_id == $project->id)
+                                                                    <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
