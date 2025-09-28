@@ -437,7 +437,7 @@
                                                             @elseif($step->id == 4)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 2 && $file->project_id == $project->id)
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
