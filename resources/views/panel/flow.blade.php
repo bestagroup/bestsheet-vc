@@ -408,6 +408,13 @@
                                                                     <button type="submit" class="btn-submit d-none"></button>
                                                                 </form>
                                                             @elseif($step->id == 3)
+                                                                @foreach($files as $file)
+                                                                    @if($file->subject_id == 3 && $file->project_id == $project->id)
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                                                <span style="color: green; font-weight: bold;">✔ تایید شد</span>
+                                                                            </div>
+                                                                    @endif
+                                                                @endforeach
                                                                 <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                     @csrf
                                                                     <input type="hidden" name="project_id" value="{{ $project->id }}">
