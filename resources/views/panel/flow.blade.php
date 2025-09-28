@@ -482,7 +482,8 @@
                                                             @elseif($step->id == 6)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [7,8,9,10,11,12,13,14,15,16]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -                                                                    @endif
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
@@ -546,7 +547,8 @@
                                                             @elseif($step->id == 9)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 19)
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -                                                                    @endif
+                                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
@@ -590,7 +592,8 @@
                                                             @elseif($step->id == 11)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 20)
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -                                                                    @endif
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
@@ -675,7 +678,8 @@
                                                             @elseif($step->id == 14)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,21]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -                                                                    @endif
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
@@ -699,7 +703,8 @@
                                                             @elseif($step->id == 15)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,22]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -                                                                    @endif
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
@@ -723,7 +728,8 @@
                                                             @elseif($step->id == 16)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,23]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -                                                                    @endif
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
@@ -747,7 +753,8 @@
                                                             @elseif($step->id == 17)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,24]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -                                                                    @endif
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                                         @csrf
