@@ -146,9 +146,9 @@ class PaneluserController extends Controller
         }
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
-    public function update(Request $request)
+    public function update(Request $request , $id)
     {
-        $user               = User::findOrfail($request->input('id'));
+        $user               = User::findOrfail($id);
         $user->name         = $request->input('name');
         $user->phone        = $request->input('phone');
         $user->email        = $request->input('email');
