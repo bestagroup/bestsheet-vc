@@ -59,7 +59,9 @@ Route::get('/toggle-theme', function () {
 
 Auth::routes();
 
-Route::post('panel/fullregister', [App\Http\Controllers\Auth\FullRegisterController::class, 'register'])->name('fullregister');
-Route::patch('panel/fullregister/{id}', [App\Http\Controllers\Auth\FullRegisterController::class, 'update'])->name('fullregister.update');
-Route::get('logout'             , [App\Http\Controllers\Auth\FullRegisterController::class, 'logout'])->name('logout');
-Route::post('logout'            , [App\Http\Controllers\Auth\FullRegisterController::class, 'logout'])->name('logout');
+Route::post('panel/fullregister'        , [App\Http\Controllers\Auth\FullRegisterController::class, 'register'])->name('fullregister');
+Route::patch('panel/fullregister/{id}'  , [App\Http\Controllers\Auth\FullRegisterController::class, 'update'])->name('fullregister.update');
+Route::get('logout'                     , [App\Http\Controllers\Auth\FullRegisterController::class, 'logout'])->name('logout');
+Route::post('logout'                    , [App\Http\Controllers\Auth\FullRegisterController::class, 'logout'])->name('logout');
+Route::get('auth/google'                , [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback'       , [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);

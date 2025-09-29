@@ -37,18 +37,8 @@
 
                     <form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="POST" novalidate>
                         @csrf
-
                         <div class="form-floating form-floating-outline mb-3">
-                            <input
-                                type="text"
-                                class="form-control @error('email') is-invalid @enderror"
-                                id="email"
-                                name="email"
-                                placeholder="ایمیل"
-                                value="{{ old('email') }}"
-                                autofocus
-                                required
-                            >
+                            <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="ایمیل" value="{{ old('email') }}" autofocus required>
                             <label for="email">ایمیل</label>
                             @error('email')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -59,14 +49,7 @@
                             <div class="form-password-toggle">
                                 <div class="input-group input-group-merge">
                                     <div class="form-floating form-floating-outline">
-                                        <input
-                                            type="password"
-                                            id="password"
-                                            class="form-control @error('password') is-invalid @enderror"
-                                            name="password"
-                                            placeholder="رمز عبور"
-                                            required
-                                        >
+                                        <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="رمز عبور" required>
                                         <label for="password">رمز عبور</label>
                                         @error('password')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -87,6 +70,9 @@
 
                         <div class="mb-3">
                             <button class="btn btn-primary d-grid w-100" type="submit">ورود</button>
+                        </div>
+                        <div class="mb-3">
+                            <a href="{{url('login/google')}}" class="btn btn-danger d-grid w-100"><i class="fa fa-google mr-2"></i> ورود با حساب گوگل </a>
                         </div>
                     </form>
 
