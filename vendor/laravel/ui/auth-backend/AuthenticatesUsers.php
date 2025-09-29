@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use mysql_xdevapi\Exception;
-
+use Laravel\Socialite\Facades\Socialite;
 trait AuthenticatesUsers
 {
     use RedirectsUsers, ThrottlesLogins;
