@@ -31,7 +31,7 @@ class FinancialController extends Controller
         if ($request->ajax()) {
             $data = DB::table('finances as f')
                 ->leftJoin('projects as p', 'p.id', '=', 'f.project_id')
-                ->select('f.serial','f.docserial','f.id as id', 'f.amount', 'f.date', 'p.id as project_id', 'p.company_name','p.title')
+                ->select('f.serial','f.docserial','f.id as id', 'f.amount', 'f.date', 'p.id as project_id', 'p.company_name','p.title' , 'p.amount_request_accept' , 'p.start_date')
                 ->orderBy('f.serial', 'asc')
                 ->where('f.amount' ,'>' ,0)
                 ->get();
@@ -40,6 +40,12 @@ class FinancialController extends Controller
 
                 ->addColumn('title', function ($data) {
                     return ($data->title);
+                })
+                ->addColumn('contract_amount', function ($data) {
+                    return ($data->amount_request_accept);
+                })
+                ->addColumn('contract_date', function ($data) {
+                    return ($data->start_date);
                 })
                 ->addColumn('company_name', function ($data) {
                     return ($data->company_name);

@@ -21,11 +21,14 @@
                 <table id="sample1" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
-                        <th>عنوان پروژه</th>
-                        <th>شماره قسط</th>
+                        <th>نام شرکت</th>
+                        <th>نام تجاری طرح</th>
+                        <th>مبلغ کل قرارداد</th>
+                        <th>تاریخ قرارداد</th>
                         <th>شماره سند</th>
+                        <th>مرحله پرداخت</th>
                         <th>تاریخ پرداخت</th>
-                        <th>مبلغ واریز</th>
+                        <th>مبلغ پرداخت</th>
                         <th>تغییرات</th>
                     </tr>
                     </thead>
@@ -145,13 +148,15 @@
                 serverSide: true,
                 ajax: "{{route(request()->segment(2).'.index')}}",
                 columns: [
-                    {data: 'title'        , name: 'title'},
-                    {data: 'company_name' , name: 'company_name'},
-                    {data: 'serial'       , name: 'serial'    },
-                    {data: 'docserial'    , name: 'docserial' },
-                    {data: 'date'         , name: 'date'      },
-                    {data: 'amount'       , name: 'amount'    },
-                    {data: 'action'       , name: 'action', orderable: true, searchable: true},
+                    {data: 'company_name'   , name: 'company_name'    },
+                    {data: 'title'          , name: 'title'           },
+                    {data: 'contract_amount', name: 'contract_amount' },
+                    {data: 'contract_date'  , name: 'contract_date'   },
+                    {data: 'serial'         , name: 'serial'          },
+                    {data: 'docserial'      , name: 'docserial'       },
+                    {data: 'date'           , name: 'date'            },
+                    {data: 'amount'         , name: 'amount'          },
+                    {data: 'action'         , name: 'action', orderable: true, searchable: true},
                 ],
                 language: {
                     url: "{{asset('assets/vendor/js/fa.json')}}"
