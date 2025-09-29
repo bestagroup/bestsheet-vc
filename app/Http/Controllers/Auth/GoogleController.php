@@ -20,7 +20,6 @@ class GoogleController extends Controller
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
 
-        // find or create user
         $user = User::firstOrCreate(
             ['email' => $googleUser->getEmail()],
             [
@@ -33,10 +32,8 @@ class GoogleController extends Controller
             ]
         );
 
-        // login
         Auth::login($user);
 
-        // store token if needed
         $user->update([
             'google_token'         => $googleUser->token,
             'google_refresh_token' => $googleUser->refreshToken,

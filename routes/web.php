@@ -65,3 +65,5 @@ Route::get('logout'                     , [App\Http\Controllers\Auth\FullRegiste
 Route::post('logout'                    , [App\Http\Controllers\Auth\FullRegisterController::class, 'logout'])->name('logout');
 Route::get('auth/google'                , [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback'       , [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
+Route::get('login/{provider}'         , 'LoginController@redirectToProvider')   ->name('redirectToProvider');
+Route::get('login/{provider}/callback', 'LoginController@handleProviderCallback')->name('handleProviderCallback');

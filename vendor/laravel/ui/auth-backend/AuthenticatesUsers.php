@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use mysql_xdevapi\Exception;
 
 trait AuthenticatesUsers
 {
@@ -193,5 +194,42 @@ trait AuthenticatesUsers
     protected function guard()
     {
         return Auth::guard();
+    }
+    public function redirectToProvider($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    public function handleProviderCallback($provider)
+    {
+        $user = Socialite::driver($provider)->user();
+        $authUser = $this->findOrCreateUser($user, $provider);
+        Auth::login($authUser, true);
+        try {
+            $user = User::find(Auth::user()->id);
+            $user->email_verify = 1;
+            $user->save();
+        }catch (Exception){
+
+        }
+        alert()->success($user->name.' به داشبورد مدیریتی ' , 'خوش آمدید' );
+        $url  = Session::get('url');
+        return Redirect::to(route('/'));
+    }
+
+    public function findOrCreateUser($user, $provider)
+    {
+        $authUser = User::whereEmail($user->email)->first();
+        if ($authUser) {
+            return $authUser;
+        }
+        return  User::create([
+            'name'              => $googleUser->getName(),
+            'password'          => Hash::make('123456789'),
+            'level'             => 'applicant',
+            'status'            => 4,
+            'role_id'           => 5,
+            'change_password'   => 1,
+        ]);
     }
 }
