@@ -153,7 +153,7 @@ class PaneluserController extends Controller
         $user->phone        = $request->input('phone');
         $user->email        = $request->input('email');
         $user->national_id  = $request->input('national_id');
-        $user->type_id      = $request->input('typeuser_id');
+        //$user->type_id      = $request->input('typeuser_id');
         $user->role_id      = $request->input('typeuser_id');
         $user->birthday     = $request->input('birthday');
         $user->gender       = $request->input('gender');
