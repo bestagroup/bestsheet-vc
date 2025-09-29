@@ -63,7 +63,7 @@ Route::post('panel/fullregister'        , [App\Http\Controllers\Auth\FullRegiste
 Route::patch('panel/fullregister/{id}'  , [App\Http\Controllers\Auth\FullRegisterController::class, 'update'])->name('fullregister.update');
 Route::get('logout'                     , [App\Http\Controllers\Auth\FullRegisterController::class, 'logout'])->name('logout');
 Route::post('logout'                    , [App\Http\Controllers\Auth\FullRegisterController::class, 'logout'])->name('logout');
-Route::get('auth/google'                , [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback'       , [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
-Route::get('login/{provider}'         , 'LoginController@redirectToProvider')   ->name('redirectToProvider');
-Route::get('login/{provider}/callback', 'LoginController@handleProviderCallback')->name('handleProviderCallback');
+//Route::get('auth/google'                , [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle']);
+//Route::get('auth/google/callback'       , [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
+Route::get('login/{provider}'           , [App\Http\Controllers\Auth\LoginController::class, 'redirectToProvider'])   ->name('redirectToProvider');
+Route::get('login/{provider}/callback'  , [App\Http\Controllers\Auth\LoginController::class, 'handleProviderCallback'])->name('handleProviderCallback');

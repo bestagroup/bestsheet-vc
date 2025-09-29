@@ -225,6 +225,7 @@ trait AuthenticatesUsers
         }
         return  User::create([
             'name'              => $googleUser->getName(),
+            'email'             => $user->email,
             'password'          => Hash::make('123456789'),
             'level'             => 'applicant',
             'status'            => 4,
