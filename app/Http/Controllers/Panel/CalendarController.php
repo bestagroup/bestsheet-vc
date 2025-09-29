@@ -9,7 +9,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Services\GoogleCalendarService;
+use Google_Service_Calendar;
+use Google_Service_Calendar_Event;
 
 class CalendarController extends Controller
 {
@@ -71,15 +72,18 @@ class CalendarController extends Controller
             'guests'      => $request->eventGuests ?? [],
         ]);
 
-        $calendar = new GoogleCalendarService(Auth::user());
+        $user = Auth::user();
+        $client = $this->getGoogleClient($user);
+        $service = new Google_Service_Calendar($client);
 
-        $event = $calendar->createEvent(
-            Auth::user(),
-            $request->title,
-            $request->description,
-            $request->start,
-            $request->end
-        );
+        $event = new Google_Service_Calendar_Event([
+            'summary' => $request->title ?? 'Test Event',
+            'description' => $request->description ?? 'From Laravel App',
+            'start' => ['dateTime' => Carbon::parse($request->start ?? now())->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
+            'end'   => ['dateTime' => Carbon::parse($request->end ?? now()->addHour())->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
+        ]);
+
+        $createdEvent = $service->events->insert('primary', $event);
 dd($event);
 
         $event = [
