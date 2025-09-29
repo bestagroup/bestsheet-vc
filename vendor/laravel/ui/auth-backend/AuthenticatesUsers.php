@@ -213,8 +213,7 @@ trait AuthenticatesUsers
 
         }
         alert()->success($user->name.' به داشبورد مدیریتی ' , 'خوش آمدید' );
-        $url  = Session::get('url');
-        return Redirect::to(route('/'));
+        return redirect()->intended('/');
     }
 
     public function findOrCreateUser($user, $provider)
