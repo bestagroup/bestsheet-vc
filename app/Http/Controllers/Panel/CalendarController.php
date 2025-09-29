@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Services\GoogleCalendarService;
 
 class CalendarController extends Controller
 {
@@ -27,6 +28,7 @@ class CalendarController extends Controller
 
         return view('panel.calendar')->with(compact('thispage' , 'users'));
     }
+
     public function getEvents()
     {
         $nowGregorian = Carbon::now();
@@ -55,7 +57,6 @@ class CalendarController extends Controller
         return response()->json($events);
     }
 
-
     public function store(Request $request)
     {
         $calendar = Calendar::create([
@@ -70,7 +71,17 @@ class CalendarController extends Controller
             'guests'      => $request->eventGuests ?? [],
         ]);
 
-        // داده مناسب FullCalendar
+        $calendar = new GoogleCalendarService(Auth::user());
+
+        $event = $calendar->createEvent(
+            Auth::user(),
+            $request->title,
+            $request->description,
+            $request->start,
+            $request->end
+        );
+dd($event);
+
         $event = [
             'id'    => $calendar->id,
             'title' => $calendar->title,
@@ -88,7 +99,6 @@ class CalendarController extends Controller
 
         return response()->json(['success' => true, 'subject' => 'عملیات موفق', 'flag'    => 'success', 'message' => 'رویداد با موفقیت ثبت شد', 'event'   => $event]);
     }
-
 
     public function update(Request $request, $id)
     {

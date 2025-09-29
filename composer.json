@@ -9,6 +9,7 @@
         "cviebrock/eloquent-sluggable": "^10.0",
         "evryn/laravel-toman": "^3.0",
         "ghasedak/php": "^2.1",
+        "google/apiclient": "2.15",
         "guzzlehttp/guzzle": "^7.8",
         "intervention/image": "^2.7",
         "laravel/fortify": "*",

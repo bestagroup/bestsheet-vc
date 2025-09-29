@@ -205,9 +205,17 @@ trait AuthenticatesUsers
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser, true);
+        $google_id             = $user->getId();
+        $google_token          = $user->token;
+        $google_refresh_token  = $user->refreshToken;
+        $google_expires_in     = $user->expiresIn;
         try {
             $user = User::find(Auth::user()->id);
             $user->email_verify = 1;
+            $user->google_id            = $google_id;
+            $user->google_token         = $google_token;
+            $user->google_refresh_token = $google_refresh_token;
+            $user->google_expires_in    = $google_expires_in;
             $user->save();
         }catch (Exception){
 
@@ -223,13 +231,17 @@ trait AuthenticatesUsers
             return $authUser;
         }
         return  User::create([
-            'name'              => $googleUser->getName(),
-            'email'             => $user->email,
-            'password'          => Hash::make('123456789'),
-            'level'             => 'applicant',
-            'status'            => 4,
-            'role_id'           => 5,
-            'change_password'   => 1,
+            'name'                  => $googleUser->getName(),
+            'email'                 => $user->email,
+            'password'              => Hash::make('123456789'),
+            'level'                 => 'applicant',
+            'status'                => 4,
+            'role_id'               => 5,
+            'change_password'       => 1,
+            'google_id'             => $google_id,
+            'google_token'          => $google_token,
+            'google_refresh_token'  => $google_refresh_token,
+            'google_expires_in'     => $google_expires_in,
         ]);
     }
 }
