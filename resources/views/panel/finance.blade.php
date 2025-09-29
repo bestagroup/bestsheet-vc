@@ -154,7 +154,6 @@
                     {data: 'contract_date'  , name: 'contract_date'   },
                     {data: 'serial'         , name: 'serial'          },
                     {data: 'installment'    , name: 'installment'     },
-                    {data: 'docserial'      , name: 'docserial'       },
                     {data: 'date'           , name: 'date'            },
                     {data: 'amount'         , name: 'amount'          },
                     {data: 'action'         , name: 'action', orderable: true, searchable: true},
