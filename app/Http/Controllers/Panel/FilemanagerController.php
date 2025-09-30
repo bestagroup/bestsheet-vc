@@ -35,7 +35,7 @@ class FilemanagerController extends Controller
         if ($request->ajax()) {
             $data = MediaFile::leftjoin('projects', 'projects.id', '=', 'media_files.project_id')
                 ->leftjoin('subject_files', 'subject_files.id', '=', 'media_files.subject_id')
-                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.original_name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title' , 'subject_files.title')->get();
+                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.original_name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title' , 'subject_files.title as step')->get();
 
             return Datatables::of($data)
                 ->addColumn('file_path', function ($data) {
@@ -55,7 +55,7 @@ class FilemanagerController extends Controller
                     return ($data->name);
                 })
                 ->addColumn('step', function ($data) {
-                    return ($data->title);
+                    return ($data->step);
                 })
                 ->addColumn('original_name', function ($data) {
                     return ($data->original_name);
