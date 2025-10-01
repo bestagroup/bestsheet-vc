@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Calendar;
+use Google\Service\Calendar\Event;
+use Google_Service_Calendar_Event;
 use Morilog\Jalali\Jalalian;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Google_Service_Calendar;
-use Google_Service_Calendar_Event;
+use App\Services\GoogleService;
 
 class CalendarController extends Controller
 {
@@ -72,18 +73,19 @@ class CalendarController extends Controller
             'guests'      => $request->eventGuests ?? [],
         ]);
 
-        $user = Auth::user();
-        $client = $this->getGoogleClient($user);
-        $service = new Google_Service_Calendar($client);
+        $googleCalendar = GoogleService::getClient(auth()->user());
 
-        $event = new Google_Service_Calendar_Event([
+        $event = new Event([
             'summary' => $request->title ?? 'Test Event',
             'description' => $request->description ?? 'From Laravel App',
             'start' => ['dateTime' => Carbon::parse($request->start ?? now())->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
             'end'   => ['dateTime' => Carbon::parse($request->end ?? now()->addHour())->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
+            'attendees' => array_map(function ($email) {
+                return ['email' => $email];
+            }, $request->attendees ?? [])
         ]);
 
-        $createdEvent = $service->events->insert('primary', $event);
+        $googleCalendar->events->insert('primary', $event);
 dd($event);
 
         $event = [
