@@ -75,8 +75,8 @@ class CalendarController extends Controller
 
         $googleCalendar = GoogleService::getClient(auth()->user());
 dd( [
-         $request->eventStartDate,
-         $request->eventEndDate
+         jdate($request->eventStartDate)->toCarbon(),
+         jdate($request->eventEndDate)->toCarbon()
     ]);
         $event = new Event([
             'summary' => $request->eventTitle ?? 'Test Event',
