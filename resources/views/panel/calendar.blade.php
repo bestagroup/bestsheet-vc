@@ -106,7 +106,61 @@
             background: transparent;
         }
         .app-calendar-sidebar .inline-calendar { display:block; }
+        /* make flatpickr-wrapper behave like the input itself */
+        .input-group .flatpickr-wrapper {
+            flex: 1 1 auto;
+            width: 1% !important;
+            min-width: 0;
+            display: flex;
+            align-items: center; /* align input vertically */
+        }
 
+        /* force input inside flatpickr wrapper to expand full width */
+        .input-group .flatpickr-wrapper .form-control {
+            flex: 1 1 auto;
+            width: 100% !important;
+            border-right: 0; /* مرز سمت چپ رو حذف کن وقتی آیکون قبلشه */
+            box-shadow: none;
+            border-radius: 8px 0 0 8px;
+        }
+
+        /* style the span (calendar icon) */
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: .375rem 0 0 .375rem; /* گردی سمت چپ */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 .75rem;
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+
+        .input-group .form-control {
+            border-radius: 0 .375rem .375rem 0; /* گردی سمت راست */
+        }
+
+        /* calendar on top of everything inside offcanvas */
+        #addEventSidebar .flatpickr-calendar {
+            z-index: 12000 !important;
+            pointer-events: auto;          /* خیلی مهم: کلیک‌ها پذیرفته شوند */
+        }
+
+        /* اگر overlay پروژه‌ات روی محتوا می‌افتد، کلیکش را خنثی کن */
+        .app-calendar-wrapper .app-overlay {
+            pointer-events: none !important;  /* فقط جلوی کلیک را می‌گیریم؛ نمایش/عدم‌نمایش با کلاس‌های خودت */
+        }
+
+        /* مطمئن شو backdrop پایین‌تر از آف‌کانواس و تقویم است */
+        .offcanvas-backdrop {
+            z-index: 1000 !important;
+        }
+
+        /* برای محاسبه صحیح موقعیت پاپ‌آپ داخل آف‌کانواس */
+        #addEventSidebar .offcanvas-body {
+            position: relative;
+        }
     </style>
 @endsection
 @section('content')
@@ -204,21 +258,19 @@
 
                             <div class="mb-3">
                                 <label class="form-label" for="eventStartDate">تاریخ شروع</label>
-                                <div class="input-group w-100">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="mdi mdi-calendar-month-outline"></i></span>
                                     <input type="text" class="form-control flatpickr-input" id="eventStartDate" name="eventStartDate" placeholder="انتخاب تاریخ شروع">
-                                    <span class="mdi mdi-calendar-month-outline"></span>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label" for="eventEndDate">تاریخ پایان</label>
-                                <div class="input-group w-100">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="mdi mdi-calendar-month-outline"></i></span>
                                     <input type="text" class="form-control flatpickr-input" id="eventEndDate" name="eventEndDate" placeholder="انتخاب تاریخ پایان">
-                                    <span class="mdi mdi-calendar-month-outline"></span>
                                 </div>
                             </div>
-
-
 
                             <div class="mb-3">
                                 <label class="switch">
