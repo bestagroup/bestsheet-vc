@@ -74,8 +74,11 @@ class CalendarController extends Controller
         ]);
 
         $googleCalendar = GoogleService::getClient(auth()->user());
-dd( Jalalian::fromFormat('Y-m-d\\TH:i:s', $request->eventStartDate)->toCarbon()->format('Y-m-d\TH:i:s'),
-    Jalalian::fromFormat('Y-m-d\\TH:i:s', $request->eventEndDate)->toCarbon()->format('Y-m-d\TH:i:s')
+
+      $start =  str_replace('T', ' ', $request->eventStartDate);
+      $end   =  str_replace('T', ' ', $request->eventEndDate);
+dd( Jalalian::fromFormat('Y-m-d H:i:s',$start)->toCarbon()->format('Y-m-d\TH:i:s'),
+    Jalalian::fromFormat('Y-m-d H:i:s', $end)->toCarbon()->format('Y-m-d\TH:i:s')
 );
 
         $event = new Event([
