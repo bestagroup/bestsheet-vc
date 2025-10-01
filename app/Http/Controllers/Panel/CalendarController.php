@@ -75,8 +75,8 @@ class CalendarController extends Controller
 
         $googleCalendar = GoogleService::getClient(auth()->user());
 dd( [
-        'start' => ['dateTime' => \Morilog\Jalali\Calendar::parse($request->eventStartDate ?? now()->format('Y/m/d H:i'))->toCarbon()->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
-        'end'   => ['dateTime' => \Morilog\Jalali\Calendar::parse($request->eventEndDate ?? now()->addHour()->format('Y/m/d H:i'))->toCarbon()->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
+        'start' => ['dateTime' => \Morilog\Jalali\Jalalian::parse($request->eventStartDate ?? now()->format('Y/m/d H:i'))->toCarbon()->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
+        'end'   => ['dateTime' => \Morilog\Jalali\Jalalian::parse($request->eventEndDate ?? now()->addHour()->format('Y/m/d H:i'))->toCarbon()->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
     ]
 );
         $event = new Event([
