@@ -75,21 +75,9 @@ class CalendarController extends Controller
 
         $googleCalendar = GoogleService::getClient(auth()->user());
 dd( [
-        'start' => [
-            'dateTime' => $request->eventStartDate
-                ? Jalalian::fromFormat('Y/m/d H:i', $request->eventStartDate)->toCarbon()->toRfc3339String()
-                : now()->toRfc3339String(),
-            'timeZone' => 'Asia/Tehran'
-        ],
-        'end' => [
-            'dateTime' => $request->eventEndDate
-                ? Jalalian::fromFormat('Y/m/d H:i', $request->eventEndDate)->toCarbon()->toRfc3339String()
-                : now()->addHour()->toRfc3339String(),
-            'timeZone' => 'Asia/Tehran'
-        ],
-    ]
-
-);
+         $request->eventStartDate,
+         $request->eventEndDate
+    ]);
         $event = new Event([
             'summary' => $request->eventTitle ?? 'Test Event',
             'description' => $request->eventDescription ?? 'From Laravel App',
