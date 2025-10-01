@@ -23,7 +23,7 @@ class GoogleService
 
         if ($client->isAccessTokenExpired()) {
             $newToken = $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-
+dd($newToken);
             $user->google_token       = $newToken['access_token'];
             $user->google_expires_in  = $newToken['expires_in'];
             if (isset($newToken['refresh_token'])) {
