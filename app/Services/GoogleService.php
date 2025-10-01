@@ -10,7 +10,7 @@ class GoogleService
     public static function getClient($user)
     {
         $client = new Client();
-        $client->setApplicationName('Laravel Calendar Integration');
+        $client->setApplicationName('bestsheetweb');
         $client->setScopes(Calendar::CALENDAR);
         $client->setAccessType('offline');
 
