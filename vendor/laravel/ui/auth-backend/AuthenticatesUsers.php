@@ -197,7 +197,14 @@ trait AuthenticatesUsers
     }
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->redirect();
+//        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)
+            ->scopes(['https://www.googleapis.com/auth/calendar'])
+            ->with([
+                'access_type' => 'offline',
+                'prompt'      => 'consent',
+            ])
+            ->redirect();
     }
 
     public function handleProviderCallback($provider)
