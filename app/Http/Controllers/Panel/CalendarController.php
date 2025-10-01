@@ -75,10 +75,8 @@ class CalendarController extends Controller
 
         $googleCalendar = GoogleService::getClient(auth()->user());
 dd( [
-        Carbon::parse(Jalalian::$request->eventStartDate->toCarbon())
-        ->format('Y-m-d\TH:i:s'),
-        Carbon::parse(Jalalian::$request->eventEndDate->toCarbon())
-        ->format('Y-m-d\TH:i:s')
+        Jalalian::fromFormat('Y-m-d H:i', $request->eventStartDate),
+        Jalalian::fromFormat('Y-m-d H:i', $request->eventEndDate)
     ]);
         $event = new Event([
             'summary' => $request->eventTitle ?? 'Test Event',
