@@ -197,34 +197,41 @@ trait AuthenticatesUsers
     }
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->redirect();
-    }
+        return Socialite::driver($provider)
+            ->scopes(['https://www.googleapis.com/auth/calendar'])
+            ->with([
+                'access_type' => 'offline',
+                'prompt'      => 'consent',
+            ])
+            ->redirect();    }
 
     public function handleProviderCallback($provider)
     {
-        $user = Socialite::driver($provider)->user();
-        $authUser = $this->findOrCreateUser($user, $provider);
+        $socialUser = Socialite::driver($provider)->user();
+        $authUser = $this->findOrCreateUser($socialUser, $provider);
         Auth::login($authUser, true);
-        $google_id            = $user->getId();
-        $google_token         = $user->token;
-        $google_refresh_token = $user->refreshToken;
-        $google_expires_in    = $user->expiresIn;
+
+        $google_id            = $socialUser->getId();
+        $google_token         = $socialUser->token;
+        $google_refresh_token = $socialUser->refreshToken;
+        $google_expires_in    = $socialUser->expiresIn;
+
         try {
             $user = User::find(Auth::id());
-            $user->email_verify     = 1;
-            $user->google_id        = $google_id;
-            $user->google_token     = $google_token;
-            $user->google_expires_in= $google_expires_in;
+            $user->email_verify      = 1;
+            $user->google_id         = $google_id;
+            $user->google_token      = $google_token;
+            $user->google_expires_in = $google_expires_in;
+
             if ($google_refresh_token) {
                 $user->google_refresh_token = $google_refresh_token;
             }
 
             $user->save();
-
-        }catch (Exception){
-
+        } catch (\Exception $e) {
         }
-        alert()->success($user->name.' به داشبورد مدیریتی ' , 'خوش آمدید' );
+
+        alert()->success($user->name.' به داشبورد مدیریتی', 'خوش آمدید');
         return redirect()->intended('/');
     }
 
