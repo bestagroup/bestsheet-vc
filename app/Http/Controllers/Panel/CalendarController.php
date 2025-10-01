@@ -84,6 +84,7 @@ class CalendarController extends Controller
                 return ['email' => $email];
             }, $request->attendees ?? [])
         ]);
+        dd($event);
 
         $googleCalendar->events->insert('primary', $event);
 dd($event);
