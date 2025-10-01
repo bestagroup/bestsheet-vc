@@ -126,12 +126,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const isAllDay = allDaySwitch && allDaySwitch.checked;
 
             const common = {
-                altInput: true,
+                altInput: false,
                 locale: 'fa',
                 disableMobile: true,
-                appendTo: addEventSidebar,
-                static: true,
-                minDate: MIN_DATE,
+                appendTo: document.body,
+                static: false,
+                // کمک به بسته‌شدن بهتر:
+                closeOnSelect: true,
+                clickOpens: true,
+                allowInput: false,
                 onReady: function (selectedDates, dateStr, instance) {
                     if (instance.isMobile) instance.mobileInput.setAttribute('step', null);
                 }
@@ -141,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 start = eventStartDate.flatpickr(Object.assign({}, common, {
                     enableTime: !isAllDay,
                     altFormat: isAllDay ? 'Y/m/d' : 'Y/m/d - H:i',
+                    positionElement: eventStartDate,
                     onChange: function (sel) {
                         if (end && sel && sel[0]) end.set('minDate', sel[0]);
                     }
@@ -151,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 end = eventEndDate.flatpickr(Object.assign({}, common, {
                     enableTime: !isAllDay,
                     altFormat: isAllDay ? 'Y/m/d' : 'Y/m/d - H:i',
+                    positionElement: eventEndDate,
                     onChange: function (sel) {
                         if (start && sel && sel[0]) start.set('maxDate', sel[0]);
                     }
@@ -160,6 +165,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // نخستین بار اینیت
         initStartEndPickers();
+
+        document.addEventListener('mousedown', function (e) {
+            const cal = document.querySelector('.flatpickr-calendar.open');
+            if (!cal) return;
+            const s = eventStartDate, t = eventEndDate;
+            if (!cal.contains(e.target) && !s.contains(e.target) && !t.contains(e.target)) {
+                try { if (start) start.close(); if (end) end.close(); } catch(_) {}
+            }
+        }, true);
 
 
 
@@ -516,7 +530,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // ---------- Add new event (AJAX -> store) ----------
-        // جایگزین هندلر فعلی btnAddEvent
         btnAddEvent.addEventListener('click', async e => {
             const status = await fv.validate(); //
 
@@ -576,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // ---------- Update event (AJAX -> update) ----------
-// جایگزین هندلر فعلی btnUpdateEvent
+
         btnUpdateEvent.addEventListener('click', async e => {
             if (!eventToUpdate) return;
 
@@ -664,7 +677,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addEventSidebar.addEventListener('hidden.bs.offcanvas', function () {
             resetValues();
+            try { if (start) { start.destroy(); start = null; } } catch(e){}
+            try { if (end)   { end.destroy();   end   = null; } } catch(e){}
         });
+
 
         // ---------- Sidebar toggle behaviour ----------
         btnToggleSidebar.addEventListener('click', e => {

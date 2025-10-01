@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-calendar.css')}}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
+        .flatpickr-time {
+            direction: ltr;
+        }
         .flatpickr-calendar {
             background-color: #fff !important;
             border: 1px solid #ddd;
@@ -104,6 +107,7 @@
             border: 0;
             width: 100%;
             background: transparent;
+            z-index: 10000;
         }
         .app-calendar-sidebar .inline-calendar { display:block; }
         /* make flatpickr-wrapper behave like the input itself */
@@ -259,8 +263,17 @@
                             <div class="mb-3">
                                 <label class="form-label" for="eventStartDate">تاریخ شروع</label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="mdi mdi-calendar-month-outline"></i></span>
-                                    <input type="text" class="form-control flatpickr-input" id="eventStartDate" name="eventStartDate" placeholder="انتخاب تاریخ شروع">
+                                        <span class="input-group-text">
+                                        <i class="mdi mdi-calendar-month-outline"></i>
+                                        </span>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="eventStartDate"
+                                        name="eventStartDate"
+                                        placeholder="انتخاب تاریخ شروع"
+                                        autocomplete="off"
+                                    >
                                 </div>
                             </div>
 
