@@ -61,7 +61,7 @@ class CalendarController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->eventGuests);
+
         $calendar = Calendar::create([
             'title'       => $request->eventTitle,
             'label'       => $request->eventLabel,
@@ -79,6 +79,9 @@ class CalendarController extends Controller
         $start =  str_replace('T', ' ', $request->eventStartDate);
         $end   =  str_replace('T', ' ', $request->eventEndDate);
 
+        $guestIds = $request->eventGuests ?? [];
+        $emails = User::whereIn('id', $guestIds)->pluck('email')->toArray();
+
         $event = new Event([
             'summary' => $request->eventTitle ?? 'Test Event',
             'description' => $request->eventDescription ?? 'From Laravel App',
@@ -86,7 +89,7 @@ class CalendarController extends Controller
             'end'   => ['dateTime' => Jalalian::fromFormat('Y-m-d H:i:s', $end)->toCarbon()->setTimezone('Asia/Tehran')->format('Y-m-d\TH:i:sP')],
             'attendees' => array_map(function ($email) {
                 return ['email' => $email];
-            }, $request->attendees ?? [])
+            }, $emails)
         ]);
 
         $googleCalendar->events->insert('primary', $event);
