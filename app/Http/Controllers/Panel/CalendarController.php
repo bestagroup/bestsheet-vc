@@ -81,8 +81,8 @@ class CalendarController extends Controller
         $event = new Event([
             'summary' => $request->eventTitle ?? 'Test Event',
             'description' => $request->eventDescription ?? 'From Laravel App',
-            'start' => ['dateTime' => Jalalian::fromFormat('Y-m-d H:i:s',$start)->toCarbon()->format('Y-m-d\TH:i:s')],
-            'end'   => ['dateTime' => Jalalian::fromFormat('Y-m-d H:i:s', $end)->toCarbon()->format('Y-m-d\TH:i:s')],
+            'start' => ['dateTime' => Jalalian::fromFormat('Y-m-d H:i:s',$start)->toCarbon()->setTimezone('Asia/Tehran')->format('Y-m-d\TH:i:sP')],
+            'end'   => ['dateTime' => Jalalian::fromFormat('Y-m-d H:i:s', $end)->toCarbon()->setTimezone('Asia/Tehran')->format('Y-m-d\TH:i:sP')],
             'attendees' => array_map(function ($email) {
                 return ['email' => $email];
             }, $request->attendees ?? [])
