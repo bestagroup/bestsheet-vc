@@ -14,13 +14,21 @@ class GoogleService
         $client->setScopes(Calendar::CALENDAR);
         $client->setAccessType('offline');
 
-        // دسترسی‌ها از دیتابیس یا session
-        $client->setAccessToken($user->google_token);
+        $client->setAccessToken([
+            'access_token'  => $user->google_token,
+            'expires_in'    => $user->google_expires_in,
+            'refresh_token' => $user->google_refresh_token,
+            'created'       => 0,
+        ]);
 
-        // در صورت منقضی شدن refresh شود
         if ($client->isAccessTokenExpired()) {
-            $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-            $user->google_token = $client->getAccessToken();
+            $newToken = $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+
+            $user->google_token       = $newToken['access_token'];
+            $user->google_expires_in  = $newToken['expires_in'];
+            if (isset($newToken['refresh_token'])) {
+                $user->google_refresh_token = $newToken['refresh_token'];
+            }
             $user->save();
         }
 
