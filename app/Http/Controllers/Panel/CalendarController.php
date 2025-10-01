@@ -86,7 +86,6 @@ class CalendarController extends Controller
         ]);
 
         $googleCalendar->events->insert('primary', $event);
-dd($event);
 
         $event = [
             'id'    => $calendar->id,
