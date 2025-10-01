@@ -75,17 +75,14 @@ class CalendarController extends Controller
 
         $googleCalendar = GoogleService::getClient(auth()->user());
 
-      $start =  str_replace('T', ' ', $request->eventStartDate);
-      $end   =  str_replace('T', ' ', $request->eventEndDate);
-dd( Jalalian::fromFormat('Y-m-d H:i:s',$start)->toCarbon()->format('Y-m-d\TH:i:s'),
-    Jalalian::fromFormat('Y-m-d H:i:s', $end)->toCarbon()->format('Y-m-d\TH:i:s')
-);
+        $start =  str_replace('T', ' ', $request->eventStartDate);
+        $end   =  str_replace('T', ' ', $request->eventEndDate);
 
         $event = new Event([
             'summary' => $request->eventTitle ?? 'Test Event',
             'description' => $request->eventDescription ?? 'From Laravel App',
-            'start' => ['dateTime' => Carbon::parse($request->eventStartDate ?? now())->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
-            'end'   => ['dateTime' => Carbon::parse($request->eventEndDate ?? now()->addHour())->toRfc3339String(), 'timeZone' => 'Asia/Tehran'],
+            'start' => ['dateTime' => Jalalian::fromFormat('Y-m-d H:i:s',$start)->toCarbon()->format('Y-m-d\TH:i:s')],
+            'end'   => ['dateTime' => Jalalian::fromFormat('Y-m-d H:i:s', $end)->toCarbon()->format('Y-m-d\TH:i:s')],
             'attendees' => array_map(function ($email) {
                 return ['email' => $email];
             }, $request->attendees ?? [])
