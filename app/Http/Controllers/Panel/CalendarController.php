@@ -61,6 +61,7 @@ class CalendarController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->eventGuests);
         $calendar = Calendar::create([
             'title'       => $request->eventTitle,
             'label'       => $request->eventLabel,
