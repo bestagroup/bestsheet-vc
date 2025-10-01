@@ -10,10 +10,10 @@ class GoogleService
     public static function getClient($user)
     {
         $client = new Client();
-        $client->setApplicationName('bestsheetweb');
+        $client->setApplicationName('Bestsheet Web App');
         $client->setScopes(Calendar::CALENDAR);
         $client->setAccessType('offline');
-
+dd($user);
         $client->setAccessToken([
             'access_token'  => $user->google_token,
             'expires_in'    => $user->google_expires_in,
