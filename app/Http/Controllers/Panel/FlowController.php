@@ -27,7 +27,7 @@ class FlowController extends Controller
         $menupanels     = Menupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
         $projects       = Project::all();
         $finances       = Finance::all();
-        $investsteps    = Investstep::all();
+        $investsteps    = Investstep::whereStats(4)->get();
         $files          = MediaFile::where('status' ,'!=' , 5)->get();
 
         $commitments    = Commitment::whereStatus(4)->get();
