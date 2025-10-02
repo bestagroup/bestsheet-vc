@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
             filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
             inlineCalendar = document.querySelector('.inline-calendar');
 
+        let pendingDate = null;
         let eventToUpdate,
             currentEvents = [], // we'll populate from server
             isFormValid = false,
@@ -70,6 +71,15 @@ document.addEventListener('DOMContentLoaded', function () {
         // Init event Offcanvas
         const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
 
+        addEventSidebar.addEventListener('show.bs.offcanvas', function () {
+            ensurePickers();
+        });
+
+        addEventSidebar.addEventListener('shown.bs.offcanvas', function () {
+            applyPendingDate();
+        });
+
+
         // ---------- select2 inits (kept from original) ----------
         if (eventLabel.length) {
             function renderBadges(option) {
@@ -77,13 +87,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 var $badge = "<span class='badge badge-dot bg-" + $(option.element).data('label') + " me-2'> " + '</span>' + option.text;
                 return $badge;
             }
+
             eventLabel.wrap('<div class="position-relative"></div>').select2({
                 placeholder: 'انتخاب',
                 dropdownParent: eventLabel.parent(),
                 templateResult: renderBadges,
                 templateSelection: renderBadges,
                 minimumResultsForSearch: -1,
-                escapeMarkup: function (es) { return es; }
+                escapeMarkup: function (es) {
+                    return es;
+                }
             });
         }
 
@@ -96,13 +109,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     "<img src='" + $(option.element).data('avatar') + "' alt='avatar' class='rounded-circle' />" + '</div>' + option.text + '</div>';
                 return $avatar;
             }
+
             eventGuests.wrap('<div class="position-relative"></div>').select2({
                 placeholder: 'انتخاب',
                 dropdownParent: eventGuests.parent(),
                 closeOnSelect: false,
                 templateResult: renderGuestAvatar,
                 templateSelection: renderGuestAvatar,
-                escapeMarkup: function (es) { return es; }
+                escapeMarkup: function (es) {
+                    return es;
+                }
             });
         }
 
@@ -111,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const now = new JDate();
             return new Date(now.getFullYear(), now.getMonth(), now.getDate());
         }
+
         const MIN_DATE = startOfToday();
 
         function isBeforeToday(dateObj) {
@@ -122,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // ---------- flatpickr inits (kept from original) ----------
         let start, end;
+
         function initStartEndPickers() {
             const isAllDay = allDaySwitch && allDaySwitch.checked;
 
@@ -171,17 +189,26 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!cal) return;
             const s = eventStartDate, t = eventEndDate;
             if (!cal.contains(e.target) && !s.contains(e.target) && !t.contains(e.target)) {
-                try { if (start) start.close(); if (end) end.close(); } catch(_) {}
+                try {
+                    if (start) start.close();
+                    if (end) end.close();
+                } catch (_) {
+                }
             }
         }, true);
-
 
 
 // تغییر حالت "تمام‌روز" → destroy & reinit
         if (allDaySwitch) {
             allDaySwitch.addEventListener('change', function () {
-                try { if (start) start.destroy(); } catch (e) {}
-                try { if (end) end.destroy(); } catch (e) {}
+                try {
+                    if (start) start.destroy();
+                } catch (e) {
+                }
+                try {
+                    if (end) end.destroy();
+                } catch (e) {
+                }
                 initStartEndPickers();
             });
         }
@@ -196,9 +223,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 disableMobile: true
             });
         }
+
         // ---------- helper utilities ----------
 
-        function pad(n) { return n < 10 ? '0' + n : n; }
+        function pad(n) {
+            return n < 10 ? '0' + n : n;
+        }
+
         // format JS Date -> "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss" (no timezone)
         function formatDateForServer(dateObj, allDay = false) {
             if (!dateObj) return null;
@@ -213,8 +244,56 @@ document.addEventListener('DOMContentLoaded', function () {
             return `${y}-${m}-${d} ${hh}:${mm}:${ss}`; // DATETIME با فاصله
         }
 
+        // ⬇️ بعد از formatDateForServer و قبل از normalizeServerEvent
+        function toJsDate(x) {
+            if (!x) return null;
+            // اگر flatpickr به ما Date داده
+            if (x instanceof Date && !isNaN(x)) return x;
+            // اگر JDate باشد و تاریخ داخلی داشته باشد
+            if (typeof x === 'object' && x['_date'] instanceof Date && !isNaN(x['_date'])) return x['_date'];
+            // اگر استرینگ میلادی باشد
+            if (typeof x === 'string') {
+                const d = new Date(x.replace('T', ' '));
+                if (!isNaN(d)) return d;
+            }
+            return null;
+        }
 
-// REPLACE: getDateFromInput
+        // مطمئن شو اینستنس‌های flatpickr موجودند (اگر destroy شده‌اند، دوباره init کن)
+        function ensurePickers() {
+            if (!start || !end) {
+                initStartEndPickers();
+            }
+        }
+
+        // ست تاریخ روی flatpickr با درنظر گرفتن allDay
+        function safeSet(fp, value, isAllDay) {
+            if (!fp || !value) return;
+            const jsDate = toJsDate(value);
+            if (!jsDate) return;
+            fp.setDate(jsDate, true, isAllDay ? 'Y-m-d' : 'Y-m-d H:i');
+        }
+
+        function applyPendingDate() {
+            if (!pendingDate) return;
+            ensurePickers();
+            const isAllDay = allDaySwitch && allDaySwitch.checked;
+            try { if (start) start.clear(); if (end) end.clear(); } catch(_) {}
+
+            // ست هر دو فیلد روی تاریخ کلیک‌شده
+            safeSet(start, pendingDate, isAllDay);
+            safeSet(end,   pendingDate, isAllDay);
+
+            // برای اینکه FormValidation متوجه مقدار شدن فیلدها بشه:
+            if (eventStartDate) eventStartDate.dispatchEvent(new Event('change', { bubbles: true }));
+            if (eventEndDate)   eventEndDate.dispatchEvent(new Event('change',   { bubbles: true }));
+
+            pendingDate = null;
+        }
+
+
+
+        // REPLACE: getDateFromInput
         function getDateFromInput(fpInstance, inputValue) {
             try {
                 // 1) اگر flatpickr اینستنس داریم و selectedDates پر است، همان را برگردان
@@ -305,18 +384,25 @@ document.addEventListener('DOMContentLoaded', function () {
             // پر کردن فرم با اطلاعات event
             eventTitle.value = eventToUpdate.title;
 
-            start.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
-            if (eventToUpdate.allDay === true) {
-                allDaySwitch.checked = true;
-            } else {
-                allDaySwitch.checked = false;
-            }
+            // هماهنگ کردن حالت تمام‌روز + ری‌اینیت بر اساس آن
+            allDaySwitch.checked = !!eventToUpdate.allDay;
+            // تریگر تغییر تا destroy/reinit داخلی‌ات اجرا شود
+            allDaySwitch.dispatchEvent(new Event('change'));
 
-            if (eventToUpdate.end !== null) {
-                end.setDate(new JDate(eventToUpdate.end), true, 'Y-m-d');
-            } else {
-                end.setDate(new JDate(eventToUpdate.start), true, 'Y-m-d');
+            // مطمئن شو پیکرها حاضرند
+            ensurePickers();
+
+            // تبدیل و ست
+            const s = toJsDate(eventToUpdate.start);
+            const e = toJsDate(eventToUpdate.end || eventToUpdate.start);
+            try {
+                if (start) start.clear();
+                if (end) end.clear();
+            } catch (e) {
             }
+            safeSet(start, s, !!eventToUpdate.allDay);
+            safeSet(end, e, !!eventToUpdate.allDay);
+
 
             eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
 
@@ -375,13 +461,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.group('GET /panel/calendar/events → RAW');
                     console.log('query:', params);
                     console.log('raw:', res);
-                    try { console.table(Array.isArray(res) ? res : []); } catch(_) {}
+                    try {
+                        console.table(Array.isArray(res) ? res : []);
+                    } catch (_) {
+                    }
                     console.groupEnd();
 
                     // نگه‌داشتن آخرین پاسخ برای بررسی بعدی:
                     window._lastEventsRaw = res;
 
-                    if (!Array.isArray(res)) { successCallback([]); return; }
+                    if (!Array.isArray(res)) {
+                        successCallback([]);
+                        return;
+                    }
 
                     // نرمال‌سازی خودت:
                     currentEvents = res.map(normalizeServerEvent);
@@ -414,11 +506,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // ---------- Init FullCalendar (kept mostly same) ----------
-        let { dayGrid, interaction, timeGrid, list } = calendarPlugins;
+        let {dayGrid, interaction, timeGrid, list} = calendarPlugins;
         let calendar = new Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            validRange: function(nowDate) {
-                return { start: nowDate };
+            validRange: function (nowDate) {
+                return {start: nowDate};
             },
             events: fetchEvents,
             plugins: [interaction, dayGrid, timeGrid, list],
@@ -427,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dayMaxEvents: 2,
             eventResizableFromStart: true,
             customButtons: {
-                sidebarToggle: { text: 'نوار کناری' }
+                sidebarToggle: {text: 'نوار کناری'}
             },
             headerToolbar: {
                 start: '',
@@ -437,51 +529,70 @@ document.addEventListener('DOMContentLoaded', function () {
             direction: direction,
             initialDate: new Date(),
             navLinks: true,
-            eventClassNames: function ({ event: calendarEvent }) {
+            eventClassNames: function ({event: calendarEvent}) {
                 const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar];
                 return ['fc-event-' + colorName];
             },
-            eventContent: function(arg) {
+            eventContent: function (arg) {
                 // اگر ساعت داشته باشه (allDay نیست) → نمایش ساعت + خط تیره + عنوان
                 let timeText = arg.timeText ? `<span class="me-1">${arg.timeText}</span>` : '';
                 let separator = arg.timeText ? `<span class="mx-1">-</span>` : '';
                 let title = `<span>${arg.event.title}</span>`;
 
-                return { html: timeText + separator + title };
+                return {html: timeText + separator + title};
             },
             dateClick: function (info) {
-                // اگر روز انتخابی قبل از امروز است، نذار فرم باز شود
-                if (info.date < MIN_DATE) {
-                    // اگر Toast داری از همون استفاده کن؛ فعلاً alert ساده:
-                    alert('امکان افزودن رویداد در روزهای گذشته وجود ندارد.');
-                    return;
-                }
-
-                let date = new JDate(info.date);
                 resetValues();
-                bsAddEventSidebar.show();
+
                 if (offcanvasTitle) offcanvasTitle.innerHTML = 'افزودن رویداد';
                 btnAddEvent.classList.remove('d-none');
                 btnUpdateEvent.classList.add('d-none');
                 btnDeleteEvent.classList.add('d-none');
-                start.setDate(date, true, 'Y-m-d');
-                end.setDate(date, true, 'Y-m-d');
+
+                // تاریخ کلیک‌شده را در صف بگذار
+                pendingDate = new Date(info.date);
+
+                // اگر سایدبار باز است، همین الآن ست کن؛ وگرنه بعد از shown ست می‌شود
+                if (addEventSidebar.classList.contains('show')) {
+                    ensurePickers();
+                    const isAllDay = allDaySwitch && allDaySwitch.checked;
+                    try { if (start) start.clear(); if (end) end.clear(); } catch (_) {}
+                    safeSet(start, pendingDate, isAllDay);
+                    safeSet(end,   pendingDate, isAllDay);
+
+                    // اطلاع به ولیدیشن
+                    if (eventStartDate) eventStartDate.dispatchEvent(new Event('change', { bubbles: true }));
+                    if (eventEndDate)   eventEndDate.dispatchEvent(new Event('change',   { bubbles: true }));
+
+                    pendingDate = null;
+                } else {
+                    bsAddEventSidebar.show();
+                }
             },
-            eventAllow: function(dropInfo, draggedEvent) {
+
+            eventAllow: function (dropInfo, draggedEvent) {
                 // dropInfo.start = تاریخ جدید
                 const today = new Date();
-                today.setHours(0,0,0,0);
+                today.setHours(0, 0, 0, 0);
                 return dropInfo.start >= today; // فقط امروز و بعد از اون مجازه
             },
-            eventClick: function (info) { eventClick(info); },
-            datesSet: function () { modifyToggler(); },
-            viewDidMount: function () { modifyToggler(); },
+            eventClick: function (info) {
+                eventClick(info);
+            },
+            datesSet: function () {
+                modifyToggler();
+            },
+            viewDidMount: function () {
+                modifyToggler();
+            },
             locale: 'fa',
             firstDay: 6,
-            buttonText: { today: 'امروز', month: 'ماه', week: 'هفته', day: 'روز', list: 'لیست' },
+            buttonText: {today: 'امروز', month: 'ماه', week: 'هفته', day: 'روز', list: 'لیست'},
             weekText: 'هفته',
             allDayText: 'تمام روز',
-            moreLinkText: function(n) { return '+' + n + ' مورد دیگر'; },
+            moreLinkText: function (n) {
+                return '+' + n + ' مورد دیگر';
+            },
             noEventsText: 'رویدادی برای نمایش وجود ندارد'
         });
 
@@ -492,23 +603,29 @@ document.addEventListener('DOMContentLoaded', function () {
         const eventForm = document.getElementById('eventForm');
         const fv = FormValidation.formValidation(eventForm, {
             fields: {
-                eventTitle: { validators: { notEmpty: { message: 'لطفا عنوان رویداد را وارد کنید ' } } },
-                eventStartDate: { validators: { notEmpty: { message: 'لطفا تاریخ شروع را وارد کنید ' } } },
-                eventEndDate: { validators: { notEmpty: { message: 'لطفا تاریخ پایان را وارد کنید ' } } }
+                eventTitle: {validators: {notEmpty: {message: 'لطفا عنوان رویداد را وارد کنید '}}},
+                eventStartDate: {validators: {notEmpty: {message: 'لطفا تاریخ شروع را وارد کنید '}}},
+                eventEndDate: {validators: {notEmpty: {message: 'لطفا تاریخ پایان را وارد کنید '}}}
             },
             plugins: {
                 trigger: new FormValidation.plugins.Trigger(),
                 bootstrap5: new FormValidation.plugins.Bootstrap5({
                     eleValidClass: '',
-                    rowSelector: function (field, ele) { return '.mb-3'; }
+                    rowSelector: function (field, ele) {
+                        return '.mb-3';
+                    }
                 }),
                 submitButton: new FormValidation.plugins.SubmitButton(),
                 autoFocus: new FormValidation.plugins.AutoFocus()
             }
-        }).on('core.form.valid', function () { isFormValid = true; });
+        }).on('core.form.valid', function () {
+            isFormValid = true;
+        });
 
         if (btnToggleSidebar) {
-            btnToggleSidebar.addEventListener('click', e => { btnCancel.classList.remove('d-none'); });
+            btnToggleSidebar.addEventListener('click', e => {
+                btnCancel.classList.remove('d-none');
+            });
         }
 
         // ---------- Local helpers (kept) ----------
@@ -525,7 +642,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function removeEventLocal(eventId) {
-            currentEvents = currentEvents.filter(function (event) { return String(event.id) !== String(eventId); });
+            currentEvents = currentEvents.filter(function (event) {
+                return String(event.id) !== String(eventId);
+            });
             calendar.refetchEvents();
         }
 
@@ -534,11 +653,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const status = await fv.validate(); //
 
 
-
             if (status !== 'Valid') return;
 
             const startDateObj = getDateFromInput(start, eventStartDate.value);
-            const endDateObj   = getDateFromInput(end, eventEndDate.value);
+            const endDateObj = getDateFromInput(end, eventEndDate.value);
 
 
             if (!startDateObj || isBeforeToday(startDateObj)) {
@@ -554,7 +672,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 eventTitle: eventTitle.value,
                 eventLabel: eventLabel.val() || null,
                 eventStartDate: formatDateForServer(startDateObj, allDaySwitch.checked),
-                eventEndDate:   formatDateForServer(endDateObj,   allDaySwitch.checked),
+                eventEndDate: formatDateForServer(endDateObj, allDaySwitch.checked),
                 allDay: allDaySwitch.checked ? 1 : 0,
                 eventURL: eventUrl.value || null,
                 eventLocation: eventLocation.value || null,
@@ -597,7 +715,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (status !== 'Valid') return;
 
             const startDateObj = getDateFromInput(start, eventStartDate.value);
-            const endDateObj   = getDateFromInput(end, eventEndDate.value);
+            const endDateObj = getDateFromInput(end, eventEndDate.value);
 
             if (!startDateObj || isBeforeToday(startDateObj)) {
                 alert('امکان ثبت رویداد با تاریخ شروع گذشته از امروز وجود ندارد.');
@@ -613,7 +731,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 eventTitle: eventTitle.value,
                 eventLabel: eventLabel.val() || null,
                 eventStartDate: formatDateForServer(startDateObj, allDaySwitch.checked),
-                eventEndDate:   formatDateForServer(endDateObj,   allDaySwitch.checked),
+                eventEndDate: formatDateForServer(endDateObj, allDaySwitch.checked),
                 allDay: allDaySwitch.checked ? 1 : 0,
                 eventURL: eventUrl.value || null,
                 eventLocation: eventLocation.value || null,
@@ -647,7 +765,7 @@ document.addEventListener('DOMContentLoaded', function () {
             $.ajax({
                 url: '/panel/calendar/delete/' + eventToUpdate.id,
                 method: 'delete',
-                data: { _method: 'DELETE' },
+                data: {_method: 'DELETE'},
                 dataType: 'json',
                 success: function (res) {
                     removeEventLocal(eventToUpdate.id);
@@ -666,7 +784,8 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 if (end) end.clear();
                 if (start) start.clear();
-            } catch (e) {}
+            } catch (e) {
+            }
             eventUrl.value = '';
             eventTitle.value = '';
             eventLocation.value = '';
@@ -677,8 +796,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addEventSidebar.addEventListener('hidden.bs.offcanvas', function () {
             resetValues();
-            try { if (start) { start.destroy(); start = null; } } catch(e){}
-            try { if (end)   { end.destroy();   end   = null; } } catch(e){}
+            // try {
+            //     if (start) {
+            //         start.destroy();
+            //         start = null;
+            //     }
+            // } catch (e) {
+            // }
+            // try {
+            //     if (end) {
+            //         end.destroy();
+            //         end = null;
+            //     }
+            // } catch (e) {
+            // }
         });
 
 
