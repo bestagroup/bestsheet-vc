@@ -221,7 +221,7 @@
                         </div>
                         <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#activeprojectsModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد طرح جاری</p>
-                            <h5 class="mb-2">{{DB::table('projects')->whereFlow_level('درحال انجام تعهدات')->count()}}</h5>
+                            <h5 class="mb-2">{{DB::table('projects')->where('invest_step' , '>=' , 1)->where('invest_step', '<>', 20)->count()}}</h5>
                         </div>
                         <div class="modal fade" id="activeprojectsModal" tabindex="-1" aria-labelledby="activeprojectsModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -243,7 +243,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach($projectis as $project)
-                                                            @if($project->flow_level == 'درحال انجام تعهدات')
+                                                            @if($project->invest_step >= 1 && $project->invest_step <> 20)
                                                                 <tr>
                                                                     <td>{{$project->title}}</td>
                                                                     <td>{{ $project->CEO }}</td>
@@ -278,13 +278,13 @@
                         </div>
                         <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#endprojectsModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد طرح خاتمه یافته</p>
-                            <h5 class="mb-2">{{DB::table('projects')->where('flow_level', 'پایان قرارداد')->orWhere('flow_level', 'خروج کامل')->count()}}</h5>
+                            <h5 class="mb-2">{{DB::table('projects')->Where('invest_step' , '>=' , 20)->count()}}</h5>
                         </div>
                         <div class="modal fade" id="endprojectsModal" tabindex="-1" aria-labelledby="endprojectsModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="endprojectsModalLabel">تعداد طرح جاری</h5>
+                                        <h5 class="modal-title" id="endprojectsModalLabel">تعداد طرح خاتمه یافته</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                                     </div>
                                     <div class="modal-body">
@@ -300,7 +300,7 @@
                                                     </thead>
                                                     <tbody>
                                                     @foreach($projectis as $project)
-                                                        @if($project->flow_level == 'پایان قرارداد' || $project->flow_level == 'خروج کامل')
+                                                        @if($project->invest_step == 20)
                                                             <tr>
                                                                 <td>{{$project->title}}</td>
                                                                 <td>{{ $project->CEO }}</td>
@@ -335,7 +335,7 @@
                         </div>
                         <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#rejectprojectsModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد طرح رد شده</p>
-                            <h5 class="mb-2">{{DB::table('projects')->where('flow_level', 'رد طرح')->count()}}</h5>
+                            <h5 class="mb-2">{{DB::table('projects')->where('invest_step' , '==', 0)->count()}}</h5>
                         </div>
                         <div class="modal fade" id="rejectprojectsModal" tabindex="-1" aria-labelledby="rejectprojectsModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -357,7 +357,7 @@
                                                     </thead>
                                                     <tbody>
                                                     @foreach($projectis as $project)
-                                                        @if($project->flow_level == 'رد طرح')
+                                                        @if($project->invest_step == 0)
                                                             <tr>
                                                                 <td>{{$project->title}}</td>
                                                                 <td>{{ $project->CEO }}</td>
@@ -428,7 +428,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <small class="text-body mb-0">{{DB::table('projects')->whereFlow_level('درحال انجام تعهدات')->count()}}  پروژه در حال اجرا </small>
+                                <small class="text-body mb-0">{{DB::table('projects')->where('invest_step' , '>=' , 1)->count()}}  پروژه در حال اجرا </small>
                             </div>
                             <div class="card-body">
                                 @foreach($projects->take(7) as $project)

@@ -360,11 +360,11 @@
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 4 && $file->project_id == $project->id)
                                                                         @if($file->status  == 4)
-                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
                                                                                 <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                                             </div>
                                                                        @elseif($file->status <> 5)
-                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
                                                                                 <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
                                                                                 <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
                                                                             </div>
@@ -410,7 +410,7 @@
                                                             @elseif($step->id == 3)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 1 && $file->project_id == $project->id)
-                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
                                                                                 <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                                             </div>
                                                                     @endif
@@ -437,7 +437,7 @@
                                                             @elseif($step->id == 4)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 2 && $file->project_id == $project->id)
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -482,7 +482,7 @@
                                                             @elseif($step->id == 6)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [3,6,7,8,9,10,11,12,13,14,15,16]) && $file->project_id == $project->id)
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -547,7 +547,7 @@
                                                             @elseif($step->id == 9)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 19)
-                                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -592,7 +592,7 @@
                                                             @elseif($step->id == 11)
                                                                 @foreach($files as $file)
                                                                     @if($file->subject_id == 20)
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -678,7 +678,7 @@
                                                             @elseif($step->id == 14)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,21]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -703,7 +703,7 @@
                                                             @elseif($step->id == 15)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,22]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -728,7 +728,7 @@
                                                             @elseif($step->id == 16)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,23]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -753,7 +753,7 @@
                                                             @elseif($step->id == 17)
                                                                 @foreach($files as $file)
                                                                     @if(in_array($file->subject_id, [18,24]))
-                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                                        <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                                                     @endif
                                                                 @endforeach
                                                                     <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
@@ -991,15 +991,15 @@
                 order: [[0, 'desc']],
                 scrollX: true,
                 scrollCollapse: true,
-                fixedColumns: {
-                    start: 3
-                },
+                // fixedColumns: {
+                //     start: 3
+                // },
                 ajax: "{{ route(request()->segment(2) . '.index') }}",
                 columns: [
                     {data: 'action'                         , name: 'action', orderable: true, searchable: true},
+                    {data: 'company_name'                  , name: 'company_name'},
                     {data: 'title'                          , name: 'title'},
                     {data: 'CEO'                            , name: 'CEO'},
-                    {data: 'portfo_status'                  , name: 'portfo_status'},
                     {data: 'flow_level'                     , name: 'flow_level'},
                     {data: 'invest_step'                    , name: 'invest_step'},
                     {data: 'start_date'                     , name: 'start_date'},
@@ -1237,6 +1237,47 @@
                     pos++;
                 }
                 input.setSelectionRange(pos, pos);
+            });
+        });
+    </script>
+
+    <script>
+        Dropzone.autoDiscover = false;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const fileFormSelector = "#fileUploadZone";
+            let currentRecordId = null;
+
+            const dz = new Dropzone(fileFormSelector, {
+                url: "{{ route('storemedia') }}",
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                maxFilesize: 20,
+                acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
+                init: function () {
+                    this.on("sending", function (file, xhr, formData) {
+
+                        formData.append("record_id", currentRecordId || document.getElementById('recordIdInput').value);
+                    });
+                    this.on("success", function (file, response) {
+                        const extension = file.name.split('.').pop().toLowerCase();
+                        previewFile(response.file_path.replace(/^\/+/, ''), extension);
+                        showToast("✅ فایل با موفقیت آپلود شد");
+                        this.removeFile(file);
+                    });
+                    this.on("error", function (file, response) {
+                        showToast("❌ خطا در آپلود فایل", "danger");
+                    });
+                }
+            });
+
+            $(document).on('click', '.upload-btn', function () {
+                currentRecordId = $(this).data('id');
+                $('#recordIdInput').val(currentRecordId);
+
+                dz.removeAllFiles(true);
+
+                $('#uploadModal').modal('show');
             });
         });
     </script>

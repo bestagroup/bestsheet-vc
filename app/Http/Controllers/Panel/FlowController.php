@@ -47,8 +47,8 @@ class FlowController extends Controller
                 ->select(
                     'p.id',
                     'p.title',
+                    'p.company_name',
                     'p.CEO',
-                    'p.portfo_status',
                     DB::raw('(SELECT i.title FROM investsteps i WHERE i.id = p.invest_step LIMIT 1) as flow_level'),
                     'p.start_date',
                     'p.invest_step',
@@ -63,8 +63,8 @@ class FlowController extends Controller
                 ->addColumn('CEO', function ($data) {
                     return ($data->CEO);
                 })
-                ->addColumn('portfo_status', function ($data) {
-                    return ($data->portfo_status);
+                ->addColumn('company_name', function ($data) {
+                    return ($data->company_name);
                 })
                 ->addColumn('flow_level', function ($data) {
                     return ($data->flow_level);
@@ -93,6 +93,8 @@ class FlowController extends Controller
                         $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
                     $actionBtn .= '<button class="btn btn-sm btn-icon btn-eye mx-1" data-bs-toggle="modal" data-bs-target="#showModal'.$data->id.'"><i class="mdi mdi-eye"></i></button>';
+
+                    $actionBtn .= '<button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="'.$data->id.'"><i class="mdi mdi-file-document-multiple-outline"></i></button>';
 
                     return $actionBtn;
                 })

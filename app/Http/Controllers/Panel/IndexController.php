@@ -41,7 +41,9 @@ class IndexController extends Controller
 
         $totalPaid = DB::table('finances')->sum('amount');
 
-        $projectis = Project::select('CEO' ,'company_name' , 'title' , 'invest_step' , 'flow_level')->orderBy('invest_step' , 'DESC')->get();
+        $projectis = Project::leftjoin('investsteps' ,'projects.invest_step' , '=' , 'investsteps.id')
+            ->select('projects.CEO' ,'projects.company_name' , 'projects.title' , 'investsteps.title as flow_evel' , 'projects.invest_step')
+            ->orderBy('projects.invest_step' , 'DESC')->get();
 
         $projects = DB::table('finances as f')
             ->leftjoin('projects as p', 'f.project_id', '=', 'p.id')
