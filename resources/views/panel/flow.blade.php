@@ -153,74 +153,136 @@
                                 @method('PATCH')
                             <input type="hidden" name="menu_id" id="menu_id_{{$project->id}}" value="{{$project->id}}" />
 
-                                <div class="col-6 col-md-3">
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="title_{{$project->id}}" name="title"
+                                        <input required type="text" class="form-control" id="company_name_{{$project->id}}" name="company_name"
+                                               placeholder="نام شرکت" value="{{ $project->company_name }}">
+                                        <label for="company_name">نام شرکت</label>
+                                        <div class="invalid-feedback" id="company_nameFeedback">نام شرکت اجباری می باشد.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required type="text" class="form-control" id="title_{{$project->id}}" name="title"
                                                placeholder="نام طرح" value="{{ $project->title }}">
                                         <label for="title">نام طرح</label>
+                                        <div class="invalid-feedback" id="titleFeedback">نام طرح اجباری می باشد.</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select name="portfo_status" id="portfo_status_{{$project->id}}" class="form-control">
+                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="registration_number_{{$project->id}}" name="registration_number"
+                                               placeholder="شماره ثبت" value="{{ $project->registration_number }}">
+                                        <label for="registration_number">شماره ثبت</label>
+                                        <div class="invalid-feedback" id="registration_numberFeedback">شماره ثبت اجباری و شامل عدد می باشد.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="national_id_{{$project->id}}" name="national_id"
+                                               placeholder="شناسه ملی شرکت" value="{{ $project->national_id }}">
+                                        <label for="national_id">شناسه ملی شرکت</label>
+                                        <div class="invalid-feedback" id="national_idFeedback">شناسه ملی شرکت اجباری و شامل عدد می باشد.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="economic_code_{{$project->id}}" name="economic_code"
+                                               placeholder="کد اقتصادی شرکت" value="{{ $project->economic_code }}">
+                                        <label for="economic_code">کد اقتصادی شرکت</label>
+                                        <div class="invalid-feedback" id="economic_codeFeedback">کد اقتصادی اجباری، و شامل عدد می باشد.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <select name="legal_type" id="legal_type_{{$project->id}}" class="form-control">
                                             <option value="" selected>انتخاب کنید</option>
-                                            <option value="پرتفو قدیم"   {{$project->portfo_status == 'پرتفو قدیم' ? 'selected' : ''}}>پرتفو قدیم</option>
-                                            <option value="پرتفو جدید"   {{$project->portfo_status == 'پرتفو جدید' ? 'selected' : ''}}>پرتفو جدید</option>
-                                            <option value="رد شده"       {{$project->portfo_status == 'رد شده' ? 'selected' : ''}}>رد شده</option>
+                                            <option value="مسئولیت محدود"   {{$project->legal_type == 'مسئولیت محدود' ? 'selected' : ''}}>مسئولیت محدود</option>
+                                            <option value="سهامی خاص"       {{$project->legal_type == 'سهامی خاص' ? 'selected' : ''}}>سهامی خاص</option>
+                                            <option value="سهامی عام"       {{$project->legal_type == 'سهامی عام' ? 'selected' : ''}}>سهامی عام</option>
+                                            <option value="تعاونی"          {{$project->legal_type == 'تعاونی' ? 'selected' : ''}}>تعاونی</option>
+                                            <option value="موسسه غیر تجاری" {{$project->legal_type == 'موسسه غیر تجاری' ? 'selected' : ''}}>موسسه غیر تجاری</option>
                                         </select>
-                                        <label for="portfo_status">وضعیت پرتفو</label>
+                                        <label for="legal_type">نوع شرکت</label>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="start_date_{{$project->id}}" name="start_date"
-                                               placeholder="تاریخ شروع قرارداد" value="{{ $project->start_date }}">
-                                        <label for="start_date">تاریخ شروع قرارداد</label>
+                                        <input inputmode="numeric" pattern="^\d{10}$" type="text" class="form-control" id="tel_{{$project->id}}" name="tel" placeholder="تلفن شرکت" value="{{ $project->tel }}">
+                                        <label for="tel">تلفن شرکت</label>
+                                        <div class="invalid-feedback" id="telFeedback">شماره تلفن شامل عدد می باشد.</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control numeric" id="amount_request_accept_{{$project->id}}" name="amount_request_accept"
-                                               placeholder="مبلغ درخواستی تایید شده" value="{{ $project->amount_request_accept ? number_format($project->amount_request_accept, 0) : '' }}">
-                                        <label for="amount_request_accept">مبلغ درخواستی تایید شده</label>
+                                        <input type="email" class="form-control" id="email_{{$project->id}}" name="email" placeholder="ایمیل شرکت" value="{{ $project->email }}">
+                                        <label for="email">ایمیل شرکت</label>
+                                        <div class="invalid-feedback" id="emailFeedback">آدرس ایمیل را با دقت وارد کنید.</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control numeric" id="amount_commitment_first_stage_{{$project->id}}" name="amount_commitment_first_stage"
-                                               placeholder="مبلغ تعهد مرحله اول" value="{{ $project->amount_commitment_first_stage ? number_format($project->amount_commitment_first_stage, 0) : '' }}">
-                                        <label for="amount_commitment_first_stage">مبلغ تعهد مرحله اول</label>
+                                        <input type="text" class="form-control" id="website_{{$project->id}}" name="website" placeholder="وبسایت" value="{{ $project->website }}">
+                                        <label for="website">وبسایت</label>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control numeric" id="amount_commitment_second_stage_{{$project->id}}" name="amount_commitment_second_stage"
-                                               placeholder="مبلغ تعهد مرحله دوم" value="{{ $project->amount_commitment_second_stage ? number_format($project->amount_commitment_second_stage, 0) : '' }}">
-                                        <label for="amount_commitment_second_stage">مبلغ تعهد مرحله دوم</label>
+                                        <input required type="text" class="form-control" id="postal_code_{{$project->id}}" name="postal_code" placeholder="کد پستی" value="{{ $project->postal_code }}">
+                                        <label for="postal_code">کد پستی</label>
+                                        <div class="invalid-feedback" id="postal_codeFeedback">کد پستی باید به شکل عدد 10 رقمی وارد شود</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control numeric" id="amount_commitment_third_stage_{{$project->id}}" name="amount_commitment_third_stage"
-                                               placeholder="مبلغ تعهد مرحله  سوم" value="{{ $project->amount_commitment_third_stage ? number_format($project->amount_commitment_third_stage, 0) : '' }}">
-                                        <label for="amount_commitment_third_stage">مبلغ تعهد مرحله  سوم</label>
+                                        <select name="state" id="state_{{$project->id}}" class="form-control select2">
+                                            <option value="" selected>انتخاب کنید</option>
+                                            @foreach($states as $state)
+                                                <option value="{{$state->id}}" {{$project->province == $state->id ? 'selected' : ''}}>
+                                                    {{$state->title}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label for="state">استان</label>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control numeric" id="amount_commitment_fourth_stage_{{$project->id}}" name="amount_commitment_fourth_stage"
-                                               placeholder="مبلغ تعهد مرحله چهارم" value="{{ $project->amount_commitment_fourth_stage ? number_format($project->amount_commitment_fourth_stage, 0) : '' }}">
-                                        <label for="amount_commitment_fourth_stage">مبلغ تعهد مرحله چهارم </label>
+                                        <select name="city" id="city_{{$project->id}}" class="form-control select2">
+                                            <option value="" selected>انتخاب کنید</option>
+                                            @foreach($cities as $city)
+                                                <option value="{{$city->id}}" {{$project->city == $city->id ? 'selected' : ''}}>
+                                                    {{$city->title}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label for="city">شهرستان</label>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+
+                                <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control numeric" id="amount_commitment_fifth_stage_{{$project->id}}" name="amount_commitment_fifth_stage"
-                                               placeholder="مبلغ تعهد مرحله  پنجم" value="{{ $project->amount_commitment_fifth_stage ? number_format($project->amount_commitment_fifth_stage, 0) : '' }}">
-                                        <label for="amount_commitment_fifth_stage">مبلغ تعهد مرحله  پنجم</label>
+                                        <input required type="text" class="form-control" id="CEO_{{$project->id}}" name="CEO" placeholder="مدیرعامل" value="{{ $project->CEO }}">
+                                        <label for="CEO">مدیرعامل</label>
+                                        <div class="invalid-feedback" id="CEOFeedback">نام مدیرعامل اجباری می باشد.</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-12 col-md-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="10" minlength="10" type="text" class="form-control" id="ceo_national_code_{{$project->id}}" name="ceo_national_code"
+                                               placeholder="کد ملی مدیرعامل" value="{{ $project->ceo_national_code }}">
+                                        <label for="ceo_national_code">کد ملی مدیرعامل</label>
+                                        <div class="invalid-feedback" id="ceo_national_codeFeedback">کد ملی مدیرعامل اجباری می باشد و با دقت وارد شود</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                    <textarea rows="2" class="form-control" id="address_{{$project->id}}" name="address" placeholder="آدرس">{{ $project->address }}</textarea>
+                                        <label for="address">آدرس شرکت</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
                                     <div class="input-group mb-3">
                                         <input type="text" name="logo" class="form-control" value="{{ $project->logo }}" id="logo_{{ $project->id }}" readonly placeholder="انتخاب فایل برای پروژه {{ $project->id }}">
                                         <button class="btn btn-outline-secondary file-selector" type="button" data-record-id="{{ $project->id }}" data-input-id="logo_{{ $project->id }}">
@@ -230,7 +292,7 @@
                                 </div>
                                 <div class="col-12 col-md-12">
                                     <div class="form-floating form-floating-outline">
-                                        <textarea name="description" class="form-control" id="description_{{$project->id}}" style="height: 220px" placeholder="معرفی طرح" >{{ $project->description }}</textarea>
+                                        <textarea name="description" class="form-control" id="description_{{$project->id}}" style="height: 150px" placeholder="معرفی طرح" >{{ $project->description }}</textarea>
                                         <label for="description">معرفی طرح</label>
                                     </div>
                                 </div>
@@ -251,7 +313,7 @@
 
                     <!-- Header -->
                     <div class="modal-header">
-                        <h5 class="modal-title">اطلاعات شرکت: {{ $project->title ?? '---' }} </h5>
+                        <h5 class="modal-title">پروفایل شرکت: {{ $project->title ?? '---' }} </h5>
                         <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
@@ -260,9 +322,15 @@
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" id="companyTabs{{ $project->id }}" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="profile-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-profile{{ $project->id }}"
-                                        type="button" role="tab" aria-controls="tab-profile{{ $project->id }}" aria-selected="true">
-                                    پروفایل
+                                <button class="nav-link active" id="profilecompany-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-profilecompany{{ $project->id }}"
+                                        type="button" role="tab" aria-controls="tab-profilecompany{{ $project->id }}" aria-selected="true">
+                                    اطلاعات شرکت
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="profileproject-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-profilepriject{{ $project->id }}"
+                                        type="button" role="tab" aria-controls="tab-profileproject{{ $project->id }}" aria-selected="true">
+                                    اطلاعات طرح
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -301,10 +369,10 @@
                         <!-- Tab Content -->
                         <div class="tab-content mt-3" id="companyTabsContent{{ $project->id }}">
                             <!-- Profile Tab -->
-                            <div class="tab-pane fade show active" id="tab-profile{{ $project->id }}" role="tabpanel" aria-labelledby="profile-tab{{ $project->id }}">
+                            <div class="tab-pane fade show active" id="tab-profilecompany{{ $project->id }}" role="tabpanel" aria-labelledby="profilecompany-tab{{ $project->id }}">
                                 <img src="@if($project->logo) {{asset('storage/'.$project->logo)  }} @endif"  class="rounded-circle mb-3" width="80" height="80"  alt="لوگو">
-                                <p><strong>نام طرح:</strong>    {{ $project->title }}  </p>
-                                <p><strong>معرفی طرح:</strong>    {{ $project->description }}   </p>
+                                <p><strong>نام شرکت:</strong>    {{ $project->title }}  </p>
+                                <p><strong>معرفی شرکت:</strong>    {{ $project->description }}   </p>
                                 <p><strong>مدیرعامل:</strong>     {{ $project->CEO }}           </p>
                                 <p><strong>شماره موبایل:</strong> {{ $project->ceo_phone }}     </p>
                                 <p><strong>وضعیت پروژه:</strong>  {{ $project->activity_status }}</p>
@@ -319,6 +387,14 @@
                                     accent-color: #dc3545;
                                 }
                             </style>
+                            <div class="tab-pane fade show" id="tab-profileproject{{ $project->id }}" role="tabpanel" aria-labelledby="profileproject-tab{{ $project->id }}">
+                                <img src="@if($project->logo) {{asset('storage/'.$project->logo)  }} @endif"  class="rounded-circle mb-3" width="80" height="80"  alt="لوگو">
+                                <p><strong>نام طرح:</strong>    {{ $project->title }}  </p>
+                                <p><strong>معرفی طرح:</strong>    {{ $project->description }}   </p>
+                                <p><strong>مدیرعامل:</strong>     {{ $project->CEO }}           </p>
+                                <p><strong>شماره موبایل:</strong> {{ $project->ceo_phone }}     </p>
+                                <p><strong>وضعیت پروژه:</strong>  {{ $project->activity_status }}</p>
+                            </div>
                             <div class="tab-pane fade" id="tab-investment{{ $project->id }}" role="tabpanel" aria-labelledby="investment-tab{{ $project->id }}">
                                 <div class="accordion" id="projectStepsAccordion{{ $project->id }}">
                                     <div class="row g-4">

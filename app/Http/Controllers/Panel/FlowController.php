@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Commitment;
 use App\Models\Finance;
 use App\Models\Investstep;
@@ -10,6 +11,7 @@ use App\Models\MediaFile;
 use App\Models\MenuPanel;
 use App\Models\Project;
 use App\Models\Project_step;
+use App\Models\State;
 use App\Models\SubmenuPanel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,19 +29,21 @@ class FlowController extends Controller
         $menupanels     = Menupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
         $projects       = Project::all();
         $finances       = Finance::all();
+        $states         = State::all();
+        $cities         = City::all();
         $investsteps    = Investstep::whereStatus(4)->get();
         $files          = MediaFile::where('status' ,'!=' , 5)->get();
 
         $commitments    = Commitment::whereStatus(4)->get();
 
         $thispage       = [
-            'title'   => 'مدیریت پروژه ها',
-            'list'    => 'لیست پروژه ها',
-            'add'     => 'افزودن پروژه ها',
-            'create'  => 'ایجاد پروژه ها',
-            'enter'   => 'ورود پروژه ها',
-            'edit'    => 'ویرایش پروژه ها',
-            'delete'  => 'حذف پروژه ها',
+            'title'   => 'مدیریت طرح / شرکت  ',
+            'list'    => 'لیست طرح ها و شرکت ها  ',
+            'add'     => 'افزودن طرح / شرکت  ',
+            'create'  => 'ایجاد طرح / شرکت  ',
+            'enter'   => 'ورود طرح / شرکت  ',
+            'edit'    => 'ویرایش اطلاعات طرح / شرکت  ',
+            'delete'  => 'حذف طرح / شرکت  ',
         ];
 
         if ($request->ajax()) {
@@ -101,7 +105,7 @@ class FlowController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'projects' , 'finances' , 'investsteps' , 'files' , 'commitments']));
+        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'projects' , 'finances' , 'investsteps' , 'files' , 'commitments' , 'states' , 'cities']));
     }
 
     /**
