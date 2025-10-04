@@ -26,7 +26,7 @@ class FinancialController extends Controller
         $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
         $finances       = Finance::all();
-        $projects       = Project::where('portfo_status' , '<>' , 'عدم تایید')->get();
+        $projects       = Project::where('invest_step' , '<>', 0)->get();
 
         if ($request->ajax()) {
             $data = DB::table('finances as f')

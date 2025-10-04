@@ -208,24 +208,30 @@ class ProjectController extends Controller
     {
 
         $project = Project::findOrfail($id);
-        $project->title                         = $request->input('title');
         $project->company_name                  = $request->input('company_name');
+        $project->title                         = $request->input('title');
+        $project->registration_number           = $request->input('registration_number');
+        $project->national_id                   = $request->input('national_id');
+        $project->economic_code                 = $request->input('economic_code');
+        $project->legal_type                    = $request->input('legal_type');
+        $project->tel                           = $request->input('tel');
+        $project->email                         = $request->input('email');
+        $project->website                       = $request->input('website');
+        $project->postal_code                   = $request->input('postal_code');
+        $project->state                         = $request->input('state');
+        $project->city                          = $request->input('city');
         $project->CEO                           = $request->input('CEO');
-        $project->portfo_status                 = $request->input('portfo_status');
-        $project->flow_level                    = $request->input('flow_level');
-        $project->progress_percentage           = $request->input('progress_percentage');
-        $project->activity_status               = $request->input('activity_status');
+        $project->ceo_national_code             = $request->input('ceo_national_code');
+        $project->address                       = $request->input('address');
+        $project->logo                          = $request->input('logo');
+        $project->description                   = $request->input('description');
         $project->start_date                    = $request->input('start_date');
         $project->amount_request_accept         = $request->filled('amount_request_accept')          ? str_replace(',', '', $request->input('amount_request_accept'))          : null;
-        $project->amount_deposited              = $request->filled('amount_deposited')               ? str_replace(',', '', $request->input('amount_deposited'))               : null;
         $project->amount_commitment_first_stage = $request->filled('amount_commitment_first_stage')  ? str_replace(',', '', $request->input('amount_commitment_first_stage'))  : null;
         $project->amount_commitment_second_stage= $request->filled('amount_commitment_second_stage') ? str_replace(',', '', $request->input('amount_commitment_second_stage')) : null;
         $project->amount_commitment_third_stage = $request->filled('amount_commitment_third_stage')  ? str_replace(',', '', $request->input('amount_commitment_third_stage'))  : null;
         $project->amount_commitment_fourth_stage= $request->filled('amount_commitment_fourth_stage') ? str_replace(',', '', $request->input('amount_commitment_fourth_stage')) : null;
         $project->amount_commitment_fifth_stage = $request->filled('amount_commitment_fifth_stage')  ? str_replace(',', '', $request->input('amount_commitment_fifth_stage'))  : null;
-        $project->commitment_balance            = $request->filled('commitment_balance')             ? str_replace(',', '', $request->input('commitment_balance'))             : null;
-        $project->logo                          = $request->input('logo');
-        $project->description                   = $request->input('description');
 
         $result = $project->update();
         try{
