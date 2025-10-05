@@ -51,30 +51,45 @@
                     <form action="{{route(request()->segment(2).'.'.'store')}}" id="addform" method="POST">
                         {{csrf_field()}}
                         <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">نام شرکت</label>
-                                <select name="project_id" id="project_id" class="form-control select-lg select2">
-                                    <option value="" selected>انتخاب کنید</option>
-                                    @foreach($projects as $project)
-                                        <option value="{{$project->id}}">{{$project->company_name}}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-6 col-md-3">
+                                <div class="form-floating form-floating-outline">
+                                    <select required name="project_id" id="project_id" class="form-control select-lg select2">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        @foreach($projects as $project)
+                                            <option value="{{$project->id}}">{{$project->company_name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="serial">نام شرکت</label>
+                                    <div class="invalid-feedback" id="serialFeedback">نام شرکت اجباری می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">شماره مرحله پرداخت</label>
-                                <input type="text" name="serial" id="serial" class="form-control" />
+                            <div class="col-6 col-md-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="serial" name="serial" placeholder="شماره مرحله پرداخت" >
+                                    <label for="serial">شماره مرحله پرداخت</label>
+                                    <div class="invalid-feedback" id="serialFeedback">شماره مرحله پرداخت اجباری می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">شماره سند بایگانی مالی</label>
-                                <input type="text" name="docserial" id="docserial" class="form-control" />
+                            <div class="col-6 col-md-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="docserial" name="docserial" placeholder="شماره سند بایگانی مالی" >
+                                    <label for="docserial">شماره سند بایگانی مالی</label>
+                                    <div class="invalid-feedback" id="docserialFeedback">شماره سند بایگانی مالی اجباری می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مبلغ پرداختی</label>
-                                <input type="text" name="amount" id="amount" class="form-control" />
+                            <div class="col-6 col-md-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="amount" name="amount" placeholder="مبلغ پرداختی" >
+                                    <label for="amount">مبلغ پرداختی</label>
+                                    <div class="invalid-feedback" id="amountFeedback">مبلغ پرداختی اجباری می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">تاریخ واریز</label>
-                                <input type="text" name="serial" id="serial" class="form-control" />
+                            <div class="col-6 col-md-3">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="date" name="date" placeholder="تاریخ واریز" >
+                                    <label for="date">تاریخ واریز</label>
+                                    <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
+                                </div>
                             </div>
                         </div>
                         <div class="text-end">
