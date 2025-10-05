@@ -11,6 +11,7 @@
         <div class="col-md-4">
             <div class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
                 @foreach($investsteps as $step)
+                    @if($step->id >= 1)
                     <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($project->invest_step) ? 'active' : '' }}"
                          style="cursor: default; border-right: 5px solid {{ $step->id < $project->invest_step ? '#4caf50' : ($step->id === $project->invest_step ? '#7367f0' : '#ddd') }};">
                         <span class="me-2 d-inline-flex justify-content-center align-items-center rounded-circle"
@@ -29,6 +30,7 @@
                             <i class="mdi mdi-check-circle-outline text-success ms-auto"></i>
                         @endif
                     </div>
+                    @endif
                 @endforeach
             </div>
         </div>
