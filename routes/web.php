@@ -67,3 +67,17 @@ Route::post('logout'                    , [App\Http\Controllers\Auth\FullRegiste
 //Route::get('auth/google/callback'       , [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
 Route::get('login/{provider}'           , [App\Http\Controllers\Auth\LoginController::class, 'redirectToProvider'])   ->name('redirectToProvider');
 Route::get('login/{provider}/callback'  , [App\Http\Controllers\Auth\LoginController::class, 'handleProviderCallback'])->name('handleProviderCallback');
+
+// --- Demo Flow ---
+use App\Http\Controllers\DemoFlowController;
+
+Route::get('/demo/flow', [DemoFlowController::class, 'index'])->name('demo.flow');
+Route::post('/demo/flow/store', [DemoFlowController::class, 'store'])->name('demo.flow.store');
+
+// --- Demo Flow with DataTable ---
+use App\Http\Controllers\DemoFlowDtController;
+
+Route::get('/demo/flow-dt', [DemoFlowDtController::class, 'index'])->name('demo.flowdt.index');
+Route::get('/demo/flow-dt/data', [DemoFlowDtController::class, 'data'])->name('demo.flowdt.data');           // DataTable rows
+Route::get('/demo/flow-dt/projects/{id}', [DemoFlowDtController::class, 'show'])->name('demo.flowdt.show');  // project + steps
+Route::post('/demo/flow-dt/store', [DemoFlowDtController::class, 'store'])->name('demo.flowdt.store');       // approve/reject
