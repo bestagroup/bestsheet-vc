@@ -55,7 +55,7 @@
                                     <select required name="project_id" id="project_id" class="form-control select-lg select2">
                                         <option value="" selected>انتخاب کنید</option>
                                         @foreach($projects as $project)
-                                            <option value="{{$project->id}}">{{$project->company_name}}</option>
+                                            <option value="{{$project->id}}">{{$project->company_name - $project->title}}</option>
                                         @endforeach
                                     </select>
                                     <label for="serial">نام شرکت</label>
