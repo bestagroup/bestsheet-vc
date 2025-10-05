@@ -48,7 +48,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route(request()->segment(2).'.'.'store')}}" id="addform" method="POST">
+                    <form action="{{route(request()->segment(2).'.'.'store')}}" id="addform" method="POST" class="row g-4 mb-4">
                         {{csrf_field()}}
                             <div class="col-6 col-md-3">
                                 <div class="form-floating form-floating-outline">
