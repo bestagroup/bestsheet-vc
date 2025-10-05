@@ -83,13 +83,20 @@
                                     <div class="invalid-feedback" id="amountFeedback">مبلغ پرداختی اجباری می باشد.</div>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input required type="text" class="form-control" id="date" name="date" placeholder="تاریخ واریز" >
-                                    <label for="date">تاریخ واریز</label>
-                                    <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
-                                </div>
+                        <div class="col-6 col-md-3">
+                            <div class="form-floating form-floating-outline">
+                                <input required type="text" class="form-control" id="date" name="date" placeholder="تاریخ واریز" >
+                                <label for="date">تاریخ واریز</label>
+                                <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
                             </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="form-floating form-floating-outline">
+                                <textarea name="description" id="description" required cols="30" rows="10" class="form-control" placeholder="توضیحات"></textarea>
+                                <label for="description">توضیحات</label>
+                                <div class="invalid-feedback" id="dateFeedback">توضیحات اجباری می باشد.</div>
+                            </div>
+                        </div>
                         <div class="text-end">
                             <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
@@ -108,40 +115,59 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="editform_{{ $finance->id }}" method="POST" action="{{ route(request()->segment(2).'.update', $finance->id) }}">
+                        <form id="editform_{{ $finance->id }}" method="POST" class="row g-4 mb-4" action="{{ route(request()->segment(2).'.update', $finance->id) }}">
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="menu_id" id="menu_id_{{$finance->id}}" value="{{$finance->id}}" />
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label">نام شرکت</label>
-                                    <select name="project_id" id="project_id" class="form-control select-lg select2">
-                                        <option value="" selected>انتخاب کنید</option>
-                                        @foreach($projects as $project)
-                                            <option value="{{$project->id}}" {{$project->id == $finance->project_id ? 'selected' : ''}}>{{$project->company_name}}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-6 col-md-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <label for="project_id">نام شرکت</label>
+                                        <select name="project_id" id="project_id" class="form-control select-lg select2">
+                                            <option value="" selected>انتخاب کنید</option>
+                                            @foreach($projects as $project)
+                                                <option value="{{$project->id}}" {{$project->id == $finance->project_id ? 'selected' : ''}}>{{$project->company_name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">شماره قسط</label>
-                                    <input type="text" name="serial" id="serial" class="form-control" value="{{$finance->serial}}">
+                                <div class="col-6 col-md-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required type="text" class="form-control" id="serial" name="serial" value="{{$finance->serial}}" >
+                                        <label for="serial">شماره مرحله پرداخت</label>
+                                        <div class="invalid-feedback" id="serialFeedback">شماره مرحله پرداخت اجباری می باشد.</div>
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">شماره سند</label>
-                                    <input type="text" name="docserial" id="docserial" class="form-control" value="{{$finance->docserial}}">
+                                <div class="col-6 col-md-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required type="text" class="form-control" id="docserial" name="docserial" value="{{$finance->docserial}}" >
+                                        <label for="docserial">شماره سند بایگانی مالی</label>
+                                        <div class="invalid-feedback" id="docserialFeedback">شماره سند بایگانی مالی اجباری می باشد.</div>
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">تاریخ</label>
-                                    <input type="text" name="date" id="date" class="form-control" value="{{$finance->date}}">
+                                <div class="col-6 col-md-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required type="text" class="form-control" id="amount" name="amount" value="{{$finance->amount}}" >
+                                        <label for="amount">مبلغ پرداختی</label>
+                                        <div class="invalid-feedback" id="amountFeedback">مبلغ پرداختی اجباری می باشد.</div>
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">مبلغ</label>
-                                    <input type="text" name="amount" id="amount" class="form-control" value="{{$finance->amount}}">
+                                <div class="col-6 col-md-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <input required type="text" class="form-control" id="date" name="date" value="{{$finance->date}}" >
+                                        <label for="date">تاریخ واریز</label>
+                                        <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="text-end">
-                                <button type="button" id="editsubmit_{{$finance->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
-                            </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <textarea name="description" id="description" required cols="30" rows="10" class="form-control" >{{$finance->description}}</textarea>
+                                        <label for="description">توضیحات</label>
+                                        <div class="invalid-feedback" id="dateFeedback">توضیحات اجباری می باشد.</div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button type="button" id="editsubmit_{{$finance->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
+                                </div>
                         </form>
                     </div>
                 </div>
