@@ -50,7 +50,6 @@
                 <div class="modal-body">
                     <form action="{{route(request()->segment(2).'.'.'store')}}" id="addform" method="POST">
                         {{csrf_field()}}
-                        <div class="row mb-3">
                             <div class="col-6 col-md-3">
                                 <div class="form-floating form-floating-outline">
                                     <select required name="project_id" id="project_id" class="form-control select-lg select2">
@@ -91,7 +90,6 @@
                                     <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
                                 </div>
                             </div>
-                        </div>
                         <div class="text-end">
                             <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
