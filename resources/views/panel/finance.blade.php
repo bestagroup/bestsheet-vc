@@ -51,30 +51,30 @@
                     <form action="{{route(request()->segment(2).'.'.'store')}}" id="addform" method="POST">
                         {{csrf_field()}}
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">نام شرکت</label>
                                 <select name="project_id" id="project_id" class="form-control select-lg select2">
                                     <option value="" selected>انتخاب کنید</option>
                                     @foreach($projects as $project)
-                                            <option value="{{$project->id}}">{{$project->company_name}}</option>
+                                        <option value="{{$project->id}}">{{$project->company_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">شماره قسط</label>
-                                <input type="text" name="serial" id="serial" class="form-control" placeholder="شماره قسط را وارد کنید">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">شماره مرحله پرداخت</label>
+                                <input type="text" name="serial" id="serial" class="form-control" />
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">شماره سند</label>
-                                <input type="text" name="docserial" id="docserial" class="form-control" placeholder="شماره سند را وارد کنید">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">شماره سند بایگانی مالی</label>
+                                <input type="text" name="docserial" id="docserial" class="form-control" />
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">مبلغ</label>
-                                <input type="text" name="amount" id="amount" class="form-control" placeholder="مبلغ واریزی را وارد کنید">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">مبلغ پرداختی</label>
+                                <input type="text" name="amount" id="amount" class="form-control" />
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">تاریخ</label>
-                                <input type="text" name="date" id="date" class="form-control" placeholder="تاریخ واریز  را وارد کنید">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">تاریخ واریز</label>
+                                <input type="text" name="serial" id="serial" class="form-control" />
                             </div>
                         </div>
                         <div class="text-end">

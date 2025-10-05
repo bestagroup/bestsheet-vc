@@ -4,7 +4,7 @@
                 data-bs-toggle="tab" data-bs-target="#navs-user-card" aria-controls="navs-user-card"
                 aria-selected="true">
             <i class="tf-icons mdi mdi-account-outline mdi-20px me-1"></i>
-            اطلاعات کاربر
+            اطلاعات مدیرعامل
         </button>
     </li>
     @if(Auth::user()->level == 'applicant')
@@ -41,7 +41,7 @@
             </button>
         </li>
         <li class="nav-item">
-            <button type="button" {{$project->invest_step > 1 ? '' : 'disabled'}} class="nav-link d-flex flex-column gap-1" role="tab"
+            <button type="button" {{$project->invest_step > 13 ? '' : 'disabled'}} class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-minutes-card"
                     aria-controls="navs-minutes-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-message-text-outline mdi-20px me-1"></i>
@@ -49,7 +49,7 @@
             </button>
         </li>
         <li class="nav-item">
-            <button type="button" {{$project->invest_step > 1 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
+            <button type="button" {{$project->invest_step > 13 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-guarantee-card"
                     aria-controls="navs-guarantee-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
