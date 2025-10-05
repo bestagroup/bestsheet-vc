@@ -43,7 +43,7 @@
                         <div class="card-body">
                             <p class="text-muted">{{ $step->description }}</p>
                             @if($step->id == 1)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="4" data-title="فایل پیچ دک"><i class="mdi mdi-file-document-multiple-outline"></i>فایل پیچ دک</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="4" data-title="فایل پیچ دک"><i class="mdi mdi-file-document-multiple-outline"></i>فایل پیچ دک</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -78,8 +78,8 @@
                             @elseif($step->id == 3)
                                 <div class="alert alert-info">در حال بررسی ، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 4)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="5" data-title="فایل طرح کسب و کار"><i class="mdi mdi-file-document-multiple-outline"></i>فایل طرح کسب و کار</button>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="6" data-title="فایل برنامه مالی"><i class="mdi mdi-file-document-multiple-outline"></i>فایل برنامه مالی</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="5" data-title="فایل طرح کسب و کار"><i class="mdi mdi-file-document-multiple-outline"></i>فایل طرح کسب و کار</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="6" data-title="فایل برنامه مالی"><i class="mdi mdi-file-document-multiple-outline"></i>فایل برنامه مالی</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -114,22 +114,22 @@
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 6)
                                 <div>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="7" data-title="مجوزها"><i class="mdi mdi-file-document-multiple-outline"></i> مجوز ها </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="9" data-title="مدارک ثبتی"><i class="mdi mdi-file-document-multiple-outline"></i> مدارک ثبتی </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="10" data-title="مستندات فروش"><i class="mdi mdi-file-document-multiple-outline"></i> مستندات فروش </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="7" data-title="مجوزها"><i class="mdi mdi-file-document-multiple-outline"></i> مجوز ها </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="9" data-title="مدارک ثبتی"><i class="mdi mdi-file-document-multiple-outline"></i> مدارک ثبتی </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="10" data-title="مستندات فروش"><i class="mdi mdi-file-document-multiple-outline"></i> مستندات فروش </button>
                                 </div>
                                 <div>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="11" data-title="رزومه اعضاء"><i class="mdi mdi-file-document-multiple-outline"></i> رزومه اعضاء </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="12" data-title="قرارداد فروش"><i class="mdi mdi-file-document-multiple-outline"></i> قرارداد فروش </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="13" data-title="قراداد کارکنان"><i class="mdi mdi-file-document-multiple-outline"></i> قراداد کارکنان </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="11" data-title="رزومه اعضاء"><i class="mdi mdi-file-document-multiple-outline"></i> رزومه اعضاء </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="12" data-title="قرارداد فروش"><i class="mdi mdi-file-document-multiple-outline"></i> قرارداد فروش </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="13" data-title="قراداد کارکنان"><i class="mdi mdi-file-document-multiple-outline"></i> قراداد کارکنان </button>
                                 </div>
                                 <div>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="14" data-title="نتایج رتبه بندی اعتباری سهامداران"><i class="mdi mdi-file-document-multiple-outline"></i> نتایج رتبه بندی اعتباری سهامداران </button>
-                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="8" data-title="لیست بیمه تمامی اعضای شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> لیست بیمه تمامی اعضای شرکت </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="14" data-title="نتایج رتبه بندی اعتباری سهامداران"><i class="mdi mdi-file-document-multiple-outline"></i> نتایج رتبه بندی اعتباری سهامداران </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="8" data-title="لیست بیمه تمامی اعضای شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> لیست بیمه تمامی اعضای شرکت </button>
                                 </div>
                             <div>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="15" data-title="اظهارنامه مالیاتی"><i class="mdi mdi-file-document-multiple-outline"></i> اظهارنامه مالیاتی </button>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="16" data-title="صورت مالی حسابرسی شده شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> صورت مالی حسابرسی شده شرکت </button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="15" data-title="اظهارنامه مالیاتی"><i class="mdi mdi-file-document-multiple-outline"></i> اظهارنامه مالیاتی </button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="16" data-title="صورت مالی حسابرسی شده شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> صورت مالی حسابرسی شده شرکت </button>
                             </div>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -166,7 +166,7 @@
                             @elseif($step->id == 8)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 9)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="19" data-title="فایل ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>فایل ارزش گذاری</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="19" data-title="فایل ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>فایل ارزش گذاری</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -199,7 +199,7 @@
                             @elseif($step->id == 10)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 11)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="20" data-title="فایل قراداد"><i class="mdi mdi-file-document-multiple-outline"></i>فایل قراداد</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="20" data-title="فایل قراداد"><i class="mdi mdi-file-document-multiple-outline"></i>فایل قراداد</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -246,7 +246,7 @@
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td>قرارداد سرمایه گذاری {{$company->company_name}} </td>
+                                            <td>قرارداد سرمایه گذاری {{$project->company_name}} </td>
                                             <td>33556644</td>
                                             <td>1404/03/01</td>
                                             <td><a href="{{ asset('#') }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="mdi mdi-eye"></i></a></td>
@@ -255,8 +255,8 @@
                                     </table>
                                 </div>
                             @elseif($step->id == 14)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="21" data-title="مستندات شاخص کلیدی اول"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی اول</button>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="21" data-title="مستندات شاخص کلیدی اول"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی اول</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
 
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -289,8 +289,8 @@
                                     @endif
                                 @endforeach
                             @elseif($step->id == 15)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="22" data-title="مستندات شاخص کلیدی دوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی دوم</button>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="22" data-title="مستندات شاخص کلیدی دوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی دوم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -322,8 +322,8 @@
                                     @endif
                                 @endforeach
                             @elseif($step->id == 16)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="23" data-title="مستندات شاخص کلیدی سوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی سوم</button>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="23" data-title="مستندات شاخص کلیدی سوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی سوم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -355,8 +355,8 @@
                                     @endif
                                 @endforeach
                             @elseif($step->id == 17)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="24" data-title="مستندات شاخص کلیدی چهارم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی چهارم</button>
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->company->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="24" data-title="مستندات شاخص کلیدی چهارم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی چهارم</button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
                                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">

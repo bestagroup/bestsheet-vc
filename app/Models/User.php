@@ -75,11 +75,14 @@ class User extends Authenticatable
         return $this->belongsTo(typeUser::class, 'type_id');
     }
 
-    public function companies(): HasMany
+//    public function companies(): HasMany
+//    {
+//        return $this->hasMany(Company::class);
+//    }
+    public function project()
     {
-        return $this->hasMany(Company::class);
+        return $this->hasOne(Project::class);
     }
-
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
@@ -102,10 +105,7 @@ class User extends Authenticatable
             ->where('status', true)
             ->latestOfMany();
     }
-    public function project()
-    {
-        return $this->hasOne(Project::class);
-    }
+
 
     public function company()
     {
