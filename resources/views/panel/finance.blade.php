@@ -119,24 +119,30 @@
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="menu_id" id="menu_id_{{$finance->id}}" value="{{$finance->id}}" />
-                                <div class="col-6 col-md-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <label for="project_id">نام شرکت</label>
-                                        <select name="project_id" id="project_id" class="form-control select-lg select2">
-                                            <option value="" selected>انتخاب کنید</option>
-                                            @foreach($projects as $project)
-                                                <option value="{{$project->id}}" {{$project->id == $finance->project_id ? 'selected' : ''}}>{{$project->company_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-floating form-floating-outline">
+                                    <label for="project_id">نام شرکت</label>
+                                    <select name="project_id" id="project_id" class="form-control select-lg select2">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        @foreach($projects as $project)
+                                            <option value="{{$project->id}}" {{$project->id == $finance->project_id ? 'selected' : ''}}>{{$project->company_name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input required type="text" class="form-control" id="serial" name="serial" value="{{$finance->serial}}" >
-                                        <label for="serial">شماره مرحله پرداخت</label>
-                                        <div class="invalid-feedback" id="serialFeedback">شماره مرحله پرداخت اجباری می باشد.</div>
-                                    </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-floating form-floating-outline">
+                                    <label for="serial">شماره مرحله پرداخت</label>
+                                    <select name="serial" id="serial" class="form-control select-lg select2">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        <option value="1" {{$project->id == $finance->serial ? 'selected' : ''}}>1</option>
+                                        <option value="2" {{$project->id == $finance->serial ? 'selected' : ''}}>2</option>
+                                        <option value="3" {{$project->id == $finance->serial ? 'selected' : ''}}>3</option>
+                                        <option value="4" {{$project->id == $finance->serial ? 'selected' : ''}}>4</option>
+                                        <option value="5" {{$project->id == $finance->serial ? 'selected' : ''}}>5</option>
+                                    </select>
                                 </div>
+                            </div>
                                 <div class="col-6 col-md-3">
                                     <div class="form-floating form-floating-outline">
                                         <input required type="text" class="form-control" id="docserial" name="docserial" value="{{$finance->docserial}}" >
@@ -146,7 +152,7 @@
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <div class="form-floating form-floating-outline">
-                                        <input required type="text" class="form-control" id="amount" name="amount" value="{{$finance->amount}}" >
+                                        <input required type="text" class="form-control" id="amount" name="amount" value="{{number_format($finance->amount)}}" >
                                         <label for="amount">مبلغ پرداختی</label>
                                         <div class="invalid-feedback" id="amountFeedback">مبلغ پرداختی اجباری می باشد.</div>
                                     </div>
@@ -158,7 +164,7 @@
                                         <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3">
+                                <div class="col-9 col-md-9">
                                     <div class="form-floating form-floating-outline">
                                         <textarea name="description" id="description" required cols="30" rows="10" class="form-control" >{{$finance->description}}</textarea>
                                         <label for="description">توضیحات</label>

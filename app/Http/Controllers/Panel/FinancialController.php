@@ -82,6 +82,7 @@ class FinancialController extends Controller
                 $finance->docserial     = $request->input('docserial');
                 $finance->finance_type  = 'vc-investment';
                 $finance->date          = $request->input('date');
+                $finance->description   = $request->input('description');
                 $finance->amount        = $request->filled('amount') ? str_replace(',', '', $request->input('amount'))  : null;
 
                 $result = $finance->save();
@@ -123,6 +124,7 @@ class FinancialController extends Controller
         $finances->docserial     = $request->input('docserial');
         $finances->finance_type  = 'vc-investment';
         $finances->date          = $request->input('date');
+        $finances->description   = $request->input('description');
         $finances->amount        = $request->input('amount');
         $finances->amount        = $request->filled('amount') ? str_replace(',', '', $request->input('amount'))  : null;
 
