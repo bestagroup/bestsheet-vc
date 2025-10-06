@@ -10,6 +10,7 @@ use App\Models\SubmenuPanel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProjectController extends Controller
@@ -156,23 +157,30 @@ class ProjectController extends Controller
     {
         try {
             $project = new Project();
-            $project->commercial_name               = $request->input('commercial_name');
             $project->company_name                  = $request->input('company_name');
+            $project->title                         = $request->input('title');
+            $project->registration_number           = $request->input('registration_number');
+            $project->national_id                   = $request->input('national_id');
+            $project->economic_code                 = $request->input('economic_code');
+            $project->legal_type                    = $request->input('legal_type');
+            $project->tel                           = $request->input('tel');
+            $project->email                         = $request->input('email');
+            $project->website                       = $request->input('website');
+            $project->postal_code                   = $request->input('postal_code');
+            $project->state                         = $request->input('state');
+            $project->city                          = $request->input('city');
             $project->CEO                           = $request->input('CEO');
-            $project->portfo_status                 = $request->input('portfo_status');
-            $project->flow_level                    = $request->input('flow_level');
-            $project->progress_percentage           = $request->input('progress_percentage');
-            $project->activity_status               = $request->input('activity_status');
-            $project->start_date                    = $request->input('start_date');
-            $project->amount_request_accept         = $request->input('amount_request_accept');
-            $project->amount_deposited              = $request->input('amount_deposited');
-            $project->amount_commitment_first_stage = $request->input('amount_commitment_first_stage');
-            $project->amount_commitment_second_stage= $request->input('amount_commitment_second_stage');
-            $project->amount_commitment_third_stage = $request->input('amount_commitment_third_stage');
-            $project->amount_commitment_fourth_stage= $request->input('amount_commitment_fourth_stage');
-            $project->amount_commitment_fifth_stage = $request->input('amount_commitment_fifth_stage');
-            $project->commitment_balance            = $request->input('commitment_balance');
+            $project->ceo_national_code             = $request->input('ceo_national_code');
+            $project->address                       = $request->input('address');
+            $project->logo                          = $request->input('logo');
             $project->description                   = $request->input('description');
+            $project->start_date                    = $request->input('start_date');
+            $project->amount_request_accept         = $request->filled('amount_request_accept')          ? str_replace(',', '', $request->input('amount_request_accept'))          : null;
+            $project->amount_commitment_first_stage = $request->filled('amount_commitment_first_stage')  ? str_replace(',', '', $request->input('amount_commitment_first_stage'))  : null;
+            $project->amount_commitment_second_stage= $request->filled('amount_commitment_second_stage') ? str_replace(',', '', $request->input('amount_commitment_second_stage')) : null;
+            $project->amount_commitment_third_stage = $request->filled('amount_commitment_third_stage')  ? str_replace(',', '', $request->input('amount_commitment_third_stage'))  : null;
+            $project->amount_commitment_fourth_stage= $request->filled('amount_commitment_fourth_stage') ? str_replace(',', '', $request->input('amount_commitment_fourth_stage')) : null;
+            $project->amount_commitment_fifth_stage = $request->filled('amount_commitment_fifth_stage')  ? str_replace(',', '', $request->input('amount_commitment_fifth_stage'))  : null;
 
             $result = $project->save();
 
@@ -190,17 +198,15 @@ class ProjectController extends Controller
             }
 
         } catch (Exception $e) {
+            Log::error('Project store error: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
 
-            $success = false;
-            $flag    = 'error';
-            $subject = 'خطا در ارتباط با سرور';
-            //$message = strchr($e);
-            $message = 'اطلاعات زیرمنو ثبت نشد،لطفا بعدا مجدد تلاش نمایید ';
+            return response()->json(['success' => false, 'flag' => 'error', 'subject' => 'خطای سرور', 'message' => 'مشکلی در ثبت اطلاعات پیش آمد، لطفاً بعداً تلاش نمایید',
+            ], 500);
         }
 
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
-
-//        return redirect(route('menudashboards.index'));
 
     }
 

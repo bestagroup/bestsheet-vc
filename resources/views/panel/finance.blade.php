@@ -64,9 +64,15 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input required type="text" class="form-control" id="serial" name="serial" placeholder="شماره مرحله پرداخت" >
                                     <label for="serial">شماره مرحله پرداخت</label>
-                                    <div class="invalid-feedback" id="serialFeedback">شماره مرحله پرداخت اجباری می باشد.</div>
+                                    <select name="serial" id="serial" class="form-control select-lg select2">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        <option value="1" >1</option>
+                                        <option value="2" >2</option>
+                                        <option value="3" >3</option>
+                                        <option value="4" >4</option>
+                                        <option value="5" >5</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-6 col-md-3">
@@ -90,7 +96,7 @@
                                 <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
                             </div>
                         </div>
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-9">
                             <div class="form-floating form-floating-outline">
                                 <textarea name="description" id="description" required cols="30" rows="10" class="form-control" placeholder="توضیحات"></textarea>
                                 <label for="description">توضیحات</label>
@@ -135,11 +141,11 @@
                                     <label for="serial">شماره مرحله پرداخت</label>
                                     <select name="serial" id="serial" class="form-control select-lg select2">
                                         <option value="" selected>انتخاب کنید</option>
-                                        <option value="1" {{$project->id == $finance->serial ? 'selected' : ''}}>1</option>
-                                        <option value="2" {{$project->id == $finance->serial ? 'selected' : ''}}>2</option>
-                                        <option value="3" {{$project->id == $finance->serial ? 'selected' : ''}}>3</option>
-                                        <option value="4" {{$project->id == $finance->serial ? 'selected' : ''}}>4</option>
-                                        <option value="5" {{$project->id == $finance->serial ? 'selected' : ''}}>5</option>
+                                        <option value="1" {{$finance->serial == 1 ? 'selected' : ''}}>1</option>
+                                        <option value="2" {{$finance->serial == 2 ? 'selected' : ''}}>2</option>
+                                        <option value="3" {{$finance->serial == 3 ? 'selected' : ''}}>3</option>
+                                        <option value="4" {{$finance->serial == 4 ? 'selected' : ''}}>4</option>
+                                        <option value="5" {{$finance->serial == 5 ? 'selected' : ''}}>5</option>
                                     </select>
                                 </div>
                             </div>

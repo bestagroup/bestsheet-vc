@@ -10,7 +10,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="card-title mb-0">{{$thispage['list']}}</h5>
-                @if (auth()->user()->can('can-access', ['project', 'insert']))
+                @if (auth()->user()->can('can-access', ['flow', 'insert']))
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">{{$thispage['add']}}</a>
                 @endif
             </div>
@@ -66,70 +66,138 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                        <form id="addform" method="POST" action="{{ route(request()->segment(2).'.store') }}">
+                        <form id="addform" method="POST" class="row g-4 mb-4" action="{{ route(request()->segment(2).'.store') }}">
                             @csrf
-                        <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">نام تجاری طرح</label>
-                                <input type="text" name="title" id="title" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="company_name" name="company_name" placeholder="نام شرکت">
+                                    <label for="company_name">نام شرکت</label>
+                                    <div class="invalid-feedback" id="company_nameFeedback">نام شرکت اجباری می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">نام شرکت</label>
-                                <input type="text" name="company_name" id="company_name" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="title" name="title" placeholder="نام طرح">
+                                    <label for="title">نام طرح</label>
+                                    <div class="invalid-feedback" id="titleFeedback">نام طرح اجباری می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مدیرعامل شرکت</label>
-                                <input type="text" name="CEO" id="CEO" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="registration_number" name="registration_number" placeholder="شماره ثبت">
+                                    <label for="registration_number">شماره ثبت</label>
+                                    <div class="invalid-feedback" id="registration_numberFeedback">شماره ثبت اجباری و شامل عدد می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">وضعیت پرتفو</label>
-                                <input type="text" name="portfo_status" id="portfo_status" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="national_id" name="national_id" placeholder="شناسه ملی شرکت" >
+                                    <label for="national_id">شناسه ملی شرکت</label>
+                                    <div class="invalid-feedback" id="national_idFeedback">شناسه ملی شرکت اجباری و شامل عدد می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مرحله فرایند شرکت</label>
-                                <input type="text" name="flow_level" id="flow_level" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="economic_code" name="economic_code" placeholder="کد اقتصادی شرکت" >
+                                    <label for="economic_code">کد اقتصادی شرکت</label>
+                                    <div class="invalid-feedback" id="economic_codeFeedback">کد اقتصادی اجباری، و شامل عدد می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">درصد پیشرفت</label>
-                                <input type="text" name="progress_percentage" id="progress_percentage" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <select name="legal_type" id="legal_type" class="form-control">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        <option value="مسئولیت محدود"   >مسئولیت محدود</option>
+                                        <option value="سهامی خاص"       >سهامی خاص</option>
+                                        <option value="سهامی عام"       >سهامی عام</option>
+                                        <option value="تعاونی"          >تعاونی</option>
+                                        <option value="موسسه غیر تجاری" >موسسه غیر تجاری</option>
+                                    </select>
+                                    <label for="legal_type">نوع شرکت</label>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">وضعیت فعالیت</label>
-                                <input type="text" name="activity_status" id="activity_status" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input inputmode="numeric" pattern="^\d{10}$" type="text" class="form-control" id="tel" name="tel" placeholder="تلفن شرکت">
+                                    <label for="tel">تلفن شرکت</label>
+                                    <div class="invalid-feedback" id="telFeedback">شماره تلفن شامل عدد می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">تاریخ شروع قرارداد</label>
-                                <input type="text" name="start_date" id="start_date" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="ایمیل شرکت">
+                                    <label for="email">ایمیل شرکت</label>
+                                    <div class="invalid-feedback" id="emailFeedback">آدرس ایمیل را با دقت وارد کنید.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مبلغ درخواستی تایید شده</label>
-                                <input type="text" name="amount_request_accept" id="amount_request_accept" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="website" name="website" placeholder="وبسایت">
+                                    <label for="website">وبسایت</label>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مبلغ تعهد مرحله اول</label>
-                                <input type="text" name="amount_commitment_first_stage" id="amount_commitment_first_stage" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="postal_code" name="postal_code" placeholder="کد پستی" >
+                                    <label for="postal_code">کد پستی</label>
+                                    <div class="invalid-feedback" id="postal_codeFeedback">کد پستی باید به شکل عدد 10 رقمی وارد شود</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مبلغ تعهد مرحله دوم</label>
-                                <input type="text" name="amount_commitment_second_stage" id="amount_commitment_second_stage" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <select name="state" id="state" class="form-control select2">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        @foreach($states as $state)
+                                            <option value="{{$state->id}}">
+                                                {{$state->title}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <label for="state">استان</label>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مبلغ تعهد مرحله سوم</label>
-                                <input type="text" name="amount_commitment_third_stage" id="amount_commitment_third_stage" class="form-control" />
+
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <select name="city" id="city" class="form-control select2">
+                                        <option value="" selected>انتخاب کنید</option>
+                                        @foreach($cities as $city)
+                                            <option value="{{$city->id}}">
+                                                {{$city->title}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <label for="city">شهرستان</label>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مبلغ تعهد مرحله چهارم</label>
-                                <input type="text" name="amount_commitment_fourth_stage" id="amount_commitment_fourth_stage" class="form-control" />
+
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required type="text" class="form-control" id="CEO" name="CEO" placeholder="مدیرعامل">
+                                    <label for="CEO">مدیرعامل</label>
+                                    <div class="invalid-feedback" id="CEOFeedback">نام مدیرعامل اجباری می باشد.</div>
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">مبلغ تعهد مرحله پنجم</label>
-                                <input type="text" name="amount_commitment_fifth_stage" id="amount_commitment_fifth_stage" class="form-control" />
+                            <div class="col-12 col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="10" minlength="10" type="text" class="form-control" id="ceo_national_code" name="ceo_national_code"
+                                           placeholder="کد ملی مدیرعامل" >
+                                    <label for="ceo_national_code">کد ملی مدیرعامل</label>
+                                    <div class="invalid-feedback" id="ceo_national_codeFeedback">کد ملی مدیرعامل اجباری می باشد و با دقت وارد شود</div>
+                                </div>
                             </div>
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">معرفی طرح</label>
-                                <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
+                            <div class="col-12 col-md-12">
+                                <div class="form-floating form-floating-outline">
+                                    <textarea rows="2" class="form-control" id="address" name="address" placeholder="آدرس"></textarea>
+                                    <label for="address">آدرس شرکت</label>
+                                </div>
                             </div>
-                        </div>
+                            <div class="col-12 col-md-12">
+                                <div class="form-floating form-floating-outline">
+                                    <textarea name="description" class="form-control" id="description" style="height: 150px" placeholder="معرفی طرح" ></textarea>
+                                    <label for="description">معرفی طرح</label>
+                                </div>
+                            </div>
                         <div class="text-end">
                             <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
@@ -148,7 +216,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                     </div>
                     <div class="modal-body">
-                            <form id="editform_{{ $project->id }}" class="row g-4 mb-4" method="POST" action="{{ route(request()->segment(2).'.update', $project->id) }}">
+                            <form id="editform_{{ $project->id }}" class="row g-4 mb-4" method="POST" action="{{ route('project.update', $project->id) }}">
                                 @csrf
                                 @method('PATCH')
                             <input type="hidden" name="menu_id" id="menu_id_{{$project->id}}" value="{{$project->id}}" />
@@ -370,7 +438,9 @@
                         <div class="tab-content mt-3" id="companyTabsContent{{ $project->id }}">
                             <!-- Profile Tab -->
                             <div class="tab-pane fade show active" id="tab-profilecompany{{ $project->id }}" role="tabpanel" aria-labelledby="profilecompany-tab{{ $project->id }}">
-                                <img src="@if($project->logo) {{asset('storage/'.$project->logo)  }} @endif"  class="rounded-circle mb-3" width="80" height="80"  alt="لوگو">
+                                @if($project->logo)
+                                    <img src="{{ asset('storage/'.$project->logo) }}" class="lazy rounded-circle mb-3" width="80" height="80" alt="لوگو">
+                                @endif
                                 <p><strong>نام شرکت:</strong>    {{ $project->title }}  </p>
                                 <p><strong>معرفی شرکت:</strong>    {{ $project->description }}   </p>
                                 <p><strong>مدیرعامل:</strong>     {{ $project->CEO }}           </p>
@@ -388,7 +458,9 @@
                                 }
                             </style>
                             <div class="tab-pane fade show" id="tab-profileproject{{ $project->id }}" role="tabpanel" aria-labelledby="profileproject-tab{{ $project->id }}">
-                                <img src="@if($project->logo) {{asset('storage/'.$project->logo)  }} @endif"  class="rounded-circle mb-3" width="80" height="80"  alt="لوگو">
+                                @if($project->logo)
+                                    <img src="{{ asset('storage/'.$project->logo) }}" class="lazy rounded-circle mb-3" width="80" height="80" alt="لوگو">
+                                @endif
                                 <p><strong>نام طرح:</strong>    {{ $project->title }}  </p>
                                 <p><strong>معرفی طرح:</strong>    {{ $project->description }}   </p>
                                 <p><strong>مدیرعامل:</strong>     {{ $project->CEO }}           </p>
@@ -1106,10 +1178,74 @@
                     timeOut: 3000,
                     rtl: true
                 };
+
+                if (toastr[type]) {
+                    toastr[type](message);
+                } else {
+                    toastr.success(message);
+                }
+            }
+            $('#submit').on('click', function(e){
+                e.preventDefault();
+                var $btn  = $(this);
+                var $form = $('#addform');
+                var originalHtml = $btn.html();
+
+                $btn.prop('disabled', true)
+                    .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('project.store') }}",
+                    method: 'POST',
+                    data: $form.serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            const modalEl = document.getElementById('addModal');
+                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+
+                            modalEl.addEventListener('hidden.bs.modal', function handler(){
+                                modalEl.removeEventListener('hidden.bs.modal', handler);
+                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                            }, { once: true });
+
+                            modal.hide();
+                            $('.modal-backdrop').remove();
+                            $('body').removeClass('modal-open');
+                            $('body').css('padding-right', '');
+                            showToast('آیتم با موفقیت افزوده شد!', 'success');
+                        } else {
+                            swal(data.subject, data.message, data.flag);
+                        }
+                    },
+                    error: function () {
+                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        jQuery(function($){
+            function showToast(message, type = 'success') {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                    timeOut: 3000,
+                    rtl: true
+                };
                 toastr[type] ? toastr[type](message) : toastr.success(message);
             }
 
-            // ست کردن وضعیت و کلیک روی submit
             $(document).on('click', '.approve-btn', function(){
                 const $form = $(this).closest('form');
                 $form.find('.status-input').val('approved');
@@ -1195,7 +1331,7 @@
                     return;
                 }
 
-                const url = $form.attr('action'); // استفاده از URL داینامیک
+                const url = $form.attr('action');
                 const originalHtml = $btn.html();
                 disableBtnWithSpinner($btn);
 
@@ -1203,24 +1339,37 @@
                     url: url,
                     method: 'PATCH',
                     data: $form.serialize(),
+                    beforeSend: function () {
+                        // دکمه رو غیر فعال و اسپینر رو فعال می‌کنیم
+                        disableBtnWithSpinner($btn);
+                    },
                     success: function (data) {
                         if (data.success) {
                             const modalEl = document.getElementById('editModal' + id);
                             const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+
                             modalEl.addEventListener('hidden.bs.modal', function handler(){
                                 modalEl.removeEventListener('hidden.bs.modal', handler);
                                 $('.yajra-datatable').DataTable().ajax.reload(null, false);
                                 showToast('آیتم با موفقیت ویرایش شد!', 'success');
                             }, { once: true });
+
                             modal.hide();
                             $('.modal-backdrop').remove();
                             $('body').removeClass('modal-open').css('padding-right', '');
                         } else {
-                            swal(data.subject, data.message, data.flag);
+                            swal(data.subject || 'خطا', data.message || 'در ویرایش مشکلی پیش آمد', data.flag || 'error');
                         }
                     },
-                    error: function () {
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
+                    error: function (xhr, status, error) {
+                        let message = 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        } else if (error) {
+                            message = error;
+                        }
+                        swal('خطا', message, 'error');
+                        console.error('AJAX Error:', xhr);
                     },
                     complete: function () {
                         restoreBtn($btn, originalHtml);
@@ -1233,6 +1382,7 @@
                     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
                 );
             }
+
             function restoreBtn($btn, html){
                 $btn.prop('disabled', false).html(html);
             }
@@ -1421,6 +1571,26 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function() {
+             $('#state').on('change', function () {
+                let stateId = $(this).val();
+                let $citySelect = $('#city');
+                $citySelect.html('<option value="">در حال بارگذاری...</option>').trigger('change');
 
+                if (stateId) {
+                    $.get(`getcities/${stateId}`, function (data) {
+                        $citySelect.empty().append('<option value="">انتخاب کنید</option>');
+                        data.forEach(function (city) {
+                            $citySelect.append(new Option(city.title, city.id));
+                        });
+                        $citySelect.trigger('change');
+                    });
+                } else {
+                    $citySelect.html('<option value="">انتخاب کنید</option>').trigger('change');
+                }
+            });
+        });
+    </script>
 
 @endsection
