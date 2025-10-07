@@ -167,6 +167,38 @@
                     });
                 });
             </script>
+                <script>
+                    $(document).ready(function() {
+                        // فعال‌سازی سرچ روی همه select ها
+                        $('.select2').select2({
+                            width: '100%',
+                            placeholder: 'انتخاب کنید',
+                            allowClear: true,
+                            language: {
+                                noResults: function () {
+                                    return "موردی یافت نشد";
+                                }
+                            }
+                        });
+                        $('#state_{{$project->id}}').on('change', function () {
+                            let stateId = $(this).val();
+                            let $citySelect = $('#city_{{$project->id}}');
+                            $citySelect.html('<option value="">در حال بارگذاری...</option>').trigger('change');
+
+                            if (stateId) {
+                                $.get(`panel/getcities/${stateId}`, function (data) {
+                                    $citySelect.empty().append('<option value="">انتخاب کنید</option>');
+                                    data.forEach(function (city) {
+                                        $citySelect.append(new Option(city.title, city.id));
+                                    });
+                                    $citySelect.trigger('change');
+                                });
+                            } else {
+                                $citySelect.html('<option value="">انتخاب کنید</option>').trigger('change');
+                            }
+                        });
+                    });
+                </script>
             @endif
             <script>
                 jQuery(function($){
@@ -387,38 +419,6 @@
                             document.getElementById(activeInputId).value = url;
                         }
                     };
-                });
-            </script>
-            <script>
-                $(document).ready(function() {
-                    // فعال‌سازی سرچ روی همه select ها
-                    $('.select2').select2({
-                        width: '100%',
-                        placeholder: 'انتخاب کنید',
-                        allowClear: true,
-                        language: {
-                            noResults: function () {
-                                return "موردی یافت نشد";
-                            }
-                        }
-                    });
-                    $('#state_{{$project->id}}').on('change', function () {
-                        let stateId = $(this).val();
-                        let $citySelect = $('#city_{{$project->id}}');
-                        $citySelect.html('<option value="">در حال بارگذاری...</option>').trigger('change');
-
-                        if (stateId) {
-                            $.get(`panel/getcities/${stateId}`, function (data) {
-                                $citySelect.empty().append('<option value="">انتخاب کنید</option>');
-                                data.forEach(function (city) {
-                                    $citySelect.append(new Option(city.title, city.id));
-                                });
-                                $citySelect.trigger('change');
-                            });
-                        } else {
-                            $citySelect.html('<option value="">انتخاب کنید</option>').trigger('change');
-                        }
-                    });
                 });
             </script>
     @endpush
