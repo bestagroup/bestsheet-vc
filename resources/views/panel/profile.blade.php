@@ -68,6 +68,7 @@
             </script>
             <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
             <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
+            @if(Auth::user()->level == 'applicant')
             <script type="text/javascript">
                 var tableInitialized = false;
                 document.querySelector('button[data-bs-target="#navs-minutes-card"]')
@@ -166,6 +167,7 @@
                     });
                 });
             </script>
+            @endif
             <script>
                 jQuery(function($){
                     function showToast(message, type = 'success') {
