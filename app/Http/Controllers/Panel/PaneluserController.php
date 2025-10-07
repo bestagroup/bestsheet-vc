@@ -158,7 +158,7 @@ class PaneluserController extends Controller
         $user->birthday     = $request->input('birthday');
         $user->gender       = $request->input('gender');
         if ($request->input('password')) {
-            $user->password     = Hash::$request->input('password');
+            $user->password     = Hash::make($request->input('password'));
         }
         $user->status       = $request->input('status');
         $result = $user->update();
