@@ -67,6 +67,8 @@ Route::get('login/{provider}'           , [App\Http\Controllers\Auth\LoginContro
 Route::get('login/{provider}/callback'  , [App\Http\Controllers\Auth\LoginController::class, 'handleProviderCallback'])->name('handleProviderCallback');
 Route::get('otplogin'                   , [App\Http\Controllers\Auth\LoginController::class, 'otplogin'])->name('otplogin');
 Route::post('gettoken'                  , [App\Http\Controllers\Auth\LoginController::class, 'gettoken'])->name('gettoken');
+Route::get('sendtoken'                  , [App\Http\Controllers\Auth\LoginController::class, 'sendtoken'])->name('sendtoken');
+Route::post('checktoken'                , [App\Http\Controllers\Auth\LoginController::class, 'checktoken'])->name('checktoken');
 
 // --- Demo Flow ---
 use App\Http\Controllers\DemoFlowController;

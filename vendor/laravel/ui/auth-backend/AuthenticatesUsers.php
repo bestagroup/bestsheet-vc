@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 use mysql_xdevapi\Exception;
 use Laravel\Socialite\Facades\Socialite;
@@ -225,6 +226,42 @@ trait AuthenticatesUsers
         return view('auth.otplogin');
     }
 
+    public function sendtoken()
+    {
+        return view('auth.token');
+    }
+    public function checktoken(Request $request)
+    {
+        $request->validate([
+            'code' => ['required','numeric','min:6','exists:active_codes,code']
+        ]);
+
+        $token = $this->convertPersianToEnglishNumbers($request->input('code'));
+        $times = ActiveCode::select('expired_at')->whereCode($token)->first();
+
+        if (jdate($times->expired_at)->getTimestamp() - jdate()->now()->getTimestamp() <= 0) {
+            alert()->error('عملیات ناموفق', 'کد وارد شده منقضی گردیده است، لطفا مجدد تلاش کنید ');
+            return Redirect::back();
+        }
+        dd($request->session()->get('auth.user_id'));
+        $user = User::findOrFail($request->session()->get('auth.user_id'));
+        $status = ActiveCode::verifyCode($token , $user);
+
+        if(auth()->loginUsingId($user->id) && $request->session()->get('auth.reg') == 1) {
+            $user->activeCode()->delete();
+            $user->phone_verify = 1;
+            $user->update();
+            return redirect(route('/'));
+        } elseif(auth()->loginUsingId($user->id))
+        {
+            $user->activeCode()->delete();
+            $user->phone_verify = 1;
+            $user->update();
+            return redirect(route('setpass'));
+        }
+        return redirect(route('login'));
+    }
+
     public function gettoken(Request $request){
 
         $validData = $request->validate([
@@ -242,7 +279,7 @@ trait AuthenticatesUsers
 
         $user->notify(new ActiveCodeNotification($code , $user->phone));
 
-        return redirect(route('phone.token'))->with(['phone' => $phone]);
+        return redirect(route('sendtoken'))->with(['phone' => $phone]);
     }
 
     public function remember(Request $request){
@@ -262,7 +299,7 @@ trait AuthenticatesUsers
 
         $user->notify(new ActiveCodeNotification($code , $user->phone));
 
-        return redirect(route('phone.token'))->with(['phone' => $phone]);
+        return redirect(route('sendtoken'))->with(['phone' => $phone]);
     }
 
     protected function convertPersianToEnglishNumbers($string) {
