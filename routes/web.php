@@ -83,3 +83,6 @@ Route::get('/demo/flow-dt', [DemoFlowDtController::class, 'index'])->name('demo.
 Route::get('/demo/flow-dt/data', [DemoFlowDtController::class, 'data'])->name('demo.flowdt.data');           // DataTable rows
 Route::get('/demo/flow-dt/projects/{id}', [DemoFlowDtController::class, 'show'])->name('demo.flowdt.show');  // project + steps
 Route::post('/demo/flow-dt/store', [DemoFlowDtController::class, 'store'])->name('demo.flowdt.store');       // approve/reject
+
+
+Route::get('getdata', [App\Http\Controllers\Api\IndexController::class, 'getdata'])->name('getdata');
