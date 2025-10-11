@@ -243,8 +243,8 @@ trait AuthenticatesUsers
             alert()->error('عملیات ناموفق', 'کد وارد شده منقضی گردیده است، لطفا مجدد تلاش کنید ');
             return Redirect::back();
         }
-        dd($request->session()->get('auth.user_id'));
-        $user = User::findOrFail($request->session()->get('auth.user_id'));
+        //dd($request->session()->get('auth.user_id'));
+        $user   = User::findOrFail($request->session()->get('auth.user_id'));
         $status = ActiveCode::verifyCode($token , $user);
 
         if(auth()->loginUsingId($user->id) && $request->session()->get('auth.reg') == 1) {

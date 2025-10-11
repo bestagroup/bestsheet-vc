@@ -23,8 +23,8 @@ class GhasedakChannel
         $receptor   = $data['phone'];
         $code       = $data['code'];
         $lineNumber = "10008642";
-        $apiKey        = 'ilvYYKKVEXlM+BAmel+hepqt8fliIow1g0Br06rP4ko';
-
+        $apiKey        = '';
+/////////ilvYYKKVEXlM+BAmel+hepqt8fliIow1g0Br06rP4ko/////
         try
         {
             $api = new GhasedakApi($apiKey);

@@ -56,22 +56,7 @@
 @endsection
 
 @push('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Password toggle
-            const togglePassword = document.querySelector('.form-password-toggle .input-group-text');
-            const passwordInput = document.querySelector('#password');
-            const icon = togglePassword?.querySelector('i');
-            togglePassword?.addEventListener('click', function () {
-                const type = passwordInput.type === 'password' ? 'text' : 'password';
-                passwordInput.type = type;
-                icon?.classList.toggle('mdi-eye-outline');
-                icon?.classList.toggle('mdi-eye-off-outline');
-            });
-        });
-    </script>
 
-    {{-- Toastr: show all errors as toast too (optional) --}}
     <script>
         @if (session('success')) toastr.success(@json(session('success'))); @endif
         @if (session('info'))    toastr.info(@json(session('info')));     @endif
