@@ -75,7 +75,7 @@
                             <a href="{{url('login/google')}}" class="btn btn-danger d-grid w-100"><i class="fa fa-google mr-2"></i> ورود با حساب گوگل </a>
                         </div>
                         <div class="mb-3">
-                            <a href="{{route('otplogin')}}" class="btn btn-info d-grid w-100"><i class="fa fa-google mr-2"></i> ورود با رمز یکبارمصرف </a>
+                            <a href="{{url('login/token')}}" class="btn btn-danger d-grid w-100"><i class="fa fa-google mr-2"></i> ورود با رمز یکبارمصرف </a>
                         </div>
                     </form>
 

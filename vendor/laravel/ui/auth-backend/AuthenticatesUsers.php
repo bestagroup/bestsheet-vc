@@ -2,6 +2,8 @@
 
 namespace Illuminate\Foundation\Auth;
 
+use App\Models\ActiveCode;
+use App\Notifications\ActiveCode as ActiveCodeNotification;
 use App\Models\User_logs;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -55,7 +57,6 @@ trait AuthenticatesUsers
         return $this->sendFailedLoginResponse($request);
     }
 
-
     protected function validateLogin(Request $request)
     {
         $request->validate([
@@ -100,13 +101,6 @@ trait AuthenticatesUsers
                     : redirect()->intended($this->redirectPath());
     }
 
-    /**
-     * The user has been authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
     protected function authenticated(Request $request, $user)
     {
         if ($user->level === 'admin') {
@@ -118,14 +112,6 @@ trait AuthenticatesUsers
         return redirect()->route('profile');
     }
 
-    /**
-     * Get the failed login response instance.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([
@@ -133,22 +119,11 @@ trait AuthenticatesUsers
         ]);
     }
 
-    /**
-     * Get the login username to be used by the controller.
-     *
-     * @return string
-     */
     public function username()
     {
         return 'email';
     }
 
-    /**
-     * Log the user out of the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
-     */
     public function logout(Request $request)
     {
         User_logs::create([
@@ -175,22 +150,11 @@ trait AuthenticatesUsers
             : redirect('/');
     }
 
-    /**
-     * The user has logged out of the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return mixed
-     */
     protected function loggedOut(Request $request)
     {
         //
     }
 
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
-     */
     protected function guard()
     {
         return Auth::guard();
@@ -255,4 +219,57 @@ trait AuthenticatesUsers
             'google_expires_in'     => $google_expires_in,
         ]);
     }
+
+    public function otplogin()
+    {
+        return view('auth.otplogin');
+    }
+
+    public function gettoken(Request $request){
+
+        $validData = $request->validate([
+            'phone'      => ['required', 'exists:users,phone'],
+        ]);
+
+        $phone      = $this->convertPersianToEnglishNumbers($validData['phone']);
+        $user       = User::wherePhone($phone)->first();
+        $user       = User::find($user->id);
+        $request->session()->flash('auth', [
+            'user_id' => $user->id
+        ]);
+
+        $code = ActiveCode::generateCode($user);
+
+        $user->notify(new ActiveCodeNotification($code , $user->phone));
+
+        return redirect(route('phone.token'))->with(['phone' => $phone]);
+    }
+
+    public function remember(Request $request){
+
+        $validData = $request->validate([
+            'phone'      => ['required', 'exists:users,phone'],
+        ]);
+
+        $phone      = $this->convertPersianToEnglishNumbers($validData['phone']);
+        $user       = User::wherePhone($phone)->first();
+        $user       = User::find($user->id);
+        $request->session()->flash('auth', [
+            'user_id' => $user->id
+        ]);
+
+        $code = ActiveCode::generateCode($user);
+
+        $user->notify(new ActiveCodeNotification($code , $user->phone));
+
+        return redirect(route('phone.token'))->with(['phone' => $phone]);
+    }
+
+    protected function convertPersianToEnglishNumbers($string) {
+        $persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        return str_replace($persianNumbers, $englishNumbers, $string);
+    }
+
 }

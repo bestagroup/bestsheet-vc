@@ -40,6 +40,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function activeCode()
+    {
+        return $this->hasMany(ActiveCode::class);
+    }
+
     public function permissionsWithActions()
     {
         $role = $this->role() // رابطه belongsTo
@@ -61,8 +66,6 @@ class User extends Authenticatable
         });
     }
 
-
-
     public function hasRole($role)
     {
         if(is_string($role)) {
@@ -70,11 +73,11 @@ class User extends Authenticatable
         }
         return !! $role->intersect($this->role)->count();
     }
+
     public function type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(typeUser::class, 'type_id');
     }
-
 //    public function companies(): HasMany
 //    {
 //        return $this->hasMany(Company::class);
@@ -83,6 +86,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Project::class);
     }
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
@@ -105,7 +109,6 @@ class User extends Authenticatable
             ->where('status', true)
             ->latestOfMany();
     }
-
 
     public function company()
     {
