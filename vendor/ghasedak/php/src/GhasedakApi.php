@@ -2,23 +2,17 @@
 
 namespace Ghasedak;
 
-use Ghasedak\Exceptions\HttpException;
 use Ghasedak\Exceptions\ApiException;
+use Ghasedak\Exceptions\HttpException;
 
 class GhasedakApi
 {
     protected $apiKey;
     private $base_url;
-    private $agent;
-    private $request_method = null;
-    private $verify_type = 1;
-    const VERIFY_TEXT_TYPE = 1;
-    const VERIFY_VOICE_TYPE = 2;
-    const MESSAGE_ID_TYPE = 1;
-    const CHECK_ID_TYPE = 2;
-    const VERSION = "2.1.3";
 
-    public function __construct($apiKey, $url = 'http://api.ghasedak.me/v2/', $agent = 'php')
+    const VERSION = "2.0.0";
+
+    public function __construct($apiKey)
     {
         if (!extension_loaded('curl')) {
             die('Curl not loaded');
@@ -29,44 +23,11 @@ class GhasedakApi
             exit;
         }
         $this->apiKey = $apiKey;
-        $this->base_url = $url;
-        $this->agent = $agent;
-    }
-
-    /**
-     * @param  string  $request_method
-     *
-     * @return $this
-     */
-    public function setRequestMethod($request_method = 'GET')
-    {
-        if (!in_array($request_method, ['GET', 'POST'])) {
-            new \Exception("'$request_method' method doesn't support !");
-        }
-        $this->request_method = $request_method;
-        return $this;
-    }
-
-    /**
-     * @param  \Ghasedak\int  $type
-     *
-     * @return $this
-     * @throws \Exception
-     */
-    public function setVerifyType($type)
-    {
-        if (!is_int($type)) {
-            throw new \Exception("the 'verity type' must be integer");
-        }
-        $this->verify_type = $type;
-        return $this;
+        $this->base_url = 'http://api.ghasedaksms.com/v2/';
     }
 
     protected function runCurl($path, $parameters = null, $method = 'POST')
     {
-        if ($this->request_method) {
-            $method = $this->request_method;
-        }
         $headers = array(
             'apikey:' . $this->apiKey,
             'Accept: application/json',
@@ -75,7 +36,7 @@ class GhasedakApi
         );
 
         $params = http_build_query($parameters);
-        $url = $this->base_url . $path . "?agent={$this->agent}";
+        $url = $this->base_url . $path . '?agent=php';
 
         $init = curl_init();
         curl_setopt($init, CURLOPT_URL, $url);
@@ -96,18 +57,10 @@ class GhasedakApi
 
         $json_result = json_decode($result);
 
-        if ($code != 200 && is_null($json_result)) {
-            throw new HttpException("Request http errors", $code);
-        } else {
-            $return = $json_result->result;
-            if ($return->code != 200) {
-                throw new ApiException($return->message, $return->code);
-            }
-            return $json_result;
-        }
+
     }
 
-    public function SendSimple($receptor, $message, $linenumber = null, $senddate = null, $checkid = null)
+    public function SendSimple($receptor, $message, $linenumber, $senddate = null, $checkid = null)
     {
         $path = 'sms/send/simple';
         $params = array(
@@ -120,7 +73,7 @@ class GhasedakApi
         return $this->runCurl($path, $params, 'POST');
     }
 
-    public function SendBulk($linenumber, $receptor, $message, $date = null, $checkid = null)
+    public function SendBulk($linenumber, $receptor, $message, $date, $checkid = null)
     {
         if (is_array($receptor)) {
             $receptor = implode(",", $receptor);
@@ -161,18 +114,16 @@ class GhasedakApi
         return $this->runCurl($path, $params);
     }
 
-    public function Verify($receptor, $template, ...$args)
+    public function Verify($receptor, $type, $template,...$args)
     {
-        if(is_array($args[0])){
-            $args = $args[0];
-        }
         if (is_array($receptor)) {
             $receptor = implode(",", $receptor);
         }
-        $path = 'verification/send/simple';
+
+        $path = 'send/verify';
         $params = array(
             "receptor" => $receptor,
-            "type" => $this->verify_type,
+            "type" => $type,
             "template" => $template
         );
         if (count($args) > 10 || count($args) == 0) {
@@ -184,14 +135,14 @@ class GhasedakApi
         return $this->runCurl($path, $params);
     }
 
-    public function Status($ids, $type = self::MESSAGE_ID_TYPE)
+    public function Status($id, $type)
     {
-        if (is_array($ids)) {
-            $ids = implode(",", $ids);
+        if (is_array($id)) {
+            $id = implode(",", $id);
         }
         $path = 'sms/status';
         $params = array(
-            "id" => $ids,
+            "id" => $id,
             "type" => $type
         );
         return $this->runCurl($path, $params, 'GET');
