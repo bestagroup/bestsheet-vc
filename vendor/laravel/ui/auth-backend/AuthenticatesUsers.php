@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 use mysql_xdevapi\Exception;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Validator;
+
 trait AuthenticatesUsers
 {
     use RedirectsUsers, ThrottlesLogins;
@@ -230,6 +232,7 @@ trait AuthenticatesUsers
     {
         return view('auth.token');
     }
+
     public function checktoken(Request $request)
     {
         $request->validate([
@@ -243,37 +246,45 @@ trait AuthenticatesUsers
             alert()->error('عملیات ناموفق', 'کد وارد شده منقضی گردیده است، لطفا مجدد تلاش کنید ');
             return Redirect::back();
         }
-        //dd($request->session()->get('auth.user_id'));
-        $user   = User::findOrFail($request->session()->get('auth.user_id'));
+
+        $user   = User::findOrFail(session('auth.user_id'));
         $status = ActiveCode::verifyCode($token , $user);
 
         if(auth()->loginUsingId($user->id) && $request->session()->get('auth.reg') == 1) {
             $user->activeCode()->delete();
             $user->phone_verify = 1;
             $user->update();
-            return redirect(route('/'));
+            if ($user->level == 'admin') {
+                return redirect()->route('dashboard');
+            } elseif ($user->level == 'applicant') {
+                return redirect()->route('profile');
+            }
         } elseif(auth()->loginUsingId($user->id))
         {
             $user->activeCode()->delete();
             $user->phone_verify = 1;
             $user->update();
-            return redirect(route('setpass'));
+            if ($user->level == 'admin') {
+                return redirect()->route('dashboard');
+            } elseif ($user->level == 'applicant') {
+                return redirect()->route('profile');
+            }
         }
         return redirect(route('login'));
     }
 
     public function gettoken(Request $request){
 
-        $validData = $request->validate([
-            'phone'      => ['required', 'exists:users,phone'],
-        ]);
+        $phone = $this->convertPersianToEnglishNumbers($request->input('phone'));
 
-        $phone      = $this->convertPersianToEnglishNumbers($validData['phone']);
-        $user       = User::wherePhone($phone)->first();
-        $user       = User::find($user->id);
-        $request->session()->flash('auth', [
-            'user_id' => $user->id
-        ]);
+        $validData = Validator::make(
+            ['phone' => $phone],
+            ['phone' => ['required', 'exists:users,phone']]
+        )->validate();
+
+        $user = User::where('phone', $phone)->first();
+
+        session(['auth' => ['user_id' => $user->id]]);
 
         $code = ActiveCode::generateCode($user);
 
