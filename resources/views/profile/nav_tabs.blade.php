@@ -41,7 +41,7 @@
             </button>
         </li>
         <li class="nav-item">
-            <button type="button" {{$project->invest_step > 13 ? '' : 'disabled'}} class="nav-link d-flex flex-column gap-1" role="tab"
+            <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}} class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-minutes-card"
                     aria-controls="navs-minutes-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-message-text-outline mdi-20px me-1"></i>
@@ -49,11 +49,35 @@
             </button>
         </li>
         <li class="nav-item">
-            <button type="button" {{$project->invest_step > 13 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
+            <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-guarantee-card"
                     aria-controls="navs-guarantee-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
                 تعهدات
+            </button>
+        </li>
+        <li class="nav-item">
+            <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
+                    data-bs-toggle="tab" data-bs-target="#navs-sales"
+                    aria-controls="navs-guarantee-card" aria-selected="false">
+                <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
+                فروش
+            </button>
+        </li>
+        <li class="nav-item">
+            <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
+                    data-bs-toggle="tab" data-bs-target="#navs-contracts"
+                    aria-controls="navs-guarantee-card" aria-selected="false">
+                <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
+                قراردادها
+            </button>
+        </li>
+        <li class="nav-item">
+            <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
+                    data-bs-toggle="tab" data-bs-target="#navs-payments"
+                    aria-controls="navs-guarantee-card" aria-selected="false">
+                <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
+                پرداخت ها
             </button>
         </li>
     @elseif(Auth::user()->level == 'investor')

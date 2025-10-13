@@ -5,9 +5,27 @@
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
-    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
-    <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto !important;word-wrap:break-word;white-space: nowrap;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
-    <style>.nav-tabs .nav-link.active {border-bottom: 3px solid #7367f0 !important;}</style>
+    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}"/>
+    <style> table {
+            margin: 0 auto;
+            width: 100% !important;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: auto !important;
+            word-wrap: break-word;
+            white-space: nowrap;
+        }
+
+        .dt-layout-start {
+            margin-right: 0 !important;
+        }
+
+        .dt-layout-end {
+            margin-left: 0 !important;
+        }</style>
+    <style>.nav-tabs .nav-link.active {
+            border-bottom: 3px solid #7367f0 !important;
+        }</style>
 @endsection
 
 <style>
@@ -41,6 +59,12 @@
                         @include('profile.tab_minutes')
 
                         @include('profile.tab_guarantees')
+
+                        @include('profile.tab_sales')
+
+                        @include('profile.tab_contracts')
+
+                        @include('profile.tab_payments')
 
                     @elseif(Auth::user()->level == 'investor')
                         @include('profile.tab_investor_projects')
@@ -87,10 +111,10 @@
                                     }
                                 },
                                 columns: [
-                                    {data: 'title'  , name: 'title'},
-                                    {data: 'date'   , name: 'date'},
-                                    {data: 'type'   , name: 'type'},
-                                    {data: 'file'   , name: 'file', orderable: true, searchable: true},
+                                    {data: 'title', name: 'title'},
+                                    {data: 'date', name: 'date'},
+                                    {data: 'type', name: 'type'},
+                                    {data: 'file', name: 'file', orderable: true, searchable: true},
                                 ],
                                 language: {
                                     url: "{{ asset('assets/vendor/js/fa.json') }}"
@@ -103,7 +127,7 @@
 
 
             <script>
-                jQuery(function($){
+                jQuery(function ($) {
                     function showToast(message, type = 'success') {
                         toastr.options = {
                             closeButton: true,
@@ -119,9 +143,10 @@
                             toastr.success(message);
                         }
                     }
-                    $('#submitaddminut').on('click', function(e){
+
+                    $('#submitaddminut').on('click', function (e) {
                         e.preventDefault();
-                        var $btn  = $(this);
+                        var $btn = $(this);
                         var $form = $('#addminuteform');
                         var originalHtml = $btn.html();
 
@@ -143,10 +168,10 @@
                                     const modalEl = document.getElementById('addMinutesModal');
                                     const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
 
-                                    modalEl.addEventListener('hidden.bs.modal', function handler(){
+                                    modalEl.addEventListener('hidden.bs.modal', function handler() {
                                         modalEl.removeEventListener('hidden.bs.modal', handler);
                                         $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                                    }, { once: true });
+                                    }, {once: true});
 
                                     modal.hide();
                                     $('.modal-backdrop').remove();
@@ -201,7 +226,7 @@
                 </script>
             @endif
             <script>
-                jQuery(function($){
+                jQuery(function ($) {
                     function showToast(message, type = 'success') {
                         toastr.options = {
                             closeButton: true,
@@ -218,7 +243,7 @@
                         }
                     }
 
-                    $(document).on('click', '[id^=editsubmit_]', function(e){
+                    $(document).on('click', '[id^=editsubmit_]', function (e) {
                         e.preventDefault();
                         const $btn = $(this);
                         const id = this.id.split('_')[1];
@@ -247,9 +272,7 @@
                                     $('#company-address').text(company.address || '');
                                     toggleEditMode('company');
                                     showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                                }
-
-                                else {
+                                } else {
                                     swal(data.subject, data.message, data.flag);
                                 }
                             },
@@ -262,18 +285,19 @@
                         });
                     });
 
-                    function disableBtnWithSpinner($btn){
+                    function disableBtnWithSpinner($btn) {
                         $btn.prop('disabled', true).html(
                             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
                         );
                     }
-                    function restoreBtn($btn, html){
+
+                    function restoreBtn($btn, html) {
                         $btn.prop('disabled', false).html(html);
                     }
                 });
             </script>
             <script>
-                jQuery(function($){
+                jQuery(function ($) {
                     function showToast(message, type = 'success') {
                         toastr.options = {
                             closeButton: true,
@@ -290,7 +314,7 @@
                         }
                     }
 
-                    $(document).on('click', '[id^=editusersubmit_]', function(e){
+                    $(document).on('click', '[id^=editusersubmit_]', function (e) {
                         e.preventDefault();
                         const $btn = $(this);
                         const id = this.id.split('_')[1];
@@ -318,9 +342,7 @@
                                     $('#user_address').text(user.user_address || '');
                                     toggleEditMode('user');
                                     showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                                }
-
-                                else {
+                                } else {
                                     swal(data.subject, data.message, data.flag);
                                 }
                             },
@@ -333,12 +355,13 @@
                         });
                     });
 
-                    function disableBtnWithSpinner($btn){
+                    function disableBtnWithSpinner($btn) {
                         $btn.prop('disabled', true).html(
                             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
                         );
                     }
-                    function restoreBtn($btn, html){
+
+                    function restoreBtn($btn, html) {
                         $btn.prop('disabled', false).html(html);
                     }
                 });
@@ -352,7 +375,7 @@
 
                     const dz = new Dropzone(fileFormSelector, {
                         url: "{{ route('storemedia') }}",
-                        headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
                         maxFilesize: 20,
                         acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                         dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
@@ -386,11 +409,11 @@
             <script>
                 document.querySelectorAll('.upload-btn').forEach(btn => {
                     btn.addEventListener('click', function () {
-                        let recordId    = this.getAttribute('data-id');
-                        let subjectId   = this.getAttribute('data-subject');
-                        let title       = this.getAttribute('data-title');
+                        let recordId = this.getAttribute('data-id');
+                        let subjectId = this.getAttribute('data-subject');
+                        let title = this.getAttribute('data-title');
 
-                        document.getElementById('recordIdInput').value  = recordId;
+                        document.getElementById('recordIdInput').value = recordId;
                         document.getElementById('subjectIdInput').value = subjectId;
                         document.getElementById('fileTitleInput').value = title;
 
@@ -422,4 +445,3 @@
                 });
             </script>
     @endpush
-
