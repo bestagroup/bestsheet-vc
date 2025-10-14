@@ -1091,13 +1091,12 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="uploadModalLabel">{{$thispage['add']}}</h5>
+                    <h5 class="modal-title" id="uploadModalLabel"> بارگزاری </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone dz-clickable border rounded-3 shadow-sm bg-light p-4" id="fileUploadZone" style="min-height: 220px; border-style: dashed;">
-                        @csrf
-
+                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
+                        <input type="hidden" name="record_id"   id="recordIdInput"  >
                         <div class="dz-message text-center text-muted">
                             <div class="mb-3">
                                 <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
@@ -1471,18 +1470,19 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             const fileFormSelector = "#fileUploadZone";
-            let currentRecordId = null;
+            //let currentRecordId = null;
+            let recordId = this.getAttribute('data-id');
 
             const dz = new Dropzone(fileFormSelector, {
                 url: "{{ route('storemedia') }}",
-                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
                 maxFilesize: 20,
                 acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
                 init: function () {
                     this.on("sending", function (file, xhr, formData) {
 
-                        formData.append("record_id", currentRecordId || document.getElementById('recordIdInput').value);
+                        formData.append("record_id", recordId || document.getElementById('recordIdInput').value);
                     });
                     this.on("success", function (file, response) {
                         const extension = file.name.split('.').pop().toLowerCase();
