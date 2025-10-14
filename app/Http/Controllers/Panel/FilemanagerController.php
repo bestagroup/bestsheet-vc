@@ -94,10 +94,10 @@ class FilemanagerController extends Controller
                 })
                 ->editColumn('action', function ($data) {
                     $actionBtn = '';
-                    if (auth()->user()->can('can-access', ['project', 'edit'])) {
+                    if (auth()->user()->can('can-access', ['filemanager', 'edit'])) {
                         $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary mx-1"><i class="mdi mdi-pencil-outline"></i></button>';
                     }
-                    if (auth()->user()->can('can-access', ['project', 'delete'])) {
+                    if (auth()->user()->can('can-access', ['filemanager', 'delete'])) {
                         $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
                     return $actionBtn;
