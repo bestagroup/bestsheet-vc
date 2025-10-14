@@ -1091,14 +1091,13 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ $thispage['add'] }}</h5>
+                    <h5 class="modal-title" id="uploadModalLabel">{{$thispage['add']}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data"
-                          class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
+                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone dz-clickable border rounded-3 shadow-sm bg-light p-4" id="fileUploadZone" style="min-height: 220px; border-style: dashed;">
                         @csrf
-                        <input type="hidden" name="record_id" id="recordIdInput">
+
                         <div class="dz-message text-center text-muted">
                             <div class="mb-3">
                                 <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
