@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\MediaFile;
 use App\Models\MenuPanel;
+use App\Models\Project;
 use App\Models\subject_file;
 use App\Models\SubmenuPanel;
 use Exception;
@@ -31,6 +32,7 @@ class FilemanagerController extends Controller
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
         $mediafiles     = MediaFile::all();
         $subject_files  = subject_file::all();
+        $companies      = Project::select('id','title')->get();
 
         if ($request->ajax()) {
             $data = MediaFile::leftjoin('projects', 'projects.id', '=', 'media_files.project_id')
@@ -105,7 +107,7 @@ class FilemanagerController extends Controller
                 ->rawColumns(['action' ,'file_path'])
                 ->make(true);
         }
-        return view('panel.file_manager')->with(compact(['menupanels' , 'submenupanels' , 'mediafiles','thispage' , 'subject_files']));
+        return view('panel.file_manager')->with(compact(['menupanels' , 'submenupanels' , 'mediafiles','thispage' , 'subject_files' , 'companies']));
     }
 
     public function store(Request $request)
@@ -259,6 +261,7 @@ class FilemanagerController extends Controller
     {
         $result = MediaFile::whereId($id)->update([
             'subject_id' => $request->input('subject_id'),
+            'company_id' => $request->input('company_id'),
         ]);
 
         try{

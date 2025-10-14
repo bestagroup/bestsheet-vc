@@ -70,6 +70,15 @@
 {{--                            <input type="hidden" name="menu_id" id="menu_id_{{$mediafile->id}}" value="{{$mediafile->id}}" />--}}
                             <div class="row mb-3 ">
                                 <div class="col-md-4">
+                                    <label class="form-label">انتخاب شرکت</label>
+                                    <select name="company_id" id="company_id_{{$mediafile->id}}" class="form-control select-lg select2">
+                                        <option value="">انتخاب شرکت</option>
+                                        @foreach($companies as $company)
+                                            <option value="{{$company->id}}" {{$company->id == $mediafile->project_id ? 'selected' : '' }}>{{$company->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label class="form-label">انتخاب نوع فایل</label>
                                     <select name="subject_id" id="subject_id_{{$mediafile->id}}" class="form-control select-lg select2">
                                         <option value="">انتخاب نوع فایل</option>
@@ -160,6 +169,7 @@
 
         });
     </script>
+
     <script>
         function previewFile(fileUrl, extension) {
             let previewContent = '';

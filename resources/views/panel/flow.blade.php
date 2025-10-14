@@ -1512,6 +1512,7 @@
         function previewFile(fileUrl, ext) {
             const url = `/${fileUrl}`;
             const recordId = $(this).data('id');
+            console.log(recordId);
             const map = {
                 img: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'],
                 vid: ['mp4', 'webm', 'ogg'],
