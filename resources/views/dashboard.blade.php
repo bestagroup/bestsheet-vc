@@ -3,6 +3,121 @@
 @section('style')
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css"/>
+    <style>
+        /* اسکرول تمیز و با ارتفاع کنترل‌شده */
+        .payment-scroll{
+            max-height: 400px;
+            overflow-y: auto;
+            padding: .25rem 0;
+            scrollbar-width: thin;
+        }
+        .payment-scroll::-webkit-scrollbar { width: 6px; }
+        .payment-scroll::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,.12);
+            border-radius: 8px;
+        }
+
+        /* آیتم‌ها */
+        .payment-item{
+            border: 0 !important;
+            border-bottom: 1px solid rgba(0,0,0,.06) !important;
+            transition: background .2s ease, transform .2s ease;
+        }
+        .payment-item:last-child{ border-bottom: 0 !important; }
+        .payment-item:hover{
+            background: #fafafa;
+            transform: translateY(-1px);
+        }
+
+        /* لوگو */
+        .payment-logo{
+            width: 40px; height: 40px;
+            background: #f3f4f6;
+        }
+
+        /* متن‌های طولانی را دو خطی کنید (اختیاری) */
+        .text-truncate{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* گوشه‌های کارت نرم‌تر */
+        .card.rounded-4, .rounded-top-4{ border-radius: 1rem !important; }
+
+        :root{
+            --bg-card: #ffffff;
+            --bg-soft: #f5f7fb;
+            --text-muted: #6b7280;
+            --ring: rgba(15, 23, 42, .06);
+
+            /* accent palette */
+            --primary-100:#eef2ff; --primary-400:#818cf8; --primary-500:#6366f1; --primary-600:#4f46e5;
+            --info-100:#e0f2fe;    --info-400:#60a5fa;    --info-500:#3b82f6;    --info-600:#2563eb;
+            --warn-100:#fff7ed;    --warn-400:#fb923c;    --warn-500:#f97316;    --warn-600:#ea580c;
+        }
+
+        .dark, [data-theme="dark"]{
+            --bg-card: #0b1220;
+            --bg-soft: #0f172a;
+            --text-muted: #9aa3b2;
+            --ring: rgba(148, 163, 184, .12);
+        }
+
+        .portfolio-card{
+            background: var(--bg-card);
+            transition: box-shadow .25s ease, transform .25s ease;
+            box-shadow: 0 6px 18px var(--ring) !important;
+        }
+        .portfolio-card:hover{ transform: translateY(-2px); }
+
+        .portfolio-scroll{
+            max-height: 400px; overflow-y: auto; scrollbar-width: thin;
+        }
+        .portfolio-scroll::-webkit-scrollbar{ width: 6px; }
+        .portfolio-scroll::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.12); border-radius: 8px; }
+
+        .portfolio-item{ background: transparent; transition: background .2s ease, transform .2s ease; }
+        .portfolio-item:hover{ background: var(--bg-soft); transform: translateY(-1px); }
+        .portfolio-item:last-child{ border-bottom: 0 !important; }
+
+        .tone-dot{
+            width:10px; height:10px; border-radius:50%;
+            box-shadow: 0 0 0 4px rgba(0,0,0,.04) inset;
+        }
+        .tone-primary{ background: var(--primary-500); }
+        .tone-info{    background: var(--info-500); }
+        .tone-warning{ background: var(--warn-500); }
+
+        .pill{
+            display:inline-block; padding:.15rem .5rem; border-radius: 999px;
+            font-weight: 600; line-height: 1; letter-spacing:.2px;
+        }
+        .pill-primary{ background: color-mix(in oklab, var(--primary-100) 70%, #fff 30%); color: var(--primary-600); }
+        .pill-info{    background: color-mix(in oklab, var(--info-100) 70%, #fff 30%);    color: var(--info-600); }
+        .pill-warning{ background: color-mix(in oklab, var(--warn-100) 70%, #fff 30%);    color: var(--warn-600); }
+
+        .progress.sleek{
+            height: 8px; border-radius: 14px; background: rgba(0,0,0,.06);
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,.04);
+        }
+        .progress.sleek .progress-bar{ border-radius: 14px; transition: width .45s cubic-bezier(.22,.61,.36,1); }
+
+        .progress .bar-primary{
+            background-image: linear-gradient(90deg, var(--primary-400), var(--primary-600));
+        }
+        .progress .bar-info{
+            background-image: linear-gradient(90deg, var(--info-400), var(--info-600));
+        }
+        .progress .bar-warning{
+            background-image: linear-gradient(90deg, var(--warn-400), var(--warn-600));
+        }
+
+        /* گردی‌ها */
+        .rounded-4, .rounded-top-4{ border-radius: 16px !important; }
+
+    </style>
 @endsection
 @section('content')
 
@@ -12,70 +127,71 @@
     </div>
 
     <!-- Radar Chart -->
-    <div class="col-md-12 col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">شاخص کلیدی عملکرد</h5>
-                <div class="dropdown primary-font">
-                    <button class="btn px-0" type="button" id="heatChartDd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bx bx-dots-vertical-rounded"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="heatChartDd1">
-                        <a class="dropdown-item" href="javascript:void(0);">28 روز اخیر</a>
-                        <a class="dropdown-item" href="javascript:void(0);">ماه قبل</a>
-                        <a class="dropdown-item" href="javascript:void(0);">سال قبل</a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div id="radarChart"></div>
-            </div>
-        </div>
-    </div>
+{{--    <div class="col-md-12 col-12">--}}
+{{--        <div class="row justify-content-between">--}}
+{{--            <div class="card col-md-6 m-1">--}}
+{{--                <div class="card-header d-flex justify-content-between align-items-center">--}}
+{{--                    <h5 class="card-title mb-0">شاخص کلیدی عملکرد</h5>--}}
+{{--                    <div class="dropdown primary-font">--}}
+{{--                        <button class="btn px-0" type="button" id="heatChartDd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+{{--                            <i class="bx bx-dots-vertical-rounded"></i>--}}
+{{--                        </button>--}}
+{{--                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="heatChartDd1">--}}
+{{--                            <a class="dropdown-item" href="javascript:void(0);">28 روز اخیر</a>--}}
+{{--                            <a class="dropdown-item" href="javascript:void(0);">ماه قبل</a>--}}
+{{--                            <a class="dropdown-item" href="javascript:void(0);">سال قبل</a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="card-body">--}}
+{{--                    <div id="radarChart"></div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="card col-md-6 m-1">--}}
+{{--                <div class="card-header d-flex justify-content-between">--}}
+{{--                    <div>--}}
+{{--                        <h5 class="card-title mb-1">آخرین به‌روزرسانی‌ها</h5>--}}
+{{--                        <small class="text-muted primary-font">شبکه‌های تجاری</small>--}}
+{{--                    </div>--}}
+{{--                    <div class="dropdown primary-font">--}}
+{{--                        <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false">--}}
+{{--                            <i class="bx bx-calendar"></i>--}}
+{{--                        </button>--}}
+{{--                        <ul class="dropdown-menu dropdown-menu-end">--}}
+{{--                            <li>--}}
+{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">امروز</a>--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">دیروز</a>--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">7 روز اخیر</a>--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">30 روز اخیر</a>--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <hr class="dropdown-divider">--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">این ماه</a>--}}
+{{--                            </li>--}}
+{{--                            <li>--}}
+{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">ماه قبل</a>--}}
+{{--                            </li>--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="card-body">--}}
+{{--                    <div id="lineAreaChart"></div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
     <!-- /Radar Chart -->
 
     <!-- Line Area Chart -->
-    <div class="col-12 mt-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between">
-                <div>
-                    <h5 class="card-title mb-1">آخرین به‌روزرسانی‌ها</h5>
-                    <small class="text-muted primary-font">شبکه‌های تجاری</small>
-                </div>
-                <div class="dropdown primary-font">
-                    <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bx bx-calendar"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">امروز</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">دیروز</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">7 روز اخیر</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">30 روز اخیر</a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">این ماه</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">ماه قبل</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card-body">
-                <div id="lineAreaChart"></div>
-            </div>
-        </div>
-    </div>
+
     <!-- /Line Area Chart -->
 
     <div class="row gy-4 mb-4">
@@ -451,97 +567,109 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-12">
-                <div class="card h-100">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">تاریخچه پرداخت</h5>
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-header d-flex align-items-center justify-content-between bg-white rounded-top-4">
+                        <h6 class="card-title m-0 me-2 fw-bold">تاریخچه پرداخت</h6>
                         <div class="dropdown">
                             <button class="btn p-0" type="button" id="paymentHistory" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="mdi mdi-dots-vertical mdi-24px"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="paymentHistory">
-                                <a class="dropdown-item" href="javascript:void(0);">28 روز گذشته</a>
+                                <a class="dropdown-item" href="javascript:void(0);">۲۸ روز گذشته</a>
                                 <a class="dropdown-item" href="javascript:void(0);">ماه گذشته</a>
                                 <a class="dropdown-item" href="javascript:void(0);">سال پیش</a>
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive rounded-3" style="margin: 0 5px">
-                        <div style="max-height: 400px; overflow-y: auto;">
-                            <table class="table table-sm table-bordered" style="border-collapse: collapse;">
-                                <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
-                                <tr>
-                                    <th class="py-3">شرکت </th>
-                                    <th class="py-3">تاریخ واریز </th>
-                                    <th class="py-3">مبلغ واریز</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+
+                    <div class="card-body py-0">
+                        <div class="payment-scroll">
+                            <ul class="list-group list-group-flush">
                                 @foreach($finances as $finance)
-                                    <tr>
-                                        <td class="d-flex">
-                                            <div class="rounded bg-lighter d-flex align-items-center h-px-30">
-                                                <img src="{{asset('storage/'.$finance->logo)}}" alt="credit-card" width="30">
+                                    <li class="list-group-item px-3 py-3 payment-item d-flex align-items-center gap-3">
+                                        {{-- Logo --}}
+                                        <div class="payment-logo rounded-3 d-flex align-items-center justify-content-center flex-shrink-0">
+                                            <img src="{{ asset('storage/'.$finance->logo) }}" alt="logo" width="28" height="28" class="rounded-2">
+                                        </div>
+
+                                        {{-- Texts --}}
+                                        <div class="flex-grow-1 min-w-0">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="text-truncate fw-semibold">{{ $finance->title }}</div>
+                                                <div class="small text-muted ms-2">{{ $finance->date }}</div>
                                             </div>
-                                            <div class="ms-2">
-                                                <small class="text-muted">{{$finance->title}}</small>
-                                            </div>
-                                        </td>
-                                        <td class="text-muted small">{{$finance->date}}</td>
-                                        <td class="text-end">
-                                            <div class="ms-2">
-                                                <h6 class="mb-0 fw-semibold">{{number_format($finance->amount)}}</h6>
-                                                <small class="text-muted">{{number_format($finance->amount)}}</small>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+
+                                        {{-- Amount --}}
+                                        <div class="text-end">
+                                            <div class="fw-semibold">{{ number_format($finance->amount) }} <span class="text-muted small">تومان</span></div>
+                                            <div class="text-muted small">{{ number_format($finance->amount) }}</div>
+                                        </div>
+                                    </li>
                                 @endforeach
-                                </tbody>
-                            </table>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
+
             <div class="col-lg-6 col-md-6 col-12">
-                <div class="card h-100">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">مجموع پورتفو سرمایه گذاری  ( ریال )</h5>
+                <div class="card h-100 border-0 shadow-sm rounded-4 portfolio-card">
+                    <!-- Header -->
+                    <div class="card-header d-flex align-items-center justify-content-between bg-white rounded-top-4">
+                        <div>
+                            <h6 class="card-title m-0 me-2 fw-bold">مجموع پورتفوی سرمایه‌گذاری (ریال)</h6>
+                            <small class="text-muted">نمای کلی سهم هر پروژه از کل پورتفو</small>
+                        </div>
                         <div class="dropdown">
-                            <button class="btn p-0" type="button" id="mostSales" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn p-0" type="button" id="portfolioMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="mdi mdi-dots-vertical mdi-24px"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="mostSales">
-                                <a class="dropdown-item" href="javascript:void(0);">28 روز گذشته</a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portfolioMenu">
+                                <a class="dropdown-item" href="javascript:void(0);">۲۸ روز گذشته</a>
                                 <a class="dropdown-item" href="javascript:void(0);">ماه گذشته</a>
                                 <a class="dropdown-item" href="javascript:void(0);">سال پیش</a>
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive rounded-3" style="margin: 0 5px">
-                        <div style="max-height: 400px; overflow-y: auto;">
-                            <table class="table table-sm table-bordered" style="border-collapse: collapse;">
-                                <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
-                                <tr>
-                                    <th class="py-3">شرکت </th>
-                                    <th class="py-3">مبلغ کل </th>
-                                    <th class="py-3">سهم از کل پوتفو</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+
+                    <!-- Body -->
+                    <div class="card-body py-2">
+                        <div class="portfolio-scroll">
+                            <ul class="list-group list-group-flush">
                                 @foreach($projects as $project)
-                                    <tr>
-                                        <td class="pe-5"><span class="text-heading">{{$project->title}}</span></td>
-                                        <td class="ps-5 d-flex justify-content-end"><span class="text-heading fw-semibold">{{number_format($project->total_amount)}}  </span></td>
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-end">
-                                                <span class="text-heading fw-semibold me-2">{{round(($project->total_amount / $totalPaid) * 100)}}%</span>
-                                                <i class="mdi  mdi-20px {{round(($project->total_amount / $totalPaid) * 100) >= 10 ? 'mdi-chevron-up text-success' : 'mdi-chevron-down text-danger'}} "></i>
+                                    @php
+                                        $share = $totalPaid > 0 ? round(($project->total_amount / $totalPaid) * 100) : 0;
+                                        // tone: primary (>=25), info (10-24), warning (<10)
+                                        $tone = $share >= 25 ? 'primary' : ($share >= 10 ? 'info' : 'warning');
+                                    @endphp
+
+                                    <li class="list-group-item px-3 py-3 border-0 border-bottom d-flex flex-column portfolio-item">
+                                        <!-- Top row -->
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <div class="d-flex align-items-center gap-2 min-w-0">
+                                                <span class="tone-dot tone-{{ $tone }}"></span>
+                                                <span class="fw-semibold text-dark text-truncate" title="{{ $project->title }}">{{ $project->title }}</span>
                                             </div>
-                                        </td>
-                                    </tr>
+                                            <div class="text-end">
+                                                <span class="fw-semibold">{{ number_format($project->total_amount) }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Meta -->
+                                        <div class="d-flex justify-content-between align-items-center mb-2 small">
+                                            <span class="text-muted">سهم از پورتفو</span>
+                                            <span class="pill pill-{{ $tone }}">{{ $share }}%</span>
+                                        </div>
+
+                                        <!-- Progress (gradient) -->
+                                        <div class="progress sleek" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ $share }}">
+                                            <div class="progress-bar bar-{{ $tone }}" style="width: {{ $share }}%;"></div>
+                                        </div>
+                                    </li>
                                 @endforeach
-                                </tbody>
-                            </table>
+                            </ul>
                         </div>
                     </div>
                 </div>
