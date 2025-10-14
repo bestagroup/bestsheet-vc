@@ -66,7 +66,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                        <form id="addform" method="POST" class="row g-4 mb-4" action="{{ route(request()->segment(2).'.store') }}">
+                        <form id="addform" data-type="create" method="POST" class="row g-4 mb-4" action="{{ route('project.store') }}">
                             @csrf
                             <div class="col-12 col-md-4">
                                 <div class="form-floating form-floating-outline">
@@ -84,21 +84,21 @@
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-floating form-floating-outline">
-                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="registration_number" name="registration_number" placeholder="شماره ثبت">
+                                    <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="20" minlength="3" type="text" class="form-control" id="registration_number" name="registration_number" placeholder="شماره ثبت">
                                     <label for="registration_number">شماره ثبت</label>
                                     <div class="invalid-feedback" id="registration_numberFeedback">شماره ثبت اجباری و شامل عدد می باشد.</div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-floating form-floating-outline">
-                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="national_id" name="national_id" placeholder="شناسه ملی شرکت" >
+                                    <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="20" minlength="3" type="text" class="form-control" id="national_id" name="national_id" placeholder="شناسه ملی شرکت" >
                                     <label for="national_id">شناسه ملی شرکت</label>
                                     <div class="invalid-feedback" id="national_idFeedback">شناسه ملی شرکت اجباری و شامل عدد می باشد.</div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-floating form-floating-outline">
-                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="economic_code" name="economic_code" placeholder="کد اقتصادی شرکت" >
+                                    <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="20" minlength="3" type="text" class="form-control" id="economic_code" name="economic_code" placeholder="کد اقتصادی شرکت" >
                                     <label for="economic_code">کد اقتصادی شرکت</label>
                                     <div class="invalid-feedback" id="economic_codeFeedback">کد اقتصادی اجباری، و شامل عدد می باشد.</div>
                                 </div>
@@ -118,7 +118,7 @@
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-floating form-floating-outline">
-                                    <input inputmode="numeric" pattern="^\d{10}$" type="text" class="form-control" id="tel" name="tel" placeholder="تلفن شرکت">
+                                    <input inputmode="numeric" pattern="^\d{3,20}$" type="text" class="form-control" id="tel" name="tel" placeholder="تلفن شرکت">
                                     <label for="tel">تلفن شرکت</label>
                                     <div class="invalid-feedback" id="telFeedback">شماره تلفن شامل عدد می باشد.</div>
                                 </div>
@@ -180,7 +180,7 @@
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-floating form-floating-outline">
-                                    <input required inputmode="numeric" pattern="^\d{10}$" maxlength="10" minlength="10" type="text" class="form-control" id="ceo_national_code" name="ceo_national_code"
+                                    <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="20" minlength="3" type="text" class="form-control" id="ceo_national_code" name="ceo_national_code"
                                            placeholder="کد ملی مدیرعامل" >
                                     <label for="ceo_national_code">کد ملی مدیرعامل</label>
                                     <div class="invalid-feedback" id="ceo_national_codeFeedback">کد ملی مدیرعامل اجباری می باشد و با دقت وارد شود</div>
@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                         <div class="text-end">
-                            <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
+                            <button type="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                     </form>
                 </div>
@@ -216,7 +216,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                     </div>
                     <div class="modal-body">
-                            <form id="editform_{{ $project->id }}" class="row g-4 mb-4" method="POST" action="{{ route('project.update', $project->id) }}">
+                            <form id="editform_{{ $project->id }}" class="row g-4 mb-4" data-type="update" method="POST" action="{{ route('project.update', $project->id) }}">
                                 @csrf
                                 @method('PATCH')
                             <input type="hidden" name="menu_id" id="menu_id_{{$project->id}}" value="{{$project->id}}" />
@@ -239,7 +239,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="registration_number_{{$project->id}}" name="registration_number"
+                                        <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="20" minlength="3" type="text" class="form-control" id="registration_number_{{$project->id}}" name="registration_number"
                                                placeholder="شماره ثبت" value="{{ $project->registration_number }}">
                                         <label for="registration_number">شماره ثبت</label>
                                         <div class="invalid-feedback" id="registration_numberFeedback">شماره ثبت اجباری و شامل عدد می باشد.</div>
@@ -247,7 +247,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="national_id_{{$project->id}}" name="national_id"
+                                        <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="20" minlength="3" type="text" class="form-control" id="national_id_{{$project->id}}" name="national_id"
                                                placeholder="شناسه ملی شرکت" value="{{ $project->national_id }}">
                                         <label for="national_id">شناسه ملی شرکت</label>
                                         <div class="invalid-feedback" id="national_idFeedback">شناسه ملی شرکت اجباری و شامل عدد می باشد.</div>
@@ -255,7 +255,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="16" minlength="10" type="text" class="form-control" id="economic_code_{{$project->id}}" name="economic_code"
+                                        <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="20" minlength="3" type="text" class="form-control" id="economic_code_{{$project->id}}" name="economic_code"
                                                placeholder="کد اقتصادی شرکت" value="{{ $project->economic_code }}">
                                         <label for="economic_code">کد اقتصادی شرکت</label>
                                         <div class="invalid-feedback" id="economic_codeFeedback">کد اقتصادی اجباری، و شامل عدد می باشد.</div>
@@ -276,7 +276,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input inputmode="numeric" pattern="^\d{10}$" type="text" class="form-control" id="tel_{{$project->id}}" name="tel" placeholder="تلفن شرکت" value="{{ $project->tel }}">
+                                        <input inputmode="numeric" pattern="^\d{3,20}$" type="text" class="form-control" id="tel_{{$project->id}}" name="tel" placeholder="تلفن شرکت" value="{{ $project->tel }}">
                                         <label for="tel">تلفن شرکت</label>
                                         <div class="invalid-feedback" id="telFeedback">شماره تلفن شامل عدد می باشد.</div>
                                     </div>
@@ -303,7 +303,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select name="state" id="state_{{$project->id}}" class="form-control select2">
+                                        <select name="state" id="state" class="form-control select2">
                                             <option value="" selected>انتخاب کنید</option>
                                             @foreach($states as $state)
                                                 <option value="{{$state->id}}" {{$project->province == $state->id ? 'selected' : ''}}>
@@ -317,7 +317,7 @@
 
                                 <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <select name="city" id="city_{{$project->id}}" class="form-control select2">
+                                        <select name="city" id="city" class="form-control select2">
                                             <option value="" selected>انتخاب کنید</option>
                                             @foreach($cities as $city)
                                                 <option value="{{$city->id}}" {{$project->city == $city->id ? 'selected' : ''}}>
@@ -338,7 +338,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input required inputmode="numeric" pattern="^\d{10}$" maxlength="10" minlength="10" type="text" class="form-control" id="ceo_national_code_{{$project->id}}" name="ceo_national_code"
+                                        <input required inputmode="numeric" pattern="^\d{3,20}$" maxlength="10" minlength="10" type="text" class="form-control" id="ceo_national_code_{{$project->id}}" name="ceo_national_code"
                                                placeholder="کد ملی مدیرعامل" value="{{ $project->ceo_national_code }}">
                                         <label for="ceo_national_code">کد ملی مدیرعامل</label>
                                         <div class="invalid-feedback" id="ceo_national_codeFeedback">کد ملی مدیرعامل اجباری می باشد و با دقت وارد شود</div>
@@ -365,7 +365,7 @@
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <button type="button" id="editsubmit_{{$project->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
+                                    <button type="submit" id="editsubmit_{{$project->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
                                 </div>
                         </form>
                     </div>
@@ -375,7 +375,7 @@
     @endforeach
     <!-- Profile Modal -->
     @foreach($projects as $project)
-        <div class="modal fade" id="showModal{{ $project->id }}" tabindex="-1" aria-labelledby="editModalLabel{{$project->id}}" aria-hidden="true">
+        <div class="modal fade" id="profileModal{{ $project->id }}" tabindex="-1" aria-labelledby="profileModalLabel{{$project->id}}" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
 
@@ -1129,6 +1129,7 @@
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
     <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js'}}"></script>
     <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js'}}"></script>
+    <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
 
      <script type="text/javascript">
         $(function () {
@@ -1161,283 +1162,283 @@
             });
         });
     </script>
-    <script>
-        function disableBtnWithSpinner($btn) {
-            $btn.prop('disabled', true)
-                .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
-        }
-    </script>
-    <script>
-        jQuery(function($){
-            function showToast(message, type = 'success') {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-right",
-                    timeOut: 3000,
-                    rtl: true
-                };
+{{--    <script>--}}
+{{--        function disableBtnWithSpinner($btn) {--}}
+{{--            $btn.prop('disabled', true)--}}
+{{--                .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');--}}
+{{--        }--}}
+{{--    </script>--}}
+{{--    <script>--}}
+{{--        jQuery(function($){--}}
+{{--            function showToast(message, type = 'success') {--}}
+{{--                toastr.options = {--}}
+{{--                    closeButton: true,--}}
+{{--                    progressBar: true,--}}
+{{--                    positionClass: "toast-top-right",--}}
+{{--                    timeOut: 3000,--}}
+{{--                    rtl: true--}}
+{{--                };--}}
 
-                if (toastr[type]) {
-                    toastr[type](message);
-                } else {
-                    toastr.success(message);
-                }
-            }
-            $('#submit').on('click', function(e){
-                e.preventDefault();
-                var $btn  = $(this);
-                var $form = $('#addform');
-                var originalHtml = $btn.html();
+{{--                if (toastr[type]) {--}}
+{{--                    toastr[type](message);--}}
+{{--                } else {--}}
+{{--                    toastr.success(message);--}}
+{{--                }--}}
+{{--            }--}}
+{{--            $('#submit').on('click', function(e){--}}
+{{--                e.preventDefault();--}}
+{{--                var $btn  = $(this);--}}
+{{--                var $form = $('#addform');--}}
+{{--                var originalHtml = $btn.html();--}}
 
-                $btn.prop('disabled', true)
-                    .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
+{{--                $btn.prop('disabled', true)--}}
+{{--                    .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');--}}
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
+{{--                $.ajaxSetup({--}}
+{{--                    headers: {--}}
+{{--                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')--}}
+{{--                    }--}}
+{{--                });--}}
 
-                $.ajax({
-                    url: "{{ route('project.store') }}",
-                    method: 'POST',
-                    data: $form.serialize(),
-                    success: function (data) {
-                        if (data.success) {
-                            const modalEl = document.getElementById('addModal');
-                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+{{--                $.ajax({--}}
+{{--                    url: "{{ route('project.store') }}",--}}
+{{--                    method: 'POST',--}}
+{{--                    data: $form.serialize(),--}}
+{{--                    success: function (data) {--}}
+{{--                        if (data.success) {--}}
+{{--                            const modalEl = document.getElementById('addModal');--}}
+{{--                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);--}}
 
-                            modalEl.addEventListener('hidden.bs.modal', function handler(){
-                                modalEl.removeEventListener('hidden.bs.modal', handler);
-                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                            }, { once: true });
+{{--                            modalEl.addEventListener('hidden.bs.modal', function handler(){--}}
+{{--                                modalEl.removeEventListener('hidden.bs.modal', handler);--}}
+{{--                                $('.yajra-datatable').DataTable().ajax.reload(null, false);--}}
+{{--                            }, { once: true });--}}
 
-                            modal.hide();
-                            $('.modal-backdrop').remove();
-                            $('body').removeClass('modal-open');
-                            $('body').css('padding-right', '');
-                            showToast('آیتم با موفقیت افزوده شد!', 'success');
-                        } else {
-                            swal(data.subject, data.message, data.flag);
-                        }
-                    },
-                    error: function () {
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
-                        $btn.prop('disabled', false).html(originalHtml);
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        jQuery(function($){
-            function showToast(message, type = 'success') {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-right",
-                    timeOut: 3000,
-                    rtl: true
-                };
-                toastr[type] ? toastr[type](message) : toastr.success(message);
-            }
+{{--                            modal.hide();--}}
+{{--                            $('.modal-backdrop').remove();--}}
+{{--                            $('body').removeClass('modal-open');--}}
+{{--                            $('body').css('padding-right', '');--}}
+{{--                            showToast('آیتم با موفقیت افزوده شد!', 'success');--}}
+{{--                        } else {--}}
+{{--                            swal(data.subject, data.message, data.flag);--}}
+{{--                        }--}}
+{{--                    },--}}
+{{--                    error: function () {--}}
+{{--                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');--}}
+{{--                    },--}}
+{{--                    complete: function () {--}}
+{{--                        $btn.prop('disabled', false).html(originalHtml);--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
+{{--    <script>--}}
+{{--        jQuery(function($){--}}
+{{--            function showToast(message, type = 'success') {--}}
+{{--                toastr.options = {--}}
+{{--                    closeButton: true,--}}
+{{--                    progressBar: true,--}}
+{{--                    positionClass: "toast-top-right",--}}
+{{--                    timeOut: 3000,--}}
+{{--                    rtl: true--}}
+{{--                };--}}
+{{--                toastr[type] ? toastr[type](message) : toastr.success(message);--}}
+{{--            }--}}
 
-            $(document).on('click', '.approve-btn', function(){
-                const $form = $(this).closest('form');
-                $form.find('.status-input').val('approved');
-                $form.find('.btn-submit').trigger('click');
-            });
+{{--            $(document).on('click', '.approve-btn', function(){--}}
+{{--                const $form = $(this).closest('form');--}}
+{{--                $form.find('.status-input').val('approved');--}}
+{{--                $form.find('.btn-submit').trigger('click');--}}
+{{--            });--}}
 
-            $(document).on('click', '.reject-btn', function(){
-                const $form = $(this).closest('form');
-                $form.find('.status-input').val('rejected');
-                $form.find('.btn-submit').trigger('click');
-            });
+{{--            $(document).on('click', '.reject-btn', function(){--}}
+{{--                const $form = $(this).closest('form');--}}
+{{--                $form.find('.status-input').val('rejected');--}}
+{{--                $form.find('.btn-submit').trigger('click');--}}
+{{--            });--}}
 
-            // هندل ارسال فرم
-            $(document).on('submit', '.flow-form', function(e){
-                e.preventDefault();
-                const $form = $(this);
-                const url   = $form.attr('action');
-                const $btn  = $form.find('.btn-submit');
-                const originalHtml = $btn.html();
+{{--            // هندل ارسال فرم--}}
+{{--            $(document).on('submit', '.flow-form', function(e){--}}
+{{--                e.preventDefault();--}}
+{{--                const $form = $(this);--}}
+{{--                const url   = $form.attr('action');--}}
+{{--                const $btn  = $form.find('.btn-submit');--}}
+{{--                const originalHtml = $btn.html();--}}
 
-                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال ارسال...');
+{{--                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال ارسال...');--}}
 
-                $.ajaxSetup({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-                });
+{{--                $.ajaxSetup({--}}
+{{--                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }--}}
+{{--                });--}}
 
-                $.post(url, $form.serialize())
-                    .done(function(data){
-                        if (data.success) {
-                            const modalEl = document.getElementById('addModal');
-                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+{{--                $.post(url, $form.serialize())--}}
+{{--                    .done(function(data){--}}
+{{--                        if (data.success) {--}}
+{{--                            const modalEl = document.getElementById('addModal');--}}
+{{--                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);--}}
 
-                            modalEl.addEventListener('hidden.bs.modal', function handler(){
-                                modalEl.removeEventListener('hidden.bs.modal', handler);
-                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                            }, { once: true });
+{{--                            modalEl.addEventListener('hidden.bs.modal', function handler(){--}}
+{{--                                modalEl.removeEventListener('hidden.bs.modal', handler);--}}
+{{--                                $('.yajra-datatable').DataTable().ajax.reload(null, false);--}}
+{{--                            }, { once: true });--}}
 
-                            modal.hide();
-                            $('.modal-backdrop').remove();
-                            $('body').removeClass('modal-open').css('padding-right', '');
-                            showToast('آیتم با موفقیت افزوده شد!', 'success');
-                        } else {
-                            swal(data.subject, data.message, data.flag);
-                        }
-                    })
-                    .fail(function(){
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    })
-                    .always(function(){
-                        $btn.prop('disabled', false).html(originalHtml);
-                    });
-            });
-        });
+{{--                            modal.hide();--}}
+{{--                            $('.modal-backdrop').remove();--}}
+{{--                            $('body').removeClass('modal-open').css('padding-right', '');--}}
+{{--                            showToast('آیتم با موفقیت افزوده شد!', 'success');--}}
+{{--                        } else {--}}
+{{--                            swal(data.subject, data.message, data.flag);--}}
+{{--                        }--}}
+{{--                    })--}}
+{{--                    .fail(function(){--}}
+{{--                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');--}}
+{{--                    })--}}
+{{--                    .always(function(){--}}
+{{--                        $btn.prop('disabled', false).html(originalHtml);--}}
+{{--                    });--}}
+{{--            });--}}
+{{--        });--}}
 
-    </script>
+{{--    </script>--}}
 
-    <script>
-        jQuery(function($){
-            function showToast(message, type = 'success') {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-center",
-                    timeOut: 3000,
-                    rtl: true
-                };
+{{--    <script>--}}
+{{--        jQuery(function($){--}}
+{{--            function showToast(message, type = 'success') {--}}
+{{--                toastr.options = {--}}
+{{--                    closeButton: true,--}}
+{{--                    progressBar: true,--}}
+{{--                    positionClass: "toast-top-center",--}}
+{{--                    timeOut: 3000,--}}
+{{--                    rtl: true--}}
+{{--                };--}}
 
-                if (toastr[type]) {
-                    toastr[type](message);
-                } else {
-                    toastr.success(message);
-                }
-            }
+{{--                if (toastr[type]) {--}}
+{{--                    toastr[type](message);--}}
+{{--                } else {--}}
+{{--                    toastr.success(message);--}}
+{{--                }--}}
+{{--            }--}}
 
-            $(document).on('click', '[id^=editsubmit_]', function(e){
-                e.preventDefault();
-                const $btn = $(this);
-                const id = this.id.split('_')[1];
-                const $form = $('#editform_' + id);
+{{--            $(document).on('click', '[id^=editsubmit_]', function(e){--}}
+{{--                e.preventDefault();--}}
+{{--                const $btn = $(this);--}}
+{{--                const id = this.id.split('_')[1];--}}
+{{--                const $form = $('#editform_' + id);--}}
 
-                if (!$form.length) {
-                    console.error('فرم editform_' + id + ' پیدا نشد!');
-                    return;
-                }
+{{--                if (!$form.length) {--}}
+{{--                    console.error('فرم editform_' + id + ' پیدا نشد!');--}}
+{{--                    return;--}}
+{{--                }--}}
 
-                const url = $form.attr('action');
-                const originalHtml = $btn.html();
-                disableBtnWithSpinner($btn);
+{{--                const url = $form.attr('action');--}}
+{{--                const originalHtml = $btn.html();--}}
+{{--                disableBtnWithSpinner($btn);--}}
 
-                $.ajax({
-                    url: url,
-                    method: 'PATCH',
-                    data: $form.serialize(),
-                    beforeSend: function () {
-                        // دکمه رو غیر فعال و اسپینر رو فعال می‌کنیم
-                        disableBtnWithSpinner($btn);
-                    },
-                    success: function (data) {
-                        if (data.success) {
-                            const modalEl = document.getElementById('editModal' + id);
-                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+{{--                $.ajax({--}}
+{{--                    url: url,--}}
+{{--                    method: 'PATCH',--}}
+{{--                    data: $form.serialize(),--}}
+{{--                    beforeSend: function () {--}}
+{{--                        // دکمه رو غیر فعال و اسپینر رو فعال می‌کنیم--}}
+{{--                        disableBtnWithSpinner($btn);--}}
+{{--                    },--}}
+{{--                    success: function (data) {--}}
+{{--                        if (data.success) {--}}
+{{--                            const modalEl = document.getElementById('editModal' + id);--}}
+{{--                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);--}}
 
-                            modalEl.addEventListener('hidden.bs.modal', function handler(){
-                                modalEl.removeEventListener('hidden.bs.modal', handler);
-                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                                showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                            }, { once: true });
+{{--                            modalEl.addEventListener('hidden.bs.modal', function handler(){--}}
+{{--                                modalEl.removeEventListener('hidden.bs.modal', handler);--}}
+{{--                                $('.yajra-datatable').DataTable().ajax.reload(null, false);--}}
+{{--                                showToast('آیتم با موفقیت ویرایش شد!', 'success');--}}
+{{--                            }, { once: true });--}}
 
-                            modal.hide();
-                            $('.modal-backdrop').remove();
-                            $('body').removeClass('modal-open').css('padding-right', '');
-                        } else {
-                            swal(data.subject || 'خطا', data.message || 'در ویرایش مشکلی پیش آمد', data.flag || 'error');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        let message = 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            message = xhr.responseJSON.message;
-                        } else if (error) {
-                            message = error;
-                        }
-                        swal('خطا', message, 'error');
-                        console.error('AJAX Error:', xhr);
-                    },
-                    complete: function () {
-                        restoreBtn($btn, originalHtml);
-                    }
-                });
-            });
+{{--                            modal.hide();--}}
+{{--                            $('.modal-backdrop').remove();--}}
+{{--                            $('body').removeClass('modal-open').css('padding-right', '');--}}
+{{--                        } else {--}}
+{{--                            swal(data.subject || 'خطا', data.message || 'در ویرایش مشکلی پیش آمد', data.flag || 'error');--}}
+{{--                        }--}}
+{{--                    },--}}
+{{--                    error: function (xhr, status, error) {--}}
+{{--                        let message = 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';--}}
+{{--                        if (xhr.responseJSON && xhr.responseJSON.message) {--}}
+{{--                            message = xhr.responseJSON.message;--}}
+{{--                        } else if (error) {--}}
+{{--                            message = error;--}}
+{{--                        }--}}
+{{--                        swal('خطا', message, 'error');--}}
+{{--                        console.error('AJAX Error:', xhr);--}}
+{{--                    },--}}
+{{--                    complete: function () {--}}
+{{--                        restoreBtn($btn, originalHtml);--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
 
-            function disableBtnWithSpinner($btn){
-                $btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
-                );
-            }
+{{--            function disableBtnWithSpinner($btn){--}}
+{{--                $btn.prop('disabled', true).html(--}}
+{{--                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'--}}
+{{--                );--}}
+{{--            }--}}
 
-            function restoreBtn($btn, html){
-                $btn.prop('disabled', false).html(html);
-            }
-        });
-    </script>
+{{--            function restoreBtn($btn, html){--}}
+{{--                $btn.prop('disabled', false).html(html);--}}
+{{--            }--}}
+{{--        });--}}
+{{--    </script>--}}
 
-    <script>
-        jQuery(function ($) {
-            let deleteId = null;
+{{--    <script>--}}
+{{--        jQuery(function ($) {--}}
+{{--            let deleteId = null;--}}
 
-            function showToast(message, type = 'success') {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-right",
-                    timeOut: 3000,
-                    rtl: true
-                };
-                toastr[type] ? toastr[type](message) : toastr.success(message);
-            }
+{{--            function showToast(message, type = 'success') {--}}
+{{--                toastr.options = {--}}
+{{--                    closeButton: true,--}}
+{{--                    progressBar: true,--}}
+{{--                    positionClass: "toast-top-right",--}}
+{{--                    timeOut: 3000,--}}
+{{--                    rtl: true--}}
+{{--                };--}}
+{{--                toastr[type] ? toastr[type](message) : toastr.success(message);--}}
+{{--            }--}}
 
-            // وقتی روی دکمه حذف کلیک شد
-            $(document).on('click', '.delete-btn', function () {
-                deleteId = $(this).data('id');
-                $('#deleteModal').modal('show');
-            });
+{{--            // وقتی روی دکمه حذف کلیک شد--}}
+{{--            $(document).on('click', '.delete-btn', function () {--}}
+{{--                deleteId = $(this).data('id');--}}
+{{--                $('#deleteModal').modal('show');--}}
+{{--            });--}}
 
-            // وقتی تایید حذف کلیک شد
-            $('#confirmDelete').on('click', function (e) {
-                const $btn = $(this);
-                const originalHtml = $btn.html();
+{{--            // وقتی تایید حذف کلیک شد--}}
+{{--            $('#confirmDelete').on('click', function (e) {--}}
+{{--                const $btn = $(this);--}}
+{{--                const originalHtml = $btn.html();--}}
 
-                $btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال حذف...'
-                );
+{{--                $btn.prop('disabled', true).html(--}}
+{{--                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال حذف...'--}}
+{{--                );--}}
 
-                $.ajax({
-                    url: "{{ route(request()->segment(2).'.destroy', 0) }}",
-                    method: 'DELETE',
-                    data: { "_token": "{{ csrf_token() }}", id: deleteId },
-                    success: function () {
-                        $('#deleteModal').modal('hide');
-                        $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                        showToast('آیتم با موفقیت حذف شد!', 'success');
-                    },
-                    error: function () {
-                        showToast('مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
-                        $btn.prop('disabled', false).html(originalHtml);
-                    }
-                });
-            });
-        });
+{{--                $.ajax({--}}
+{{--                    url: "{{ route(request()->segment(2).'.destroy', 0) }}",--}}
+{{--                    method: 'DELETE',--}}
+{{--                    data: { "_token": "{{ csrf_token() }}", id: deleteId },--}}
+{{--                    success: function () {--}}
+{{--                        $('#deleteModal').modal('hide');--}}
+{{--                        $('.yajra-datatable').DataTable().ajax.reload(null, false);--}}
+{{--                        showToast('آیتم با موفقیت حذف شد!', 'success');--}}
+{{--                    },--}}
+{{--                    error: function () {--}}
+{{--                        showToast('مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');--}}
+{{--                    },--}}
+{{--                    complete: function () {--}}
+{{--                        $btn.prop('disabled', false).html(originalHtml);--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        });--}}
 
-    </script>
+{{--    </script>--}}
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -264,6 +264,7 @@ class ProjectController extends Controller
         }
 
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
+
     }
 
     public function destroy(Request $request)
