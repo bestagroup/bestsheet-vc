@@ -444,4 +444,17 @@
                     };
                 });
             </script>
+            <script>
+                document.querySelectorAll('.price-input').forEach(input => {
+                    input.addEventListener('input', function (e) {
+                        let value = e.target.value.replace(/,/g, '');
+                        value = value.replace(/\D/g, '');
+                        if (value) {
+                            e.target.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        } else {
+                            e.target.value = '';
+                        }
+                    });
+                });
+            </script>
     @endpush

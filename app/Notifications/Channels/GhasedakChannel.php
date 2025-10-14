@@ -24,7 +24,6 @@ class GhasedakChannel
         $code       = $data['code'];
         $lineNumber = "10008642";
         $apiKey        = 'ilvYYKKVEXlM+BAmel+hepqt8fliIow1g0Br06rP4ko';
-/////////ilvYYKKVEXlM+BAmel+hepqt8fliIow1g0Br06rP4ko/////
         try
         {
             $api = new GhasedakApi($apiKey);

@@ -44,7 +44,7 @@
             <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}} class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-minutes-card"
                     aria-controls="navs-minutes-card" aria-selected="false">
-                <i class="tf-icons mdi mdi-message-text-outline mdi-20px me-1"></i>
+                <i class="tf-icons mdi mdi-text-box-multiple mdi-20px me-1"></i>
                 صورتجلسات
             </button>
         </li>
@@ -60,24 +60,16 @@
             <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-sales"
                     aria-controls="navs-guarantee-card" aria-selected="false">
-                <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
-                فروش
+                <i class="tf-icons mdi mdi-finance mdi-20px me-1"></i>
+                اطلاعات مالی
             </button>
         </li>
         <li class="nav-item">
             <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
                     data-bs-toggle="tab" data-bs-target="#navs-contracts"
                     aria-controls="navs-guarantee-card" aria-selected="false">
-                <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
-                قراردادها
-            </button>
-        </li>
-        <li class="nav-item">
-            <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
-                    data-bs-toggle="tab" data-bs-target="#navs-payments"
-                    aria-controls="navs-guarantee-card" aria-selected="false">
-                <i class="tf-icons mdi mdi-comment-text-multiple mdi-20px me-1"></i>
-                پرداخت ها
+                <i class="tf-icons mdi mdi-file-sign mdi-20px me-1"></i>
+                اطلاعات قرارداد ها
             </button>
         </li>
     @elseif(Auth::user()->level == 'investor')
