@@ -61,7 +61,7 @@
                     data-bs-toggle="tab" data-bs-target="#navs-sales"
                     aria-controls="navs-guarantee-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-finance mdi-20px me-1"></i>
-                اطلاعات مالی
+                اطلاعات فروش
             </button>
         </li>
         <li class="nav-item">
