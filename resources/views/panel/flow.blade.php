@@ -1471,7 +1471,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const fileFormSelector = "#fileUploadZone";
             //let currentRecordId = null;
-            let recordId = this.getAttribute('data-id');
+            const recordId = $(this).data('id');
 
             const dz = new Dropzone(fileFormSelector, {
                 url: "{{ route('storemedia') }}",
