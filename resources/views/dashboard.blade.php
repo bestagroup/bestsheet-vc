@@ -117,6 +117,37 @@
         /* گردی‌ها */
         .rounded-4, .rounded-top-4{ border-radius: 16px !important; }
 
+        .user-card { box-shadow: 0 6px 18px rgba(15,23,42,.06) !important; }
+        .rounded-top-4, .rounded-4 { border-radius: 16px !important; }
+
+        .user-scroll{
+            max-height: 400px; overflow-y: auto; scrollbar-width: thin;
+        }
+        .user-scroll::-webkit-scrollbar{ width: 6px; }
+        .user-scroll::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.12); border-radius: 8px; }
+
+        .user-item{
+            transition: background .2s ease, transform .2s ease;
+            border-bottom: 1px solid rgba(0,0,0,.06) !important;
+        }
+        .user-item:last-child{ border-bottom: 0 !important; }
+        .user-item:hover{ background: #fafafa; transform: translateY(-1px); }
+
+        .user-avatar{ width: 44px; height: 44px; background: #f3f4f6; }
+        .user-avatar img{ width: 100%; height: 100%; object-fit: cover; }
+
+        /* Badge نقش‌ها */
+        .role-badge{ font-weight: 600; border-radius: 999px; padding: .25rem .55rem; }
+        .role-admin{ background: rgba(99,102,241,.12); color:#4f46e5; }
+        .role-applicant{ background: rgba(56,189,248,.14); color:#0ea5e9; }
+        .role-unknown{ background: rgba(148,163,184,.18); color:#475569; }
+
+        /* وضعیت (pill) */
+        .pill{ display:inline-block; padding:.18rem .6rem; border-radius:999px; font-weight:700; line-height:1; }
+        .pill-success{ background: rgba(34,197,94,.14); color:#16a34a; }
+        .pill-danger{  background: rgba(239,68,68,.12); color:#dc2626; }
+        .pill-warning{ background: rgba(245,158,11,.14); color:#d97706; }
+
     </style>
 @endsection
 @section('content')
@@ -676,46 +707,73 @@
             </div>
 
             <div class="col-lg-12 col-md-12 col-12">
-                <div class="card" style="max-height: 509px">
-                    <div class="table-responsive rounded-3" style="margin: 0 5px">
-                        <div style="max-height: 400px; overflow-y: auto;">
-                            <table class="table table-sm table-bordered" style="border-collapse: collapse;">
-                                <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
-                                <tr>
-                                    <th class="py-3">تصویر </th>
-                                    <th class="py-3">نام کاربری </th>
-                                    <th class="py-3">ایمیل</th>
-                                    <th class="py-3">نقش</th>
-                                    <th class="py-3">وضعیت</th>
-                                    <th class="py-3">اخرین ورود</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                <div class="card border-0 shadow-sm rounded-4 user-card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white rounded-top-4">
+                        <h6 class="m-0 fw-bold">کاربران</h6>
+                        <div class="d-flex gap-2">
+                            <input id="usersSearch" type="text" class="form-control form-control-sm rounded-3"
+                                   placeholder="جستجو نام یا ایمیل..." dir="rtl" style="min-width:220px">
+                        </div>
+                    </div>
+
+                    <div class="card-body py-0">
+                        <div class="user-scroll">
+                            <ul class="list-group list-group-flush">
                                 @foreach($users as $user)
-                                    <tr>
-                                        <td>
-                                            @if($user->gender == 1)
-                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
-                                            @elseif($user->gender == 2)
-                                                <img src="{{ asset('assets/img/avatars/8.png') }}" alt class="w-px-40 h-auto rounded-circle" />
-                                            @else
-                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
-                                            @endif
-                                        </td>
-                                        <td>{{$user->name}}</td>
-                                        <td>{{$user->email}}</td>
-                                        <td>{{ $user->level == 'admin' ? 'مدیر' : ($user->level == 'applicant' ? 'سرمایه‌پذیر' : 'نامشخص') }}</td>
-                                        <td>فعال</td>
-                                        <td>@if($user->lastLogin && $user->lastLogin->created_at)
-                                                {{ jdate($user->lastLogin->created_at)->format('Y/m/d ساعت H:i') }}
-                                            @else
-                                                ورود ثبت نشده
-                                            @endif
-                                        </td>
-                                    </tr>
-                              @endforeach
-                                </tbody>
-                            </table>
+                                    @php
+                                        $avatar = $user->gender == 2
+                                          ? asset('assets/img/avatars/8.png')
+                                          : asset('assets/img/avatars/1.png');
+
+                                        $roleLabel = $user->level === 'admin' ? 'مدیر'
+                                                    : ($user->level === 'applicant' ? 'سرمایه‌پذیر' : 'نامشخص');
+
+                                        $statusLabel = 'فعال';
+                                        $statusTone  = 'success'; // در صورت نیاز از فیلد وضعیت بخوانید
+
+                                        $lastSeen = ($user->lastLogin && $user->lastLogin->created_at)
+                                          ? jdate($user->lastLogin->created_at)->format('Y/m/d ساعت H:i')
+                                          : 'ورود ثبت نشده';
+                                    @endphp
+
+                                    <li class="list-group-item px-3 py-3 border-0 border-bottom user-item"
+                                        data-name="{{ Str::lower($user->name) }}"
+                                        data-email="{{ Str::lower($user->email) }}">
+
+                                        <div class="d-flex align-items-center gap-3">
+                                            <!-- Avatar -->
+                                            <div class="user-avatar rounded-circle overflow-hidden flex-shrink-0">
+                                                <img src="{{ $avatar }}" alt="avatar" width="44" height="44">
+                                            </div>
+
+                                            <!-- Main info -->
+                                            <div class="flex-grow-1 min-w-0">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="min-w-0">
+                                                        <div class="fw-semibold text-truncate" title="{{ $user->name }}">{{ $user->name }}</div>
+                                                        <div class="small text-muted text-truncate" title="{{ $user->email }}">{{ $user->email }}</div>
+                                                    </div>
+                                                    <div class="text-end ms-2">
+                      <span class="badge role-badge me-1
+                        {{ $user->level==='admin' ? 'role-admin' : ($user->level==='applicant' ? 'role-applicant' : 'role-unknown') }}">
+                        {{ $roleLabel }}
+                      </span>
+                                                        <span class="pill pill-{{ $statusTone }}">{{ $statusLabel }}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between align-items-center mt-2 small text-muted">
+                    <span class="d-flex align-items-center gap-1">
+                      <i class="mdi mdi-clock-outline mdi-18px"></i> آخرین ورود:
+                    </span>
+                                                    <span class="text-end">{{ $lastSeen }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -826,5 +884,22 @@
 @push('scripts')
     <script src="{{ asset('assets/js/timeline-chart.js') }}"></script>
     <script src="{{ asset('assets/js/charts-apex.js') }}"></script>
+    <script>
+        // جستجوی سبک در کلاینت بر اساس نام/ایمیل
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('usersSearch');
+            const items = Array.from(document.querySelectorAll('.user-item'));
+            if (!input) return;
+
+            input.addEventListener('input', () => {
+                const q = (input.value || '').trim().toLowerCase();
+                items.forEach(li => {
+                    const name  = li.dataset.name  || '';
+                    const email = li.dataset.email || '';
+                    li.style.display = (name.includes(q) || email.includes(q)) ? '' : 'none';
+                });
+            });
+        });
+    </script>
 @endpush
 
