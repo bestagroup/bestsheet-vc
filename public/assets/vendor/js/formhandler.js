@@ -178,14 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
         $btn.prop('disabled', true).html(
             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال حذف...'
         );
-
-        const baseUrl = window.location.pathname.split('/')[1]; // بخش دوم URL مثل 'projects'
-        const deleteUrl = `/${baseUrl}/destroy/${id}`;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const baseUrl = `/${pathParts[0]}/${pathParts[1]}`;
+        const deleteUrl = `${baseUrl}/${id}`;
 
         $.ajax({
             url: deleteUrl,
             method: 'DELETE',
-            data: { "_token": $('meta[name="_token"]').attr('content') },
+            data: { "_token": csrfToken },
             success: function (data) {
                 $('#deleteModal').modal('hide');
                 $('.yajra-datatable').DataTable().ajax.reload(null, false);

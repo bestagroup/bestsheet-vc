@@ -13,6 +13,7 @@ use App\Models\Project;
 use App\Models\Project_step;
 use App\Models\State;
 use App\Models\SubmenuPanel;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -129,8 +130,32 @@ class FlowController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
+
     {
-        //
+        try {
+            $project = Project::findOrfail($id);
+            $result = $project->delete();
+
+            if ($result == true) {
+                $success = true;
+                $flag = 'success';
+                $subject = 'عملیات موفق';
+                $message = 'اطلاعات با موفقیت پاک شد';
+            }elseif($result != true) {
+                $success = false;
+                $flag    = 'error';
+                $subject = 'عملیات نا موفق';
+                $message = 'اطلاعات زیرمنو ثبت نشد، لطفا مجددا تلاش نمایید';
+            }
+
+        } catch (Exception $e) {
+
+            $success = false;
+            $flag    = 'error';
+            $subject = 'خطا در ارتباط با سرور';
+            $message = 'اطلاعات پاک نشد،لطفا بعدا مجدد تلاش نمایید ';
+        }
+        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
 }
