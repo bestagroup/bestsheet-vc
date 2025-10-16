@@ -61,6 +61,59 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    /* -------------------------------------------
+     *  لود فرم ویرایش به صورت داینامیک
+     * ------------------------------------------- */
+    $(document).on('click', '.edit-btn', function () {
+        const url = $(this).data('url');
+        const $modal = $('#editModal');
+        const $body = $('#editModalBody');
+
+        $body.html('<div class="text-center text-muted py-5">در حال بارگذاری...</div>');
+        $modal.modal('show');
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function (html) {
+                $body.html(html);
+            },
+            error: function () {
+                $body.html('<div class="alert alert-danger m-3">خطا در بارگذاری فرم ویرایش</div>');
+            }
+        });
+    });
+
+    $(document).on('submit', 'form[data-type="update"]', function (e) {
+        e.preventDefault();
+
+        const $form = $(this);
+        const $btn = $form.find('button[type="submit"]');
+        const originalHtml = $btn.html();
+
+        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال ذخیره...');
+
+        $.ajax({
+            url: $form.attr('action'),
+            method: 'PATCH',
+            data: $form.serialize(),
+            success: function (data) {
+                if (data.success) {
+                    $('#editModal').modal('hide');
+                    $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                    showToast('اطلاعات با موفقیت به‌روزرسانی شد!', 'success');
+                } else {
+                    showToast(data.message || 'خطایی رخ داد', 'error');
+                }
+            },
+            error: function () {
+                showToast('مشکلی در ذخیره تغییرات رخ داد', 'error');
+            },
+            complete: function () {
+                $btn.prop('disabled', false).html(originalHtml);
+            }
+        });
+    });
 
     /* -------------------------------------------
      *  هندل کردن UPDATE
@@ -82,20 +135,24 @@ document.addEventListener('DOMContentLoaded', () => {
             success: function (data) {
                 if (data.success) {
                     const id = $form.data('id') || '';
-                    const modalEl = document.getElementById('editModal' + id);
-                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    const modalEl = document.getElementById('showModal' + id);
 
-                    modalEl.addEventListener('hidden.bs.modal', function handler(){
-                        modalEl.removeEventListener('hidden.bs.modal', handler);
+                    if (modalEl) {
+                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+
+                        modalEl.addEventListener('hidden.bs.modal', function handler() {
+                            modalEl.removeEventListener('hidden.bs.modal', handler);
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                            showToast('آیتم با موفقیت ویرایش شد!', 'success');
+                        }, {once: true});
+
+                        modal.hide();
+                    } else {
+                        // در صورتی که مودال پیدا نشه (برای خطایابی)
+                        console.error('Modal element not found for id:', id);
+                        showToast('آیتم با موفقیت ویرایش شد! (مودال پیدا نشد)', 'success');
                         $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                        showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                    }, { once: true });
-
-                    modal.hide();
-                    $('.modal-backdrop').remove();
-                    $('body').removeClass('modal-open').css('padding-right', '');
-                } else {
-                    swal(data.subject || 'خطا', data.message || 'عملیات انجام نشد.', data.flag || 'error');
+                    }
                 }
             },
             error: function (xhr) {
@@ -114,13 +171,16 @@ document.addEventListener('DOMContentLoaded', () => {
     /* -------------------------------------------
      *  هندل کردن DELETE
      * ------------------------------------------- */
-    function handleDelete(deleteUrl) {
+    function handleDelete(id) {
         const $btn = $('#confirmDelete');
         const originalHtml = $btn.html();
 
         $btn.prop('disabled', true).html(
             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال حذف...'
         );
+
+        const baseUrl = window.location.pathname.split('/')[1]; // بخش دوم URL مثل 'projects'
+        const deleteUrl = `/${baseUrl}/destroy/${id}`;
 
         $.ajax({
             url: deleteUrl,
@@ -160,17 +220,15 @@ document.addEventListener('DOMContentLoaded', () => {
     /* -------------------------------------------
      *  رویدادهای حذف
      * ------------------------------------------- */
-    let deleteUrl = null;
+    let deleteId = null;
 
     $(document).on('click', '.delete-btn', function () {
-        const id = $(this).data('id');
-        const baseUrl = $(this).data('url'); // مسیر حذف را به دکمه بده مثل data-url="{{ route('users.destroy', id) }}"
-        deleteUrl = baseUrl;
+        deleteId = $(this).data('id');
         $('#deleteModal').modal('show');
     });
 
     $('#confirmDelete').on('click', function () {
-        if (deleteUrl) handleDelete(deleteUrl);
+        if (deleteId) handleDelete(deleteId);
     });
 
 });

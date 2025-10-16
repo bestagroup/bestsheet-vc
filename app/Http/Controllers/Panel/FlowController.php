@@ -91,10 +91,10 @@ class FlowController extends Controller
                 ->editColumn('action', function ($data) {
                     $actionBtn = '';
                     if (auth()->user()->can('can-access', ['flow', 'edit'])) {
-                        $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary mx-1"><i class="mdi mdi-pencil-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('flow.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
                     }
                     if (auth()->user()->can('can-access', ['flow', 'delete'])) {
-                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
                     $actionBtn .= '<button class="btn btn-sm btn-icon btn-eye mx-1" data-bs-toggle="modal" data-bs-target="#profileModal'.$data->id.'"><i class="mdi mdi-eye"></i></button>';
 
@@ -108,75 +108,15 @@ class FlowController extends Controller
         return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'projects' , 'finances' , 'investsteps' , 'files' , 'commitments' , 'states' , 'cities']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function edit($id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $states = State::all();
+        $cities = City::all();
+
+        return view('panel.partials.edit-form', compact('project', 'states', 'cities'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        try {
-            $step = new Project_step();
-            $step->project_id   = $request->input('project_id');
-            $step->title        = $request->input('step_title');
-            $step->step_number  = $request->input('step_id');
-            $step->description  = $request->input('description');
-            $step->status       = $request->input('status');
-            $step->user_id      = Auth::user()->id;
-
-            $result = $step->save();
-
-            $project = Project::whereId($request->input('project_id'))->first();
-            $project->invest_step = intval($request->input('step_id')) + 1;
-            $project->save();
-
-            if ($result == true) {
-                $success = true;
-                $flag    = 'success';
-                $subject = 'عملیات موفق';
-                $message = 'اطلاعات زیرمنو با موفقیت ثبت شد';
-            }
-            elseif($result != true) {
-                $success = false;
-                $flag    = 'error';
-                $subject = 'عملیات نا موفق';
-                $message = 'اطلاعات زیرمنو ثبت نشد، لطفا مجددا تلاش نمایید';
-            }
-
-        } catch (Exception $e) {
-
-            $success = false;
-            $flag    = 'error';
-            $subject = 'خطا در ارتباط با سرور';
-            //$message = strchr($e);
-            $message = 'اطلاعات زیرمنو ثبت نشد،لطفا بعدا مجدد تلاش نمایید ';
-        }
-
-        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
