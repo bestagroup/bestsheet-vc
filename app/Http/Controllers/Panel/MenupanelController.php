@@ -15,10 +15,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class MenupanelController extends Controller
 {
-
     public function index(Request $request)
     {
-
         $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'submenu' , 'class' , 'controller')->get();
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
         $thispage       = [
@@ -63,17 +61,11 @@ class MenupanelController extends Controller
                 ->editColumn('action', function ($data) {
 
                     $actionBtn = '';
-
-                    if (Gate::allows('can-access', ['menupanel', 'edit'])) {
-                        $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary">
-                        <i class="mdi mdi-pencil-outline"></i>
-                      </button> ';
+                    if (auth()->user()->can('can-access', ['menupanel', 'edit'])) {
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('menupanel.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
                     }
-
-                    if (Gate::allows('can-access', ['menupanel', 'delete'])) {
-                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal' . $data->id . '" id="#deletesubmit_' . $data->id . '" data-id="#deletesubmit_' . $data->id . '">
-                        <i class="mdi mdi-delete-outline"></i>
-                       </button>';
+                    if (auth()->user()->can('can-access', ['menupanel', 'delete'])) {
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
                     return $actionBtn;
                 })
@@ -143,6 +135,14 @@ class MenupanelController extends Controller
 
     }
 
+    public function edit($id)
+    {
+        $menupanel      = Menupanel::whereId($id)->first();
+        $submenupanels  = Submenupanel::all();
+
+        return view('panel.partials.edit-form-menupanel', compact('menupanel', 'submenupanels'));
+    }
+
     public function update(Request $request)
     {
 
@@ -187,13 +187,13 @@ class MenupanelController extends Controller
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
         try {
-            $menu = MenuPanel::findOrfail($request->input('id'));
+            $menu = MenuPanel::findOrfail($id);
             $result1 = $menu->delete();
 
-            $permission = Permission::whereMenu_panel_id($request->input('id'))->first();
+            $permission = Permission::whereMenu_panel_id($id)->first();
             $result2 = $permission->delete();
 
 

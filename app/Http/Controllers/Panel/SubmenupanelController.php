@@ -63,16 +63,11 @@ class SubmenupanelController extends Controller
                 })
                 ->editColumn('action', function ($data) {
                     $actionBtn = '';
-
-                    if (Gate::allows('can-access', ['submenupanel', 'edit'])) {
-                        $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary">
-                        <i class="mdi mdi-pencil-outline"></i>
-                      </button> ';
+                    if (auth()->user()->can('can-access', ['submenupanel', 'edit'])) {
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('submenupanel.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
                     }
-                    if (Gate::allows('can-access', ['submenupanel', 'delete'])) {
-                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal' . $data->id . '" id="#deletesubmit_' . $data->id . '" data-id="#deletesubmit_' . $data->id . '">
-                        <i class="mdi mdi-delete-outline"></i>
-                       </button>';
+                    if (auth()->user()->can('can-access', ['submenupanel', 'delete'])) {
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
                     return $actionBtn;
                 })
@@ -141,10 +136,18 @@ class SubmenupanelController extends Controller
 
     }
 
-    public function update(Request $request)
+    public function edit($id)
+    {
+        $menupanels    = Menupanel::all();
+        $submenupanel  = Submenupanel::whereId($id)->first();
+
+        return view('panel.partials.edit-form-submenupanel', compact('menupanels', 'submenupanel'));
+    }
+
+    public function update(Request $request , $id)
     {
 
-        $submenu_panel = SubmenuPanel::findOrfail($request->input('id'));
+        $submenu_panel = SubmenuPanel::findOrfail($id);
         $submenu_panel->title        = $request->input('title');
         $submenu_panel->label        = $request->input('label');
         $submenu_panel->menu_id      = $request->input('menupanel_id');
@@ -184,13 +187,13 @@ class SubmenupanelController extends Controller
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
         try {
-            $submenu = SubmenuPanel::findOrfail($request->input('id'));
+            $submenu = SubmenuPanel::findOrfail($id);
             $result1 = $submenu->delete();
 
-            $permission = Permission::whereSubmenu_panel_id($request->input('id'))->first();
+            $permission = Permission::whereSubmenu_panel_id($id)->first();
             $result2 = $permission->delete();
 
 

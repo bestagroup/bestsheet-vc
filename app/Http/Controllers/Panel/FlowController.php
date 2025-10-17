@@ -35,6 +35,7 @@ class FlowController extends Controller
             'create'  => 'ایجاد طرح / شرکت  ',
             'enter'   => 'ورود طرح / شرکت  ',
             'edit'    => 'ویرایش اطلاعات طرح / شرکت  ',
+            'upload'  => 'بارگزاری فایل طرح / شرکت  ',
             'delete'  => 'حذف طرح / شرکت  ',
         ];
 

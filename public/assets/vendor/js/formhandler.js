@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * ------------------------------------------- */
     function handleCreate(form) {
         const $form = $(form);
-        const $btn  = $form.find('[type="submit"]');
+        const $btn = $form.find('[type="submit"]');
         const originalHtml = $btn.html();
 
         $btn.prop('disabled', true)
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             url: $form.attr('action'),
             method: $form.attr('method') || 'POST',
             data: $form.serialize(),
-            headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+            headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')},
             success: function (data) {
                 if (data.success) {
                     const modalEl = document.querySelector('#addModal');
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     modalEl.addEventListener('hidden.bs.modal', function handler() {
                         modalEl.removeEventListener('hidden.bs.modal', handler);
                         $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                    }, { once: true });
+                    }, {once: true});
 
                     modal.hide();
                     $('.modal-backdrop').remove();
@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
     /* -------------------------------------------
      *  لود فرم ویرایش به صورت داینامیک
      * ------------------------------------------- */
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * ------------------------------------------- */
     function handleUpdate(form) {
         const $form = $(form);
-        const $btn  = $form.find('[type="submit"]');
+        const $btn = $form.find('[type="submit"]');
         const originalHtml = $btn.html();
         const url = $form.attr('action');
 
@@ -131,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
             url: url,
             method: 'PATCH',
             data: $form.serialize(),
-            headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+            headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')},
             success: function (data) {
                 if (data.success) {
                     const id = $form.data('id') || '';
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $.ajax({
             url: deleteUrl,
             method: 'DELETE',
-            data: { "_token": csrfToken },
+            data: {"_token": csrfToken},
             success: function (data) {
                 $('#deleteModal').modal('hide');
                 $('.yajra-datatable').DataTable().ajax.reload(null, false);
@@ -208,12 +209,12 @@ document.addEventListener('DOMContentLoaded', () => {
     /* -------------------------------------------
      *  اتصال رویدادها به فرم‌ها
      * ------------------------------------------- */
-    $('form[data-type="create"]').on('submit', function(e) {
+    $('form[data-type="create"]').on('submit', function (e) {
         e.preventDefault();
         handleCreate(this);
     });
 
-    $('form[data-type="update"]').on('submit', function(e) {
+    $('form[data-type="update"]').on('submit', function (e) {
         e.preventDefault();
         handleUpdate(this);
     });
@@ -254,5 +255,86 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // --- آپلود فایل Dropzone ---
+// 🔹 Dropzone تنظیمات اولیه
+    Dropzone.autoDiscover = false;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileFormSelector = "#fileUploadZone";
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const uploadUrl = document.querySelector(fileFormSelector)?.getAttribute('action') || '/storemedia';
+
+        const dz = new Dropzone(fileFormSelector, {
+            url: uploadUrl,
+            headers: { 'X-CSRF-TOKEN': csrfToken },
+            maxFilesize: 20,
+            acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
+            init: function () {
+                this.on("sending", function (file, xhr, formData) {
+                    const recordId = document.getElementById('recordIdInput')?.value || '';
+                    formData.append("record_id", recordId);
+                });
+
+                this.on("success", function (file, response) {
+                    const extension = file.name.split('.').pop().toLowerCase();
+                    if (response?.file_path) {
+                        previewFile(response.file_path.replace(/^\/+/, ''), extension);
+                    }
+                    showToast("✅ فایل با موفقیت آپلود شد", "success");
+                    this.removeFile(file);
+                });
+
+                this.on("error", function () {
+                    showToast("❌ خطا در آپلود فایل", "danger");
+                });
+            }
+        });
+
+        // 🔹 دکمه باز کردن مودال
+        $(document).on('click', '.upload-btn', function () {
+            const currentRecordId = $(this).data('id') || '';
+            $('#recordIdInput').val(currentRecordId);
+            dz.removeAllFiles(true);
+            $('#uploadModal').modal('show');
+        });
+    });
+
+// 🔹 نمایش فایل پس از آپلود
+    function previewFile(fileUrl, ext) {
+        const url = `/${fileUrl}`;
+        const map = {
+            img: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'],
+            vid: ['mp4', 'webm', 'ogg'],
+            pdf: ['pdf'],
+            office: ['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx']
+        };
+
+        let html =
+            map.img.includes(ext) ? `<img src="${url}" class="img-fluid">` :
+                map.vid.includes(ext) ? `<video controls style="width:100%;max-height:500px"><source src="${url}" type="video/${ext}"></video>` :
+                    map.pdf.includes(ext) ? `<iframe src="${url}" style="width:100%;height:500px;border:none;"></iframe>` :
+                        map.office.includes(ext) ? `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${location.origin}/${fileUrl}" style="width:100%;height:500px;border:none;"></iframe>` :
+                            `<p class="text-center">پیش‌نمایش برای این نوع فایل در دسترس نیست.</p>`;
+
+        document.getElementById('previewContent').innerHTML = html;
+        const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+        modal.show();
+    }
+
+// 🔹 تابع Toast ساده
+    function showToast(msg, type = "success") {
+        const el = document.createElement("div");
+        el.className = `toast text-bg-${type} border-0 show position-fixed bottom-0 end-0 m-4`;
+        el.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${msg}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+    }
+
 
 });

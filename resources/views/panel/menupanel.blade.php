@@ -3,6 +3,7 @@
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
     <div class="card">
@@ -37,25 +38,23 @@
     </div>
 
     <!-- Delete Modal -->
-    @foreach($menupanels as $menupanel)
-    <div class="modal fade" id="deleteModal{{$menupanel->id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content text-center">
-                <div class="modal-header border-bottom-0">
-                    <h5 class="modal-title w-100" id="deleteModalLabel">{{$thispage['delete']}}</h5>
-                    <button type="button" class="btn-close position-absolute start-0 mx-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    آیا از حذف این منو مطمئن هستید؟
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
-                    <button type="button" class="btn btn-danger" id="deletesubmit_{{$menupanel->id}}" data-id="{{$menupanel->id}}">حذف</button>
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-center">
+                    <div class="modal-header border-bottom-0">
+                        <h5 class="modal-title w-100" id="deleteModalLabel">{{ $thispage['delete'] }}</h5>
+                        <button type="button" class="btn-close position-absolute start-0 mx-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        آیا از حذف این زیر منو مطمئن هستید؟
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
+                        <button type="button" class="btn btn-danger" id="confirmDelete">حذف</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    @endforeach
     <!-- Add Modal -->
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -65,46 +64,60 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route(request()->segment(2).'.'.'store')}}" id="addform" method="POST">
+                    <form id="addform" data-type="create" method="POST" class="row g-4 mb-4" action="{{ route('menupanel.store') }}">
                         {{csrf_field()}}
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">نام  منو داشبورد فارسی</label>
-                                <input type="text" name="label" id="label" data-required="1" placeholder="نام منو داشبورد فارسی را وارد کنید" class="form-control" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">نام  منو داشبورد</label>
-                                <input type="text" name="title" id="title" data-required="1" placeholder="نام منو داشبورد را وارد کنید" class="form-control" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">زیر  منو داشبورد</label>
-                                <select name="submenu" id="submenu" class="form-control">
-                                    <option value="" selected>انتخاب کنید</option>
-                                    <option value="1" >دارد</option>
-                                    <option value="0">ندارد</option>
-                                </select>
+                        <div class="col-12 col-md-4">
+                            <div class="form-floating form-floating-outline">
+                                <input required type="text" class="form-control" id="label" name="label"
+                                       placeholder="نام  منو داشبورد فارسی" >
+                                <label for="label">نام  منو داشبورد فارسی</label>
+                                <div class="invalid-feedback" id="labelFeedback">نام  منو داشبورد فارسی اجباری می باشد.</div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">کلاس داشبورد</label>
-                                <input type="text" name="class" id="class" data-required="1" placeholder="کلاس منو داشبورد را وارد کنید" class="form-control" />
+                        <div class="col-12 col-md-4">
+                            <div class="form-floating form-floating-outline">
+                                <input required type="text" class="form-control" id="title" name="title"
+                                       placeholder="نام  منو داشبورد" >
+                                <label for="title">نام  منو داشبورد</label>
+                                <div class="invalid-feedback" id="titleFeedback">نام  منو داشبورد اجباری می باشد.</div>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">کنترلر داشبورد</label>
-                                <input type="text" name="controller" id="controller" data-required="1" placeholder="کلاس منو داشبورد را وارد کنید" class="form-control" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">نمایش/عدم نمایش</label>
-                                <select name="status" id="status" class="form-control">
-                                    <option value="" selected>انتخاب کنید</option>
-                                    <option value="4" >نمایش</option>
-                                    <option value="0" >عدم نمایش</option>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-floating form-floating-outline">
+                                <select name="submenu" id="submenu" class="form-control">
+                                    <option value="1" >دارد</option>
+                                    <option value="0" >ندارد</option>
                                 </select>
+                                <label for="submenu">زیر  منو داشبورد</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-floating form-floating-outline">
+                                <input required type="text" class="form-control" id="class" name="class"
+                                       placeholder="کلاس داشبورد">
+                                <label for="class">کلاس داشبورد</label>
+                                <div class="invalid-feedback" id="classFeedback">کلاس داشبورد اجباری می باشد.</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-floating form-floating-outline">
+                                <input required type="text" class="form-control" id="controller" name="controller"
+                                       placeholder="کنترلر داشبورد" >
+                                <label for="controller">کنترلر داشبورد</label>
+                                <div class="invalid-feedback" id="controllerFeedback">کنترلر داشبورد اجباری می باشد.</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-floating form-floating-outline">
+                                <select name="status" id="status" class="form-control">
+                                    <option value="1" >نمایش</option>
+                                    <option value="0">عدم نمایش</option>
+                                </select>
+                                <label for="status">نمایش/عدم نمایش</label>
                             </div>
                         </div>
                         <div class="text-end">
-                            <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
+                            <button type="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                     </form>
                 </div>
@@ -112,66 +125,23 @@
         </div>
     </div>
     <!-- Edit Modal -->
-    @foreach($menupanels as $menupanel)
-    <div class="modal fade" id="editModal{{$menupanel->id}}" tabindex="-1" aria-labelledby="editModalLabel{{$menupanel->id}}" aria-hidden="true">
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel{{$menupanel->id}}">{{$thispage['edit']}}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    <h5 class="modal-title" id="editModalLabel">ویرایش اطلاعات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <form action="{{route(request()->segment(2).'.update' , $menupanel->id)}}" id="editform_{{$menupanel->id}}" method="POST">
-                        {{csrf_field()}}
-                        <input type="hidden" name="menu_id" id="menu_id_{{$menupanel->id}}" value="{{$menupanel->id}}" />
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">نام  منو داشبورد فارسی</label>
-                                <input type="text" name="label" id="label_{{$menupanel->id}}" value="{{$menupanel->label}}" class="form-control" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">نام  منو داشبورد</label>
-                                <input type="text" name="title" id="title_{{$menupanel->id}}" value="{{$menupanel->title}}" class="form-control" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">زیر  منو داشبورد</label>
-                                <select name="submenu" id="submenu_{{$menupanel->id}}" class="form-control">
-                                    <option value="1" {{$menupanel->submenu == 1 ? 'selected' : '' }} >دارد</option>
-                                    <option value="0" {{$menupanel->submenu == 0 ? 'selected' : '' }}>ندارد</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">کلاس داشبورد</label>
-                                <input type="text" name="class" id="class_{{$menupanel->id}}" value="{{$menupanel->class}}"  class="form-control" />
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">کنترلر داشبورد</label>
-                                <input type="text" name="controller" id="controller_{{$menupanel->id}}"  value="{{$menupanel->controller}}" class="form-control" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">نمایش/عدم نمایش</label>
-                                <select name="status" id="status_{{$menupanel->id}}" class="form-control">
-                                    <option value="4" {{$menupanel->status == 4 ? 'selected' : '' }}>نمایش</option>
-                                    <option value="0" {{$menupanel->status == 0 ? 'selected' : '' }}>عدم نمایش</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <button type="button" id="editsubmit_{{$menupanel->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
-                        </div>
-                    </form>
+                <div class="modal-body" id="editModalBody">
+                    <div class="text-center text-muted py-5">در حال بارگذاری...</div>
                 </div>
             </div>
         </div>
     </div>
-    @endforeach
 @endsection
 @section('script')
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
-
+    <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
     <script type="text/javascript">
         $(function () {
 
@@ -196,158 +166,4 @@
 
         });
     </script>
-    <script>
-        jQuery(document).ready(function(){
-            jQuery('#submit').click(function(e){
-                e.preventDefault();
-
-                var button = jQuery(this);
-                var originalButtonHtml = button.html();
-                button.prop('disabled', true);
-                button.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
-
-                jQuery.ajax({
-                    url: "{{route(request()->segment(2).'.'.'store')}}",
-                    method: 'POST',
-                    data: {
-                        "_token"    : "{{ csrf_token() }}",
-                        title       : jQuery('#title').val(),
-                        label       : jQuery('#label').val(),
-                        class       : jQuery('#class').val(),
-                        controller  : jQuery('#controller').val(),
-                        submenu     : jQuery('#submenu').val(),
-                        status      : jQuery('#status').val()
-                    },
-                    success: function (data) {
-                        if(data.success == true){
-                            // بستن مدال
-                            var modal = bootstrap.Modal.getInstance(document.querySelector('#addModal'));
-                            if (modal) modal.hide();
-                            $('#addform')[0].reset();
-                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                            //swal(data.subject, data.message, data.flag);
-
-                        } else {
-                            swal(data.subject, data.message, data.flag);
-                        }
-                    },
-                    error: function () {
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
-                        button.prop('disabled', false);
-                        button.html(originalButtonHtml);
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        jQuery(document).ready(function(){
-            jQuery('[id^=editsubmit_]').click(function(e){
-                e.preventDefault();
-                var button = jQuery(this);
-                var originalButtonHtml = button.html(); // متن اصلی دکمه رو ذخیره کن
-
-                button.prop('disabled', true);
-                button.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
-
-                var id = jQuery(this).attr('id').split('_')[1];
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
-                jQuery.ajax({
-                    url: "{{ route(request()->segment(2).'.update' , 0) }}",
-                    method: 'PATCH',
-                    data: {
-                        "_token"        : "{{ csrf_token() }}",
-                        id              : jQuery('#menu_id_' + id).val(),
-                        title           : jQuery('#title_' + id).val(),
-                        label           : jQuery('#label_' + id).val(),
-                        class           : jQuery('#class_' + id).val(),
-                        controller      : jQuery('#controller_' + id).val(),
-                        submenu         : jQuery('#submenu_' + id).val(),
-                        status          : jQuery('#status_' + id).val()
-                    },
-                    success: function (data) {
-                        if(data.success == true){
-                            // بستن مدال
-                            var modalId = '#editModal' + id;
-                            var modal = bootstrap.Modal.getInstance(document.querySelector(modalId)); // اینجا #myModal باید id مدال شما باشه
-                            if (modal) modal.hide();
-                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                            //swal(data.subject, data.message, data.flag);
-
-                        } else {
-                            swal(data.subject, data.message, data.flag);
-                        }
-                    },
-                    error: function () {
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
-                        // چه موفقیت چه خطا، دکمه رو برگردون
-                        button.prop('disabled', false);
-                        button.html(originalButtonHtml);
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        jQuery(document).ready(function(){
-            jQuery('[id^=deletesubmit_]').click(function(e){
-                e.preventDefault();
-
-                var button = jQuery(this);
-                var id = button.data('id');
-                var originalButtonHtml = button.html(); // متن اصلی دکمه رو ذخیره کن
-
-                // قفل کردن دکمه + گذاشتن اسپینر
-                button.prop('disabled', true);
-                button.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال حذف...');
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
-
-                jQuery.ajax({
-                    url: "{{ route(request()->segment(2).'.destroy', 0) }}",
-                    method: 'delete',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id: id,
-                    },
-                    success: function (data) {
-                        // مدال را ببند
-                        var modalId = '#deleteModal' + id;
-                        var modal = bootstrap.Modal.getInstance(document.querySelector(modalId));
-                        modal.hide();
-
-                        // جدول را رفرش کن
-                        $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                    },
-                    error: function () {
-                        alert('مشکلی پیش آمد. لطفاً دوباره تلاش کنید.');
-                    },
-                    complete: function () {
-                        // چه موفق باشه چه خطا بده، دکمه رو برگردون
-                        button.prop('disabled', false);
-                        button.html(originalButtonHtml);
-                    }
-                });
-            });
-        });
-    </script>
-
 @endsection

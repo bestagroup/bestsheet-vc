@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/dropzone/dropzone.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/dropzone6/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/toastr/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/node-waves/node-waves.css')}}"/>
@@ -195,7 +195,7 @@
 
 <!-- Vendors JS -->
 <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
-<script src="{{ asset('assets/vendor/libs/dropzone/dropzone.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/dropzone6/dropzone.js') }}"></script>
 <script src="{{ asset('assets/vendor/libs/fullcalendar/fullcalendar.js') }}"></script>
 <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>

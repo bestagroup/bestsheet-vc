@@ -246,13 +246,13 @@
                 <div class="modal-body">
                     <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone dz-clickable border rounded-3 shadow-sm bg-light p-4" id="fileUploadZone" style="min-height: 220px; border-style: dashed;">
                         @csrf
-
+                        <input type="hidden" id="recordIdInput" name="record_id">
                         <div class="dz-message text-center text-muted">
                             <div class="mb-3">
                                 <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
                             </div>
                             <h5 class="fw-bold mb-2">برای آپلود فایل، کلیک کنید یا فایل را بکشید اینجا</h5>
-                            <p class="small text-secondary mb-0">فرمت‌های مجاز: JPG, PNG, PDF, MP4, DOCX (حداکثر 10 مگابایت)</p>
+                            <p class="small text-secondary mb-0">فرمت‌های مجاز: JPG, PNG, PDF, MP4, DOCX (حداکثر 40 مگابایت)</p>
                         </div>
                     </form>
                 </div>
@@ -381,94 +381,94 @@
         });
     </script>
 
-    <script>
-        function previewFile(fileUrl, ext) {
-            const url = `/${fileUrl}`;
-            const recordId = $(this).data('id');
-            console.log(recordId);
-            const map = {
-                img: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'],
-                vid: ['mp4', 'webm', 'ogg'],
-                pdf: ['pdf'],
-                office: ['doc','docx','ppt','pptx','xls','xlsx']
-            };
+{{--    <script>--}}
+{{--        function previewFile(fileUrl, ext) {--}}
+{{--            const url = `/${fileUrl}`;--}}
+{{--            const recordId = $(this).data('id');--}}
+{{--            console.log(recordId);--}}
+{{--            const map = {--}}
+{{--                img: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'],--}}
+{{--                vid: ['mp4', 'webm', 'ogg'],--}}
+{{--                pdf: ['pdf'],--}}
+{{--                office: ['doc','docx','ppt','pptx','xls','xlsx']--}}
+{{--            };--}}
 
-            let html =
-                map.img.includes(ext) ? `<img src="${url}" class="img-fluid">` :
-                    map.vid.includes(ext) ? `<video controls style="width:100%;max-height:500px"><source src="${url}" type="video/${ext}"></video>` :
-                        map.pdf.includes(ext) ? `<iframe src="${url}" style="width:100%;height:500px;border:none;"></iframe>` :
-                            map.office.includes(ext) ? `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${location.origin}/${fileUrl}" style="width:100%;height:500px;border:none;"></iframe>` :
-                                `<p class="text-center">پیش‌نمایش برای این نوع فایل در دسترس نیست.</p>`;
+{{--            let html =--}}
+{{--                map.img.includes(ext) ? `<img src="${url}" class="img-fluid">` :--}}
+{{--                    map.vid.includes(ext) ? `<video controls style="width:100%;max-height:500px"><source src="${url}" type="video/${ext}"></video>` :--}}
+{{--                        map.pdf.includes(ext) ? `<iframe src="${url}" style="width:100%;height:500px;border:none;"></iframe>` :--}}
+{{--                            map.office.includes(ext) ? `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${location.origin}/${fileUrl}" style="width:100%;height:500px;border:none;"></iframe>` :--}}
+{{--                                `<p class="text-center">پیش‌نمایش برای این نوع فایل در دسترس نیست.</p>`;--}}
 
-            document.getElementById('previewContent').innerHTML = html;
-            new bootstrap.Modal('#previewModal').show();
-        }
+{{--            document.getElementById('previewContent').innerHTML = html;--}}
+{{--            new bootstrap.Modal('#previewModal').show();--}}
+{{--        }--}}
 
-        document.addEventListener("DOMContentLoaded", () => {
-            if (Dropzone.instances.length) return;
+{{--        document.addEventListener("DOMContentLoaded", () => {--}}
+{{--            if (Dropzone.instances.length) return;--}}
 
-            const dz = new Dropzone("#fileUploadZone", {
-                url: "{{ route('storemedia') }}",
-                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
-                maxFilesize: 20,
-                parallelUploads: 5,
-                acceptedFiles: 'image/*,video/*,application/pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx',
-                dictDefaultMessage: "فایل را اینجا رها کنید یا کلیک کنید برای انتخاب",
-                init: function () {
-                    let uploaded = 0, total = 0;
-                    this.on("addedfile", () => total++);
-                    this.on("sending", (file, xhr, formData) => {
-                        formData.append('recordId', document.getElementById('recordIdInput').value);
+{{--            const dz = new Dropzone("#fileUploadZone", {--}}
+{{--                url: "{{ route('storemedia') }}",--}}
+{{--                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },--}}
+{{--                maxFilesize: 20,--}}
+{{--                parallelUploads: 5,--}}
+{{--                acceptedFiles: 'image/*,video/*,application/pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx',--}}
+{{--                dictDefaultMessage: "فایل را اینجا رها کنید یا کلیک کنید برای انتخاب",--}}
+{{--                init: function () {--}}
+{{--                    let uploaded = 0, total = 0;--}}
+{{--                    this.on("addedfile", () => total++);--}}
+{{--                    this.on("sending", (file, xhr, formData) => {--}}
+{{--                        formData.append('recordId', document.getElementById('recordIdInput').value);--}}
 
-                    });
-                    this.on("uploadprogress", (f, p) => {
-                        const bar = f.previewElement.querySelector("[data-dz-uploadprogress]");
-                        const badge = f.previewElement.querySelector(".upload-percent");
-                        if (bar && badge) {
-                            bar.style.width = p + "%";
-                            badge.textContent = `${Math.round(p)}%`;
-                        }
-                    });
-                    this.on("success", (f, r) => {
-                        uploaded++;
-                        previewFile(r.file_path.replace(/^\/+/, ''), f.name.split('.').pop().toLowerCase());
-                        if (uploaded === total) {
-                            setTimeout(() => {
-                                bootstrap.Modal.getInstance('#uploadModal').hide();
-                                window.sample1Table ? window.sample1Table.ajax.reload(null, false) : location.reload();
-                                showToast('✅ فایل‌ها با موفقیت آپلود شدند.');
-                            }, 800);
-                        }
-                    });
-                    this.on("error", () => showToast("❌ خطا در آپلود فایل", "danger"));
-                },
-                previewTemplate: `
-<div class="dz-preview dz-file-preview text-center me-2 mb-3" style="width:160px">
-  <div class="card border rounded shadow-sm p-2 position-relative">
-    <div class="dz-image mb-2 rounded overflow-hidden" style="height:100px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;">
-      <img data-dz-thumbnail class="img-fluid" style="max-height:100%;object-fit:cover;">
-    </div>
-    <div data-dz-name class="text-truncate small fw-bold"></div>
-    <div data-dz-size class="small text-muted mb-1"></div>
-    <div class="progress mb-1" style="height:4px;"><div class="progress-bar bg-primary" data-dz-uploadprogress></div></div>
-    <span class="upload-percent badge bg-primary position-absolute top-0 end-0 m-1" style="font-size:.7rem;">0%</span>
-  </div>
-</div>`
-            });
+{{--                    });--}}
+{{--                    this.on("uploadprogress", (f, p) => {--}}
+{{--                        const bar = f.previewElement.querySelector("[data-dz-uploadprogress]");--}}
+{{--                        const badge = f.previewElement.querySelector(".upload-percent");--}}
+{{--                        if (bar && badge) {--}}
+{{--                            bar.style.width = p + "%";--}}
+{{--                            badge.textContent = `${Math.round(p)}%`;--}}
+{{--                        }--}}
+{{--                    });--}}
+{{--                    this.on("success", (f, r) => {--}}
+{{--                        uploaded++;--}}
+{{--                        previewFile(r.file_path.replace(/^\/+/, ''), f.name.split('.').pop().toLowerCase());--}}
+{{--                        if (uploaded === total) {--}}
+{{--                            setTimeout(() => {--}}
+{{--                                bootstrap.Modal.getInstance('#uploadModal').hide();--}}
+{{--                                window.sample1Table ? window.sample1Table.ajax.reload(null, false) : location.reload();--}}
+{{--                                showToast('✅ فایل‌ها با موفقیت آپلود شدند.');--}}
+{{--                            }, 800);--}}
+{{--                        }--}}
+{{--                    });--}}
+{{--                    this.on("error", () => showToast("❌ خطا در آپلود فایل", "danger"));--}}
+{{--                },--}}
+{{--                previewTemplate: `--}}
+{{--<div class="dz-preview dz-file-preview text-center me-2 mb-3" style="width:160px">--}}
+{{--  <div class="card border rounded shadow-sm p-2 position-relative">--}}
+{{--    <div class="dz-image mb-2 rounded overflow-hidden" style="height:100px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;">--}}
+{{--      <img data-dz-thumbnail class="img-fluid" style="max-height:100%;object-fit:cover;">--}}
+{{--    </div>--}}
+{{--    <div data-dz-name class="text-truncate small fw-bold"></div>--}}
+{{--    <div data-dz-size class="small text-muted mb-1"></div>--}}
+{{--    <div class="progress mb-1" style="height:4px;"><div class="progress-bar bg-primary" data-dz-uploadprogress></div></div>--}}
+{{--    <span class="upload-percent badge bg-primary position-absolute top-0 end-0 m-1" style="font-size:.7rem;">0%</span>--}}
+{{--  </div>--}}
+{{--</div>`--}}
+{{--            });--}}
 
-            window.showToast = (msg, type="success") => {
-                const el = document.createElement("div");
-                el.className = `toast text-bg-${type} border-0 show position-fixed bottom-0 end-0 m-4`;
-                el.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${msg}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>`;
-                document.body.appendChild(el);
-                setTimeout(() => el.remove(), 4000);
-            };
-        });
-    </script>
+{{--            window.showToast = (msg, type="success") => {--}}
+{{--                const el = document.createElement("div");--}}
+{{--                el.className = `toast text-bg-${type} border-0 show position-fixed bottom-0 end-0 m-4`;--}}
+{{--                el.innerHTML = `--}}
+{{--        <div class="d-flex">--}}
+{{--            <div class="toast-body">${msg}</div>--}}
+{{--            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>--}}
+{{--        </div>`;--}}
+{{--                document.body.appendChild(el);--}}
+{{--                setTimeout(() => el.remove(), 4000);--}}
+{{--            };--}}
+{{--        });--}}
+{{--    </script>--}}
 
 
     <script>
