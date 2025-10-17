@@ -232,4 +232,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deleteId) handleDelete(deleteId);
     });
 
+    /* -------------------------------------------
+ *  نمایش پروفایل شرکت
+ * ------------------------------------------- */
+    $(document).on('click', '.show-btn', function () {
+        const url = $(this).data('url');
+        const $modal = $('#showModal');
+        const $body = $('#showModalBody');
+
+        $body.html('<div class="text-center text-muted py-5">در حال بارگذاری...</div>');
+        $modal.modal('show');
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function (response) {
+                $body.html(response); // فرض: کنترلر HTML برمی‌گردونه
+            },
+            error: function () {
+                $body.html('<div class="text-center text-danger py-5">خطا در بارگذاری اطلاعات</div>');
+            }
+        });
+    });
+
 });

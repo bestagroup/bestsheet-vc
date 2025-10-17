@@ -21,21 +21,12 @@ use Yajra\DataTables\Facades\DataTables;
 
 class FlowController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $submenupanels  = SubmenuPanel::select('id','priority','title','label','menu_id','slug','status','class','controller')->get();
         $menupanels     = Menupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
-        $projects       = Project::all();
-        $finances       = Finance::all();
         $states         = State::all();
         $cities         = City::all();
-        $investsteps    = Investstep::whereStatus(4)->get();
-        $files          = MediaFile::where('status' ,'!=' , 5)->get();
-
-        $commitments    = Commitment::whereStatus(4)->get();
 
         $thispage       = [
             'title'   => 'مدیریت طرح / شرکت  ',
@@ -93,11 +84,12 @@ class FlowController extends Controller
                     $actionBtn = '';
                     if (auth()->user()->can('can-access', ['flow', 'edit'])) {
                         $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('flow.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
+
                     }
                     if (auth()->user()->can('can-access', ['flow', 'delete'])) {
                         $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
-                    $actionBtn .= '<button class="btn btn-sm btn-icon btn-eye mx-1" data-bs-toggle="modal" data-bs-target="#profileModal'.$data->id.'"><i class="mdi mdi-eye"></i></button>';
+                    $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary show-btn" data-id="'.$data->id.'" data-url="'.route('flow.show', $data->id).'"><i class="mdi mdi-eye"></i></button>';
 
                     $actionBtn .= '<button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="'.$data->id.'"><i class="mdi mdi-file-document-multiple-outline"></i></button>';
 
@@ -106,7 +98,7 @@ class FlowController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'projects' , 'finances' , 'investsteps' , 'files' , 'commitments' , 'states' , 'cities']));
+        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'states' ,'cities']));
     }
 
     public function edit($id)
@@ -118,20 +110,20 @@ class FlowController extends Controller
         return view('panel.partials.edit-form', compact('project', 'states', 'cities'));
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function show($id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $finances       = Finance::all();
+        $states         = State::all();
+        $cities         = City::all();
+        $investsteps    = Investstep::whereStatus(4)->get();
+        $files          = MediaFile::where('status' ,'!=' , 5)->get();
+        $commitments    = Commitment::whereStatus(4)->get();
+
+        return view('panel.partials.show-profile', compact('project', 'states', 'cities' , 'investsteps' , 'files' , 'commitments' , 'finances'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
-
     {
         try {
             $project = Project::findOrfail($id);

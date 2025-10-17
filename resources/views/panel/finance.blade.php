@@ -3,6 +3,11 @@
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+    <link rel="stylesheet" href="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css">
+    <script type="text/javascript" src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"></script>
+    <style>
+        jdp-container{z-index:99999999 !important;}
+    </style>
 @endsection
 @section('content')
     <div class="card">
@@ -48,8 +53,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route(request()->segment(2).'.'.'store')}}" id="addform" method="POST" class="row g-4 mb-4">
-                        {{csrf_field()}}
+                    <form id="addform" data-type="create" method="POST" class="row g-4 mb-4" action="{{route(request()->segment(2).'.'.'store')}}">
+                        @csrf
                             <div class="col-6 col-md-3">
                                 <div class="form-floating form-floating-outline">
                                     <select required name="project_id" id="project_id" class="form-control select-lg select2">
@@ -84,14 +89,14 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <div class="form-floating form-floating-outline">
-                                    <input required type="text" class="form-control" id="amount" name="amount" placeholder="مبلغ پرداختی" >
+                                    <input required type="text" class="form-control number-input" id="amount" name="amount" placeholder="مبلغ پرداختی" >
                                     <label for="amount">مبلغ پرداختی</label>
                                     <div class="invalid-feedback" id="amountFeedback">مبلغ پرداختی اجباری می باشد.</div>
                                 </div>
                             </div>
                         <div class="col-6 col-md-3">
                             <div class="form-floating form-floating-outline">
-                                <input required type="text" class="form-control" id="date" name="date" placeholder="تاریخ واریز" >
+                                <input required type="text" data-jdp class="form-control" id="date" name="date" placeholder="تاریخ واریز" >
                                 <label for="date">تاریخ واریز</label>
                                 <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
                             </div>
@@ -104,7 +109,7 @@
                             </div>
                         </div>
                         <div class="text-end">
-                            <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
+                            <button type="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                     </form>
                 </div>
@@ -113,74 +118,15 @@
     </div>
     <!-- Edit Modal -->
     @foreach($finances as $finance)
-        <div class="modal fade" id="editModal{{$finance->id}}" tabindex="-1" aria-labelledby="editModalLabel{{$finance->id}}" aria-hidden="true">
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel{{$finance->id}}">{{$thispage['edit']}}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                        <h5 class="modal-title" id="editModalLabel">ویرایش اطلاعات</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body">
-                        <form id="editform_{{ $finance->id }}" method="POST" class="row g-4 mb-4" action="{{ route(request()->segment(2).'.update', $finance->id) }}">
-                            @csrf
-                            @method('PATCH')
-                            <input type="hidden" name="menu_id" id="menu_id_{{$finance->id}}" value="{{$finance->id}}" />
-                            <div class="col-6 col-md-3">
-                                <div class="form-floating form-floating-outline">
-                                    <label for="project_id">نام شرکت</label>
-                                    <select name="project_id" id="project_id" class="form-control select-lg select2">
-                                        <option value="" selected>انتخاب کنید</option>
-                                        @foreach($projects as $project)
-                                            <option value="{{$project->id}}" {{$project->id == $finance->project_id ? 'selected' : ''}}>{{$project->company_name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div class="form-floating form-floating-outline">
-                                    <label for="serial">شماره مرحله پرداخت</label>
-                                    <select name="serial" id="serial" class="form-control select-lg select2">
-                                        <option value="" selected>انتخاب کنید</option>
-                                        <option value="1" {{$finance->serial == 1 ? 'selected' : ''}}>1</option>
-                                        <option value="2" {{$finance->serial == 2 ? 'selected' : ''}}>2</option>
-                                        <option value="3" {{$finance->serial == 3 ? 'selected' : ''}}>3</option>
-                                        <option value="4" {{$finance->serial == 4 ? 'selected' : ''}}>4</option>
-                                        <option value="5" {{$finance->serial == 5 ? 'selected' : ''}}>5</option>
-                                    </select>
-                                </div>
-                            </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input required type="text" class="form-control" id="docserial" name="docserial" value="{{$finance->docserial}}" >
-                                        <label for="docserial">شماره سند بایگانی مالی</label>
-                                        <div class="invalid-feedback" id="docserialFeedback">شماره سند بایگانی مالی اجباری می باشد.</div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input required type="text" class="form-control" id="amount" name="amount" value="{{number_format($finance->amount)}}" >
-                                        <label for="amount">مبلغ پرداختی</label>
-                                        <div class="invalid-feedback" id="amountFeedback">مبلغ پرداختی اجباری می باشد.</div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input required type="text" class="form-control" id="date" name="date" value="{{$finance->date}}" >
-                                        <label for="date">تاریخ واریز</label>
-                                        <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
-                                    </div>
-                                </div>
-                                <div class="col-9 col-md-9">
-                                    <div class="form-floating form-floating-outline">
-                                        <textarea name="description" id="description" required cols="30" rows="10" class="form-control" >{{$finance->description}}</textarea>
-                                        <label for="description">توضیحات</label>
-                                        <div class="invalid-feedback" id="dateFeedback">توضیحات اجباری می باشد.</div>
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <button type="button" id="editsubmit_{{$finance->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
-                                </div>
-                        </form>
+                    <div class="modal-body" id="editModalBody">
+                        <div class="text-center text-muted py-5">در حال بارگذاری...</div>
                     </div>
                 </div>
             </div>
@@ -191,7 +137,7 @@
 @section('script')
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
     <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
-
+    <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
     <script type="text/javascript">
         $(function () {
             var table = $('.yajra-datatable').DataTable({
@@ -216,144 +162,61 @@
         });
     </script>
     <script>
-        jQuery(function($){
-            // ✅ تابع نهایی showToast با toastr.js
-            function showToast(message, type = 'success') {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-right",
-                    timeOut: 3000,
-                    rtl: true
-                };
+        jalaliDatepicker.startWatch();
 
-                if (toastr[type]) {
-                    toastr[type](message);
-                } else {
-                    toastr.success(message);
-                }
+        document.querySelector("[data-jdp-miladi-input]").addEventListener("jdp:change", function (e) {
+            var miladiInput = document.getElementById(this.getAttribute("data-jdp-miladi-input"));
+            if (!this.value) {
+                miladiInput.value = "";
+                return;
             }
-
-            // 👇 منطق ارسال فرم بدون تغییر
-            $('#submit').on('click', function(e){
-                e.preventDefault();
-                var $btn  = $(this);
-                var $form = $('#addform');
-                var originalHtml = $btn.html();
-
-                $btn.prop('disabled', true)
-                    .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                    }
-                });
-
-                $.ajax({
-                    url: "{{ route(request()->segment(2).'.store') }}",
-                    method: 'POST',
-                    data: $form.serialize(),
-                    success: function (data) {
-                        if (data.success) {
-                            const modalEl = document.getElementById('addModal');
-                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-
-                            modalEl.addEventListener('hidden.bs.modal', function handler(){
-                                modalEl.removeEventListener('hidden.bs.modal', handler);
-                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                            }, { once: true });
-
-                            modal.hide();
-                            $('.modal-backdrop').remove();
-                            $('body').removeClass('modal-open');
-                            $('body').css('padding-right', '');
-                            showToast('آیتم با موفقیت افزوده شد!', 'success');
-                        } else {
-                            swal(data.subject, data.message, data.flag);
-                        }
-                    },
-                    error: function () {
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
-                        $btn.prop('disabled', false).html(originalHtml);
-                    }
-                });
-            });
+            var date = this.value.split("/");
+            miladiInput.value = jalali_to_gregorian(date[0], date[1], date[2]).join("/")
         });
+
+        function jalali_to_gregorian(jy, jm, jd) {
+            jy = Number(jy);
+            jm = Number(jm);
+            jd = Number(jd);
+            var gy = (jy <= 979) ? 621 : 1600;
+            jy -= (jy <= 979) ? 0 : 979;
+            var days = (365 * jy) + ((parseInt(jy / 33)) * 8) + (parseInt(((jy % 33) + 3) / 4))
+                + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
+            gy += 400 * (parseInt(days / 146097));
+            days %= 146097;
+            if (days > 36524) {
+                gy += 100 * (parseInt(--days / 36524));
+                days %= 36524;
+                if (days >= 365) days++;
+            }
+            gy += 4 * (parseInt((days) / 1461));
+            days %= 1461;
+            gy += parseInt((days - 1) / 365);
+            if (days > 365) days = (days - 1) % 365;
+            var gd = days + 1;
+            var sal_a = [0, 31, ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            var gm
+            for (gm = 0; gm < 13; gm++) {
+                var v = sal_a[gm];
+                if (gd <= v) break;
+                gd -= v;
+            }
+            return [gy, gm, gd];
+        }
     </script>
     <script>
-        jQuery(function($){
-            function showToast(message, type = 'success') {
-                toastr.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-center",
-                    timeOut: 3000,
-                    rtl: true
-                };
+        document.querySelectorAll('.number-input').forEach(function(input) {
+            input.addEventListener('input', function(e) {
+                // حذف ویرگول‌های قبلی و کاراکترهای غیرعددی
+                let value = e.target.value.replace(/,/g, '').replace(/\D/g, '');
 
-                if (toastr[type]) {
-                    toastr[type](message);
-                } else {
-                    toastr.success(message);
-                }
-            }
-
-            // 🚫 هیچ چیز دیگه‌ای تغییر نکرده، فقط از تابع بالا استفاده شده
-            $(document).on('click', '[id^=editsubmit_]', function(e){
-                e.preventDefault();
-                const $btn = $(this);
-                const id = this.id.split('_')[1];
-                const $form = $('#editform_' + id);
-
-                if (!$form.length) {
-                    console.error('فرم editform_' + id + ' پیدا نشد!');
-                    return;
+                // فرمت سه‌رقمی
+                if (value) {
+                    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 }
 
-                const url = $form.attr('action'); // استفاده از URL داینامیک
-                const originalHtml = $btn.html();
-                disableBtnWithSpinner($btn);
-
-                $.ajax({
-                    url: url,
-                    method: 'PATCH',
-                    data: $form.serialize(),
-                    success: function (data) {
-                        if (data.success) {
-                            const modalEl = document.getElementById('editModal' + id);
-                            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                            modalEl.addEventListener('hidden.bs.modal', function handler(){
-                                modalEl.removeEventListener('hidden.bs.modal', handler);
-                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                                showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                            }, { once: true });
-                            modal.hide();
-                            $('.modal-backdrop').remove();
-                            $('body').removeClass('modal-open').css('padding-right', '');
-                        } else {
-                            swal(data.subject, data.message, data.flag);
-                        }
-                    },
-                    error: function () {
-                        swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                    },
-                    complete: function () {
-                        restoreBtn($btn, originalHtml);
-                    }
-                });
+                e.target.value = value;
             });
-
-            function disableBtnWithSpinner($btn){
-                $btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
-                );
-            }
-            function restoreBtn($btn, html){
-                $btn.prop('disabled', false).html(html);
-            }
         });
     </script>
 

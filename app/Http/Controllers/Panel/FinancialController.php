@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Finance;
 use App\Models\MenuPanel;
 use App\Models\Project;
+use App\Models\State;
 use App\Models\SubmenuPanel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +65,8 @@ class FinancialController extends Controller
                     return ($data->date);
                 })
                 ->addColumn('action', function ($data) {
-                    $actionBtn = '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary" ><i class="mdi mdi-pencil-outline"></i></button>';
+                    $actionBtn ='<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('finance.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
+
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -115,6 +118,14 @@ class FinancialController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $finance       = Finance::findOrFail($id);
+        $projects       = Project::where('invest_step' , '>=', 6)->get();
+
+        return view('panel.partials.edit-form-finance', compact('finance', 'projects'));
+    }
+
     public function update(Request $request , $id)
     {
 
@@ -155,6 +166,7 @@ class FinancialController extends Controller
 
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
+
     public function destroy(Request $request)
     {
         try {
