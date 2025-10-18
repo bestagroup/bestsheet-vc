@@ -30,9 +30,6 @@ class FilemanagerController extends Controller
         ];
         $menupanels     = Menupanel::select('id','priority','icon', 'title','label', 'slug', 'status' , 'class' , 'controller')->get();
         $submenupanels  = Submenupanel::select('id','priority', 'title','label', 'slug', 'status' , 'class' , 'controller' , 'menu_id')->get();
-        $mediafiles     = MediaFile::all();
-        $subject_files  = subject_file::all();
-        $companies      = Project::select('id','title')->get();
 
         if ($request->ajax()) {
             $data = MediaFile::leftjoin('projects', 'projects.id', '=', 'media_files.project_id')
@@ -97,17 +94,18 @@ class FilemanagerController extends Controller
                 ->editColumn('action', function ($data) {
                     $actionBtn = '';
                     if (auth()->user()->can('can-access', ['filemanager', 'edit'])) {
-                        $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary mx-1"><i class="mdi mdi-pencil-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('filemanager.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
+
                     }
                     if (auth()->user()->can('can-access', ['filemanager', 'delete'])) {
-                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
                     return $actionBtn;
                 })
                 ->rawColumns(['action' ,'file_path'])
                 ->make(true);
         }
-        return view('panel.file_manager')->with(compact(['menupanels' , 'submenupanels' , 'mediafiles','thispage' , 'subject_files' , 'companies']));
+        return view('panel.file_manager')->with(compact(['menupanels' , 'submenupanels' ,'thispage']));
     }
 
     public function store(Request $request)
@@ -168,10 +166,19 @@ class FilemanagerController extends Controller
         return Redirect::back();
     }
 
-    public function destroy(Request $request)
+    public function edit($id){
+        $mediafile     = MediaFile::whereId($id)->first();
+        $subject_files  = subject_file::all();
+        $companies      = Project::select('id','title')->get();
+
+        return view('panel.partials.edit-form-filemanager', compact('mediafile', 'subject_files' , 'companies'));
+
+    }
+
+    public function destroy($id)
     {
         try{
-            $media = MediaFile::findOrFail($request->input('id'));
+            $media = MediaFile::findOrFail($id);
             Storage::disk('public')->delete($media->file_path);
 //            if (Storage::exists($media->file_path)) {
 //                Storage::delete($media->file_path);
@@ -213,7 +220,7 @@ class FilemanagerController extends Controller
 
         $recordId = $request->record_id;
         $files = MediaFile::where('project_id', $recordId)->get();
-        //dd($files);
+
         return view('panel.files', compact('files' , 'thispage'));
     }
 
@@ -262,6 +269,7 @@ class FilemanagerController extends Controller
         $result = MediaFile::whereId($id)->update([
             'subject_id' => $request->input('subject_id'),
             'company_id' => $request->input('company_id'),
+            'project_id' => $request->input('company_id'),
         ]);
 
         try{
