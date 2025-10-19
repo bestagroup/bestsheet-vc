@@ -50,7 +50,7 @@
         </li>
         <li class="nav-item">
             <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
-                    data-bs-toggle="tab" data-bs-target="#navs-sales"
+                    data-bs-toggle="tab" data-bs-target="#navs-sales-card"
                     aria-controls="navs-guarantee-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-finance mdi-20px me-1"></i>
                 اطلاعات فروش
@@ -58,7 +58,7 @@
         </li>
         <li class="nav-item">
             <button type="button" {{$project->invest_step > 0 ? '' : 'disabled'}}  class="nav-link d-flex flex-column gap-1" role="tab"
-                    data-bs-toggle="tab" data-bs-target="#navs-contracts"
+                    data-bs-toggle="tab" data-bs-target="#navs-contracts-card"
                     aria-controls="navs-guarantee-card" aria-selected="false">
                 <i class="tf-icons mdi mdi-file-sign mdi-20px me-1"></i>
                 اطلاعات قرارداد ها
