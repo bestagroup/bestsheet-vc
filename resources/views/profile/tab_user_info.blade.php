@@ -10,47 +10,47 @@
 <div class="tab-pane fade show active justify-content-center" id="navs-user-card" role="tabpanel">
     {{-- کارت پروفایل کاربر --}}
 
-    <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius: 1.25rem;">
-        <div class="card-body p-4">
-            <label for="test-users" class="form-label">اعضای هیئت‌مدیره (تستی)</label>
-            <select id="test-users"
-                    class="select2 select2-lg"
-                    multiple
-                    data-placeholder="نام اعضا را جستجو یا انتخاب کنید"
-                    data-allow-clear="true"
-                    data-min-search="0">
-                <option value="1">علی رضایی</option>
-                <option value="2">سارا احمدی</option>
-                <option value="3">محمد حسینی</option>
-                <option value="4">نیلوفر کریمی</option>
-                <option value="5">رضا مرادی</option>
-            </select>
-            <small class="text-muted d-block mt-2">چیپ‌های انتخاب‌شده قابل حذف هستند؛ تایپ برای جستجو.</small>
-        </div>
-    </div>
+{{--    <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius: 1.25rem;">--}}
+{{--        <div class="card-body p-4">--}}
+{{--            <label for="test-users" class="form-label">اعضای هیئت‌مدیره (تستی)</label>--}}
+{{--            <select id="test-users"--}}
+{{--                    class="select2 select2-lg"--}}
+{{--                    multiple--}}
+{{--                    data-placeholder="نام اعضا را جستجو یا انتخاب کنید"--}}
+{{--                    data-allow-clear="true"--}}
+{{--                    data-min-search="0">--}}
+{{--                <option value="1">علی رضایی</option>--}}
+{{--                <option value="2">سارا احمدی</option>--}}
+{{--                <option value="3">محمد حسینی</option>--}}
+{{--                <option value="4">نیلوفر کریمی</option>--}}
+{{--                <option value="5">رضا مرادی</option>--}}
+{{--            </select>--}}
+{{--            <small class="text-muted d-block mt-2">چیپ‌های انتخاب‌شده قابل حذف هستند؛ تایپ برای جستجو.</small>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
     {{-- تک‌انتخاب: نوع شرکت --}}
-    <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius: 1.25rem;">
-        <div class="card-body p-4">
-            <label for="company-category" class="form-label">نوع شرکت</label>
+{{--    <div class="card border-0 shadow-sm mb-4" style="max-width:480px; margin:0 auto; border-radius: 1.25rem;">--}}
+{{--        <div class="card-body p-4">--}}
+{{--            <label for="company-category" class="form-label">نوع شرکت</label>--}}
 
-            <select id="company-category"
-                    name="company_category"
-                    class="select2 select2-lg"
-                    data-placeholder="یک مورد را انتخاب کنید"
-                    data-allow-clear="true"
-                    data-min-search="5">
-                <option value=""></option> {{-- برای نمایش placeholder ضروری است --}}
-                <option value="startup">استارتاپ</option>
-                <option value="sme">کسب‌وکار کوچک/متوسط</option>
-                <option value="enterprise">شرکت بزرگ (Enterprise)</option>
-                <option value="ngo">سازمان مردم‌نهاد (NGO)</option>
-                <option value="gov">شرکت دولتی</option>
-            </select>
+{{--            <select id="company-category"--}}
+{{--                    name="company_category"--}}
+{{--                    class="select2 select2-lg"--}}
+{{--                    data-placeholder="یک مورد را انتخاب کنید"--}}
+{{--                    data-allow-clear="true"--}}
+{{--                    data-min-search="5">--}}
+{{--                <option value=""></option> --}}{{-- برای نمایش placeholder ضروری است --}}
+{{--                <option value="startup">استارتاپ</option>--}}
+{{--                <option value="sme">کسب‌وکار کوچک/متوسط</option>--}}
+{{--                <option value="enterprise">شرکت بزرگ (Enterprise)</option>--}}
+{{--                <option value="ngo">سازمان مردم‌نهاد (NGO)</option>--}}
+{{--                <option value="gov">شرکت دولتی</option>--}}
+{{--            </select>--}}
 
-            <small class="text-muted d-block mt-2">می‌توانید با علامت × انتخاب را پاک کنید.</small>
-        </div>
-    </div>
+{{--            <small class="text-muted d-block mt-2">می‌توانید با علامت × انتخاب را پاک کنید.</small>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
 
 

@@ -1,11 +1,10 @@
 @extends('layouts.base')
-
 @section('title', ' حساب کاربری')
-
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style> table {
             margin: 0 auto;
             width: 100% !important;
@@ -68,7 +67,6 @@
 
                     @elseif(Auth::user()->level == 'investor')
                         @include('profile.tab_investor_projects')
-
                     @endif
                 </div>
             </div>
@@ -76,7 +74,10 @@
         @endsection
 
         @push('scripts')
-            <script src="{{'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js'}}"></script>
+            <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
+            <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
+            <script src="{{'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'}}"></script>
+
             <script>
                 function toggleEditMode(section) {
                     if (section === 'user') {
@@ -90,8 +91,7 @@
                 }
 
             </script>
-            <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
-            <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
+
             @if(Auth::user()->level == 'applicant')
             <script type="text/javascript">
                 var tableInitialized = false;
@@ -124,9 +124,29 @@
                         }
                     });
             </script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+
+                        let hash = window.location.hash;
+                        if (hash) {
+                            let triggerEl = document.querySelector(`button[data-bs-target="${hash}"]`);
+                            if (triggerEl) {
+                                let tab = new bootstrap.Tab(triggerEl);
+                                tab.show();
+                            }
+                        }
+
+                        document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(function(tabButton) {
+                            tabButton.addEventListener('shown.bs.tab', function (event) {
+                                let target = event.target.getAttribute('data-bs-target');
+                                history.replaceState(null, null, target);
+                            });
+                        });
+                    });
+                </script>
 
 
-            <script>
+                <script>
                 jQuery(function ($) {
                     function showToast(message, type = 'success') {
                         toastr.options = {
@@ -192,7 +212,7 @@
                     });
                 });
             </script>
-                <script>
+            <script>
                     $(document).ready(function() {
                         // فعال‌سازی سرچ روی همه select ها
                         $('.select2').select2({
@@ -225,147 +245,147 @@
                     });
                 </script>
             @endif
-            <script>
-                jQuery(function ($) {
-                    function showToast(message, type = 'success') {
-                        toastr.options = {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-top-center",
-                            timeOut: 3000,
-                            rtl: true
-                        };
+{{--            <script>--}}
+{{--                jQuery(function ($) {--}}
+{{--                    function showToast(message, type = 'success') {--}}
+{{--                        toastr.options = {--}}
+{{--                            closeButton: true,--}}
+{{--                            progressBar: true,--}}
+{{--                            positionClass: "toast-top-center",--}}
+{{--                            timeOut: 3000,--}}
+{{--                            rtl: true--}}
+{{--                        };--}}
 
-                        if (toastr[type]) {
-                            toastr[type](message);
-                        } else {
-                            toastr.success(message);
-                        }
-                    }
+{{--                        if (toastr[type]) {--}}
+{{--                            toastr[type](message);--}}
+{{--                        } else {--}}
+{{--                            toastr.success(message);--}}
+{{--                        }--}}
+{{--                    }--}}
 
-                    $(document).on('click', '[id^=editsubmit_]', function (e) {
-                        e.preventDefault();
-                        const $btn = $(this);
-                        const id = this.id.split('_')[1];
-                        const $form = $('#editform_' + id);
+{{--                    $(document).on('click', '[id^=editsubmit_]', function (e) {--}}
+{{--                        e.preventDefault();--}}
+{{--                        const $btn = $(this);--}}
+{{--                        const id = this.id.split('_')[1];--}}
+{{--                        const $form = $('#editform_' + id);--}}
 
-                        if (!$form.length) {
-                            console.error('فرم editform_' + id + ' پیدا نشد!');
-                            return;
-                        }
+{{--                        if (!$form.length) {--}}
+{{--                            console.error('فرم editform_' + id + ' پیدا نشد!');--}}
+{{--                            return;--}}
+{{--                        }--}}
 
-                        const url = $form.attr('action'); // استفاده از URL داینامیک
-                        const originalHtml = $btn.html();
-                        disableBtnWithSpinner($btn);
+{{--                        const url = $form.attr('action'); // استفاده از URL داینامیک--}}
+{{--                        const originalHtml = $btn.html();--}}
+{{--                        disableBtnWithSpinner($btn);--}}
 
-                        $.ajax({
-                            url: url,
-                            method: 'PATCH',
-                            data: $form.serialize(),
-                            success: function (data) {
-                                if (data.success) {
-                                    const company = data.data;
-                                    $('#company-registration-number').text(company.registration_number || '');
-                                    $('#company-national-id').text(company.national_id || '');
-                                    $('#company-phone').text(company.phone || '');
-                                    $('#company-email').text(company.email || '');
-                                    $('#company-address').text(company.address || '');
-                                    toggleEditMode('company');
-                                    showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                                } else {
-                                    swal(data.subject, data.message, data.flag);
-                                }
-                            },
-                            error: function () {
-                                swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                            },
-                            complete: function () {
-                                restoreBtn($btn, originalHtml);
-                            }
-                        });
-                    });
+{{--                        $.ajax({--}}
+{{--                            url: url,--}}
+{{--                            method: 'PATCH',--}}
+{{--                            data: $form.serialize(),--}}
+{{--                            success: function (data) {--}}
+{{--                                if (data.success) {--}}
+{{--                                    const company = data.data;--}}
+{{--                                    $('#company-registration-number').text(company.registration_number || '');--}}
+{{--                                    $('#company-national-id').text(company.national_id || '');--}}
+{{--                                    $('#company-phone').text(company.phone || '');--}}
+{{--                                    $('#company-email').text(company.email || '');--}}
+{{--                                    $('#company-address').text(company.address || '');--}}
+{{--                                    toggleEditMode('company');--}}
+{{--                                    showToast('آیتم با موفقیت ویرایش شد!', 'success');--}}
+{{--                                } else {--}}
+{{--                                    swal(data.subject, data.message, data.flag);--}}
+{{--                                }--}}
+{{--                            },--}}
+{{--                            error: function () {--}}
+{{--                                swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');--}}
+{{--                            },--}}
+{{--                            complete: function () {--}}
+{{--                                restoreBtn($btn, originalHtml);--}}
+{{--                            }--}}
+{{--                        });--}}
+{{--                    });--}}
 
-                    function disableBtnWithSpinner($btn) {
-                        $btn.prop('disabled', true).html(
-                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
-                        );
-                    }
+{{--                    function disableBtnWithSpinner($btn) {--}}
+{{--                        $btn.prop('disabled', true).html(--}}
+{{--                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'--}}
+{{--                        );--}}
+{{--                    }--}}
 
-                    function restoreBtn($btn, html) {
-                        $btn.prop('disabled', false).html(html);
-                    }
-                });
-            </script>
-            <script>
-                jQuery(function ($) {
-                    function showToast(message, type = 'success') {
-                        toastr.options = {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-top-center",
-                            timeOut: 3000,
-                            rtl: true
-                        };
+{{--                    function restoreBtn($btn, html) {--}}
+{{--                        $btn.prop('disabled', false).html(html);--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            </script>--}}
+{{--            <script>--}}
+{{--                jQuery(function ($) {--}}
+{{--                    function showToast(message, type = 'success') {--}}
+{{--                        toastr.options = {--}}
+{{--                            closeButton: true,--}}
+{{--                            progressBar: true,--}}
+{{--                            positionClass: "toast-top-center",--}}
+{{--                            timeOut: 3000,--}}
+{{--                            rtl: true--}}
+{{--                        };--}}
 
-                        if (toastr[type]) {
-                            toastr[type](message);
-                        } else {
-                            toastr.success(message);
-                        }
-                    }
+{{--                        if (toastr[type]) {--}}
+{{--                            toastr[type](message);--}}
+{{--                        } else {--}}
+{{--                            toastr.success(message);--}}
+{{--                        }--}}
+{{--                    }--}}
 
-                    $(document).on('click', '[id^=editusersubmit_]', function (e) {
-                        e.preventDefault();
-                        const $btn = $(this);
-                        const id = this.id.split('_')[1];
-                        const $form = $('#edituserform_' + id);
+{{--                    $(document).on('click', '[id^=editusersubmit_]', function (e) {--}}
+{{--                        e.preventDefault();--}}
+{{--                        const $btn = $(this);--}}
+{{--                        const id = this.id.split('_')[1];--}}
+{{--                        const $form = $('#edituserform_' + id);--}}
 
-                        if (!$form.length) {
-                            console.error('فرم edituserform_' + id + ' پیدا نشد!');
-                            return;
-                        }
+{{--                        if (!$form.length) {--}}
+{{--                            console.error('فرم edituserform_' + id + ' پیدا نشد!');--}}
+{{--                            return;--}}
+{{--                        }--}}
 
-                        const url = $form.attr('action'); // استفاده از URL داینامیک
-                        const originalHtml = $btn.html();
-                        disableBtnWithSpinner($btn);
+{{--                        const url = $form.attr('action'); // استفاده از URL داینامیک--}}
+{{--                        const originalHtml = $btn.html();--}}
+{{--                        disableBtnWithSpinner($btn);--}}
 
-                        $.ajax({
-                            url: url,
-                            method: 'PATCH',
-                            data: $form.serialize(),
-                            success: function (data) {
-                                if (data.success) {
-                                    const user = data.data;
-                                    $('#user_national_id').text(user.user_national_id || '');
-                                    $('#user_phone').text(user.user_phone || '');
-                                    $('#user_email').text(user.user_email || '');
-                                    $('#user_address').text(user.user_address || '');
-                                    toggleEditMode('user');
-                                    showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                                } else {
-                                    swal(data.subject, data.message, data.flag);
-                                }
-                            },
-                            error: function () {
-                                swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');
-                            },
-                            complete: function () {
-                                restoreBtn($btn, originalHtml);
-                            }
-                        });
-                    });
+{{--                        $.ajax({--}}
+{{--                            url: url,--}}
+{{--                            method: 'PATCH',--}}
+{{--                            data: $form.serialize(),--}}
+{{--                            success: function (data) {--}}
+{{--                                if (data.success) {--}}
+{{--                                    const user = data.data;--}}
+{{--                                    $('#user_national_id').text(user.user_national_id || '');--}}
+{{--                                    $('#user_phone').text(user.user_phone || '');--}}
+{{--                                    $('#user_email').text(user.user_email || '');--}}
+{{--                                    $('#user_address').text(user.user_address || '');--}}
+{{--                                    toggleEditMode('user');--}}
+{{--                                    showToast('آیتم با موفقیت ویرایش شد!', 'success');--}}
+{{--                                } else {--}}
+{{--                                    swal(data.subject, data.message, data.flag);--}}
+{{--                                }--}}
+{{--                            },--}}
+{{--                            error: function () {--}}
+{{--                                swal('خطا', 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.', 'error');--}}
+{{--                            },--}}
+{{--                            complete: function () {--}}
+{{--                                restoreBtn($btn, originalHtml);--}}
+{{--                            }--}}
+{{--                        });--}}
+{{--                    });--}}
 
-                    function disableBtnWithSpinner($btn) {
-                        $btn.prop('disabled', true).html(
-                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'
-                        );
-                    }
+{{--                    function disableBtnWithSpinner($btn) {--}}
+{{--                        $btn.prop('disabled', true).html(--}}
+{{--                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...'--}}
+{{--                        );--}}
+{{--                    }--}}
 
-                    function restoreBtn($btn, html) {
-                        $btn.prop('disabled', false).html(html);
-                    }
-                });
-            </script>
+{{--                    function restoreBtn($btn, html) {--}}
+{{--                        $btn.prop('disabled', false).html(html);--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            </script>--}}
             <script>
                 Dropzone.autoDiscover = false;
 

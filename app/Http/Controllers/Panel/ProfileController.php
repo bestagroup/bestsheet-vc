@@ -10,6 +10,7 @@ use App\Models\MediaFile;
 use App\Models\Minute;
 use App\Models\Project;
 use App\Models\State;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -44,4 +45,5 @@ class ProfileController extends Controller
     }
         return view('panel.profile')->with(compact('thispage' , 'project' , 'investsteps' , 'files' , 'minutes' , 'commitments','states' , 'cities'));
     }
+
 }

@@ -29,6 +29,7 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('company'            , 'CompanyController');
     Route::resource('minute'             , 'MinuteController');
     Route::resource('panel/flow'         , 'FlowController');
+    Route::get('profile'            , 'ProfileController@index')->name('profile');
 
 
     Route::get('panel/calendar'                 , 'CalendarController@index')->name('calendar.index');
@@ -37,7 +38,6 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::patch('panel/calendar/update/{id}'   , 'CalendarController@update')->name('calendar.update');
     Route::delete('panel/calendar/delete/{id}'  , 'CalendarController@destroy')->name('calendar.destroy');
 
-    Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('panel/changepassword'      , 'ChangePasswordController@index')->name('password.change.form');
     Route::post('panel/changepassword'     , 'ChangePasswordController@change')->name('password.change.submit');
 
