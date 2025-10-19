@@ -2,10 +2,10 @@
     .bg-light-subtle { background: #f8f9fb !important; }
 
     .card { transition: all .25s ease; }
-    .card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.07); }
+    /*.card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.07); }*/
 
     .contract-card { transition: box-shadow .25s ease, transform .25s ease; }
-    .contract-card:hover { box-shadow: 0 14px 28px rgba(0,0,0,.08); transform: translateY(-2px); }
+    /*.contract-card:hover { box-shadow: 0 14px 28px rgba(0,0,0,.08); transform: translateY(-2px); }*/
 
     .file-badge {
         display:inline-flex; align-items:center; justify-content:center;
@@ -32,7 +32,7 @@
 
 </style>
 
-<div class="tab-pane fade justify-content-center" id="navs-contracts" role="tabpanel">
+<div class="tab-pane fade justify-content-center" id="navs-contracts-card" role="tabpanel">
     <div class="card border-0 shadow-sm rounded-4 p-4 bg-light-subtle">
 
         <!-- Header + Controls -->

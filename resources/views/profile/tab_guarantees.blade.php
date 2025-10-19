@@ -2,7 +2,7 @@
     .bg-light-subtle { background: var(--bs-body-bg) !important; }
 
     .card { transition: all .25s ease; }
-    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,.06); }
+    /*.card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,.06); }*/
 
     .commitment-card { transition: box-shadow .25s ease, transform .25s ease; }
     .commitment-card:hover { box-shadow: 0 12px 26px rgba(0,0,0,.08); transform: translateY(-2px); }
@@ -26,6 +26,7 @@
     .empty-icon{ font-size: 2rem; opacity:.8; }
 
 </style>
+
 <div class="tab-pane fade justify-content-center" id="navs-guarantee-card" role="tabpanel">
     <div class="card border-0 shadow-sm rounded-4 p-4 bg-light-subtle">
         <div class="d-flex justify-content-between align-items-center mb-3">

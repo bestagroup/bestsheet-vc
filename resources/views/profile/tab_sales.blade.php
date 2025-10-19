@@ -1,4 +1,4 @@
-<div class="tab-pane fade justify-content-center" id="navs-sales" role="tabpanel">
+<div class="tab-pane fade justify-content-center" id="navs-sales-card" role="tabpanel">
     <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSale">
             <i class="mdi mdi-plus"></i>افزودن
