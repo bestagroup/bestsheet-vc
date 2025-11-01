@@ -8,12 +8,25 @@ document.addEventListener('DOMContentLoaded', () => {
             closeButton: true,
             progressBar: true,
             positionClass: "toast-top-right",
-            timeOut: 3000,
-            rtl: true
+            timeOut: 4000,
+            rtl: true,
         };
-        if (toastr[type]) toastr[type](message);
-        else toastr.success(message);
+
+        switch (type) {
+            case 'error':
+                toastr.error(message || '❌ خطایی رخ داده است.');
+                break;
+            case 'warning':
+                toastr.warning(message || '⚠️ توجه!');
+                break;
+            case 'info':
+                toastr.info(message || 'ℹ️ اطلاعات');
+                break;
+            default:
+                toastr.success(message || '✅ عملیات با موفقیت انجام شد.');
+        }
     }
+
 
     /* -------------------------------------------
      *  هندل کردن CREATE
@@ -22,7 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const $form = $(form);
         const $btn = $form.find('[type="submit"]');
         const originalHtml = $btn.html();
+        const modalEl = document.querySelector('#addModal');
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
 
+        // دکمه را غیرفعال و اسپینر را فعال کن
         $btn.prop('disabled', true)
             .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
 
@@ -30,41 +46,63 @@ document.addEventListener('DOMContentLoaded', () => {
             url: $form.attr('action'),
             method: $form.attr('method') || 'POST',
             data: $form.serialize(),
-            headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')},
+            headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+
             success: function (data) {
                 if (data.success) {
-                    const modalEl = document.querySelector('#addModal');
-                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-
+                    // ✅ موفقیت
                     modalEl.addEventListener('hidden.bs.modal', function handler() {
                         modalEl.removeEventListener('hidden.bs.modal', handler);
-                        $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                    }, {once: true});
+                        if ($.fn.DataTable.isDataTable('.yajra-datatable')) {
+                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                        }
+                    }, { once: true });
 
                     modal.hide();
                     $('.modal-backdrop').remove();
                     $('body').removeClass('modal-open').css('padding-right', '');
-                    showToast('آیتم با موفقیت افزوده شد!', 'success');
+
+                    showToast(data.message || '✅ آیتم با موفقیت افزوده شد!', 'success');
                 } else {
-                    swal(data.subject || 'خطا', data.message || 'عملیات انجام نشد.', data.flag || 'error');
+                    // ❌ پاسخ ناموفق از کنترلر
+                    showToast(data.message || '❌ عملیات انجام نشد.', 'error');
+
+                    // مودال را ببند و دکمه را برگردان
+                    modal.hide();
+                    $('.modal-backdrop').remove();
+                    $('body').removeClass('modal-open').css('padding-right', '');
+                    $btn.prop('disabled', false).html(originalHtml);
                 }
             },
+
             error: function (xhr) {
-                let message = 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
+                // ❌ خطای سمت سرور یا ارتباط
+                let message = '❌ مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
-                swal('خطا', message, 'error');
+                showToast(message, 'error');
+
+                // مودال را ببند و دکمه را برگردان
+                modal.hide();
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open').css('padding-right', '');
+                $btn.prop('disabled', false).html(originalHtml);
             },
+
             complete: function () {
+                // در هر صورت اطمینان از بازگرداندن دکمه
                 $btn.prop('disabled', false).html(originalHtml);
             }
         });
     }
 
+
+
     /* -------------------------------------------
      *  لود فرم ویرایش به صورت داینامیک
      * ------------------------------------------- */
+
     $(document).on('click', '.edit-btn', function () {
         const url = $(this).data('url');
         const $modal = $('#editModal');
@@ -124,6 +162,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const $btn = $form.find('[type="submit"]');
         const originalHtml = $btn.html();
         const url = $form.attr('action');
+        const id = $form.data('id') || '';
+        const modalEl = document.getElementById('showModal' + id);
+        const modal = modalEl ? (bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl)) : null;
 
         $btn.prop('disabled', true)
             .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
@@ -133,41 +174,55 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'PATCH',
             data: $form.serialize(),
             headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')},
+
             success: function (data) {
                 if (data.success) {
-                    const id = $form.data('id') || '';
-                    const modalEl = document.getElementById('showModal' + id);
-
-                    if (modalEl) {
-                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-
+                    if (modalEl && modal) {
                         modalEl.addEventListener('hidden.bs.modal', function handler() {
                             modalEl.removeEventListener('hidden.bs.modal', handler);
                             $('.yajra-datatable').DataTable().ajax.reload(null, false);
                             showToast('آیتم با موفقیت ویرایش شد!', 'success');
+                            $btn.prop('disabled', false).html(originalHtml);
                         }, {once: true});
 
                         modal.hide();
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open').css('padding-right', '');
                     } else {
-                        // در صورتی که مودال پیدا نشه (برای خطایابی)
                         console.error('Modal element not found for id:', id);
-                        showToast('آیتم با موفقیت ویرایش شد! (مودال پیدا نشد)', 'success');
                         $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                        showToast('آیتم با موفقیت ویرایش شد! (مودال پیدا نشد)', 'success');
+                        $btn.prop('disabled', false).html(originalHtml);
                     }
+                } else {
+                    showToast(data.message || 'خطا در عملیات ویرایش', 'error');
+                    if (modalEl && modal) {
+                        modal.hide();
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open').css('padding-right', '');
+                    }
+                    $btn.prop('disabled', false).html(originalHtml);
                 }
             },
+
             error: function (xhr) {
                 let message = 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
-                swal('خطا', message, 'error');
+                showToast(message, 'error');
+                if (modalEl && modal) {
+                    modal.hide();
+                    $('.modal-backdrop').remove();
+                    $('body').removeClass('modal-open').css('padding-right', '');
+                }
             },
             complete: function () {
                 $btn.prop('disabled', false).html(originalHtml);
             }
         });
     }
+
 
     /* -------------------------------------------
      *  هندل کردن DELETE
@@ -179,7 +234,8 @@ document.addEventListener('DOMContentLoaded', () => {
         $btn.prop('disabled', true).html(
             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال حذف...'
         );
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
         const pathParts = window.location.pathname.split('/').filter(Boolean);
         const baseUrl = `/${pathParts[0]}/${pathParts[1]}`;
         const deleteUrl = `${baseUrl}/${id}`;
@@ -190,6 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {"_token": csrfToken},
             success: function (data) {
                 $('#deleteModal').modal('hide');
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open').css('padding-right', '');
                 $('.yajra-datatable').DataTable().ajax.reload(null, false);
                 showToast(data.message || 'آیتم با موفقیت حذف شد!', 'success');
             },
@@ -198,6 +256,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
+                $('#deleteModal').modal('hide');
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open').css('padding-right', '');
                 showToast(message, 'error');
             },
             complete: function () {
@@ -205,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
 
     /* -------------------------------------------
      *  اتصال رویدادها به فرم‌ها
@@ -335,6 +397,76 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 4000);
     }
+
+//نمایش تقویم جلالی
+    jalaliDatepicker.startWatch();
+
+    document.querySelector("[data-jdp-miladi-input]").addEventListener("jdp:change", function (e) {
+        var miladiInput = document.getElementById(this.getAttribute("data-jdp-miladi-input"));
+        if (!this.value) {
+            miladiInput.value = "";
+            return;
+        }
+        var date = this.value.split("/");
+        miladiInput.value = jalali_to_gregorian(date[0], date[1], date[2]).join("/")
+    });
+
+    function jalali_to_gregorian(jy, jm, jd) {
+        jy = Number(jy);
+        jm = Number(jm);
+        jd = Number(jd);
+        var gy = (jy <= 979) ? 621 : 1600;
+        jy -= (jy <= 979) ? 0 : 979;
+        var days = (365 * jy) + ((parseInt(jy / 33)) * 8) + (parseInt(((jy % 33) + 3) / 4))
+            + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
+        gy += 400 * (parseInt(days / 146097));
+        days %= 146097;
+        if (days > 36524) {
+            gy += 100 * (parseInt(--days / 36524));
+            days %= 36524;
+            if (days >= 365) days++;
+        }
+        gy += 4 * (parseInt((days) / 1461));
+        days %= 1461;
+        gy += parseInt((days - 1) / 365);
+        if (days > 365) days = (days - 1) % 365;
+        var gd = days + 1;
+        var sal_a = [0, 31, ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var gm
+        for (gm = 0; gm < 13; gm++) {
+            var v = sal_a[gm];
+            if (gd <= v) break;
+            gd -= v;
+        }
+        return [gy, gm, gd];
+    }
+
+
+// ✅ اطمینان از اجرا بعد از لود کامل صفحه و مودال‌ها
+    $(document).ready(function () {
+
+        // وقتی کاربر در input تایپ می‌کند
+        $(document).on('input', '.input-number', function (e) {
+            let value = e.target.value.replace(/,/g, ''); // حذف کاماهای قبلی
+
+            // فقط اگر مقدار عددی بود
+            if (/^\d*$/.test(value)) {
+                // تبدیل به عدد و فرمت سه‌رقمی
+                const formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                e.target.value = formatted;
+            } else {
+                // اگر کاربر حروف زد، حذفش کن
+                e.target.value = value.replace(/\D/g, '');
+            }
+        });
+
+        // قبل از ارسال هر فرم، کاماها را حذف می‌کنیم
+        $(document).on('submit', 'form', function () {
+            $(this).find('.input-number').each(function () {
+                this.value = this.value.replace(/,/g, '');
+            });
+        });
+    });
 
 
 });

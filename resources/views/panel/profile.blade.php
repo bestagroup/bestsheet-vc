@@ -76,6 +76,7 @@
         @push('scripts')
             <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
             <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
+            <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
 
             <script>
                 function toggleEditMode(section) {
