@@ -19,16 +19,16 @@ class MinuteController extends Controller
             $data = Minute::where('company_id' , $request->id)->get();
             return Datatables::of($data)
                 ->addColumn('title', function ($data) {
-                    return ($data->title);
+                    return ($data->title ?? '');
                 })
                 ->addColumn('date', function ($data) {
-                    return ($data->date);
+                    return ($data->date ?? '');
                 })
                 ->addColumn('type', function ($data) {
-                    return ($data->type);
+                    return ($data->type ?? '');
                 })
                 ->addColumn('file', function ($data) {
-                    if ($data->file_path) {
+                    if ($data->file_path ?? '') {
                         $fileUrl = asset('storage/' . $data->file_path);
                         return '<a href="' . $fileUrl . '" class="btn btn-sm btn-outline-primary" target="_blank">
                     <i class="mdi mdi-download"></i> دریافت
@@ -43,17 +43,6 @@ class MinuteController extends Controller
         return view('panel.company');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
 

@@ -13,8 +13,8 @@
                 </div>
                 <div class="card-body">
                     <div class="modal-body">
-                    <form id="addminuteform" method="POST" class="row g-4 mb-4" action="{{route('minute.store')}}">
-                    @csrf
+                    <form id="addform" method="POST" action="{{ route('minute.store') }}" class="row g-4 mb-4">
+                        @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}">
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
@@ -46,8 +46,8 @@
                             </div>
                         </div>
                         <div class="col-12 text-center">
-                        <button type="button" class="btn btn-primary" id="submitaddminut">ذخیره</button>
-                    </div>
+                            <button type="submit" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
+                        </div>
                 </form>
                     </div>
                 </div>
@@ -73,3 +73,57 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    @if(Auth::user()->level == 'applicant')
+        <script type="text/javascript">
+            $(document).ready(function () {
+                const minuteTable = $('#sample1.yajra-datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('minute.index') }}",
+                        data: function (d) {
+                            d.id = "{{ $project->id }}";
+                        }
+                    },
+                    columns: [
+                        { data: 'title', name: 'title' },
+                        { data: 'date', name: 'date' },
+                        { data: 'type', name: 'type' },
+                        {
+                            data: 'file_path',
+                            name: 'file_path',
+                            orderable: false,
+                            searchable: false,
+                            render: function (data) {
+                                if (!data) {
+                                    return '<span class="text-muted">فاقد فایل</span>';
+                                }
+
+                                let fileUrl = data.startsWith('http')
+                                    ? data
+                                    : `{{ asset('storage') }}/${data}`;
+
+                                return `<a href="${fileUrl}" target="_blank" class="text-primary text-decoration-none">
+                    مشاهده فایل <i class="mdi mdi-file-outline"></i>
+                </a>`;
+                            }
+                        }
+                    ],
+                    columnDefs: [
+                        { targets: '_all', render: $.fn.dataTable.render.text() } // حذف کن یا تغییر بده
+                    ],
+                    order: [[0, 'desc']],
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    language: {
+                        url: "{{ asset('assets/vendor/js/fa.json') }}"
+                    }
+                });
+            });
+        </script>
+
+    @endif
+@endpush

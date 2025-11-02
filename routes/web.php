@@ -31,6 +31,7 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('panel/flow'         , 'FlowController');
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('userdata'                  , 'ProfileController@userdata')->name('userdata');
+    Route::get('companydata'               , 'ProfileController@companydata')->name('companydata');
 
 
     Route::get('panel/calendar'                 , 'CalendarController@index')->name('calendar.index');
