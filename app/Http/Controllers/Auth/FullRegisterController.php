@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\User_logs;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

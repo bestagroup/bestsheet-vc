@@ -35,10 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const $form = $(form);
         const $btn = $form.find('[type="submit"]');
         const originalHtml = $btn.html();
-        const modalEl = document.querySelector('#addModal');
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        const modalEl = $form.closest('.modal')[0]; // ✅ پیدا کردن مودال مرتبط با فرم
+        const modal = modalEl ? (bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl)) : null;
 
-        // دکمه را غیرفعال و اسپینر را فعال کن
         $btn.prop('disabled', true)
             .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
 
@@ -50,52 +49,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
             success: function (data) {
                 if (data.success) {
-                    // ✅ موفقیت
-                    modalEl.addEventListener('hidden.bs.modal', function handler() {
-                        modalEl.removeEventListener('hidden.bs.modal', handler);
-                        if ($.fn.DataTable.isDataTable('.yajra-datatable')) {
-                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                        }
-                    }, { once: true });
+                    if (modalEl && modal) {
+                        modalEl.addEventListener('hidden.bs.modal', function handler() {
+                            modalEl.removeEventListener('hidden.bs.modal', handler);
+                            if ($.fn.DataTable.isDataTable('.yajra-datatable')) {
+                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                            }
+                        }, { once: true });
 
-                    modal.hide();
-                    $('.modal-backdrop').remove();
-                    $('body').removeClass('modal-open').css('padding-right', '');
+                        modal.hide();
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open').css('padding-right', '');
+                    }
 
                     showToast(data.message || '✅ آیتم با موفقیت افزوده شد!', 'success');
                 } else {
-                    // ❌ پاسخ ناموفق از کنترلر
                     showToast(data.message || '❌ عملیات انجام نشد.', 'error');
-
-                    // مودال را ببند و دکمه را برگردان
-                    modal.hide();
-                    $('.modal-backdrop').remove();
-                    $('body').removeClass('modal-open').css('padding-right', '');
-                    $btn.prop('disabled', false).html(originalHtml);
                 }
             },
 
             error: function (xhr) {
-                // ❌ خطای سمت سرور یا ارتباط
                 let message = '❌ مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
                 showToast(message, 'error');
-
-                // مودال را ببند و دکمه را برگردان
-                modal.hide();
-                $('.modal-backdrop').remove();
-                $('body').removeClass('modal-open').css('padding-right', '');
-                $btn.prop('disabled', false).html(originalHtml);
             },
 
             complete: function () {
-                // در هر صورت اطمینان از بازگرداندن دکمه
                 $btn.prop('disabled', false).html(originalHtml);
             }
         });
     }
+
 
 
 
@@ -180,22 +166,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (modalEl && modal) {
                         modalEl.addEventListener('hidden.bs.modal', function handler() {
                             modalEl.removeEventListener('hidden.bs.modal', handler);
-                            $('.yajra-datatable').DataTable().ajax.reload(null, false);
+                            setTimeout(function () {
+                                const table = $('.yajra-datatable').DataTable();
+                                if (table) table.ajax.reload(null, false);
+                            }, 300);
                             showToast('آیتم با موفقیت ویرایش شد!', 'success');
                             $btn.prop('disabled', false).html(originalHtml);
                         }, {once: true});
-
                         modal.hide();
                         $('.modal-backdrop').remove();
                         $('body').removeClass('modal-open').css('padding-right', '');
                     } else {
-                        console.error('Modal element not found for id:', id);
-                        $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                        showToast('آیتم با موفقیت ویرایش شد! (مودال پیدا نشد)', 'success');
+                        const table = $('.yajra-datatable').DataTable();
+                        table.ajax.url(table.ajax.url()).load(null, false);
+
+                        if (typeof showToast === 'function') {
+                            showToast('آیتم با موفقیت ویرایش شد! ', 'success');
+                        }
                         $btn.prop('disabled', false).html(originalHtml);
                     }
                 } else {
-                    showToast(data.message || 'خطا در عملیات ویرایش', 'error');
+                    if (typeof showToast === 'function') {
+                        showToast(data.message || 'خطا در عملیات ویرایش', 'error');
+                    }
                     if (modalEl && modal) {
                         modal.hide();
                         $('.modal-backdrop').remove();
@@ -210,18 +203,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     message = xhr.responseJSON.message;
                 }
-                showToast(message, 'error');
+                if (typeof showToast === 'function') {
+                    showToast(message, 'error');
+                }
                 if (modalEl && modal) {
                     modal.hide();
                     $('.modal-backdrop').remove();
                     $('body').removeClass('modal-open').css('padding-right', '');
                 }
             },
+
             complete: function () {
                 $btn.prop('disabled', false).html(originalHtml);
             }
         });
     }
+
 
 
     /* -------------------------------------------

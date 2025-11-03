@@ -13,8 +13,8 @@
                 </div>
                 <div class="card-body">
                     <div class="modal-body">
-                    <form id="addform" method="POST" action="{{ route('minute.store') }}" class="row g-4 mb-4">
-                        @csrf
+                        <form id="addform" method="POST" action="{{ route('minute.store') }}" class="row g-4 mb-4">
+                            @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}">
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
@@ -39,14 +39,14 @@
                     </div>
                         <div class="col-12 col-md-6">
                             <div class="input-group">
-                                <input type="text" name="file_path" class="form-control" id="file_{{ $project->id }}" readonly placeholder="انتخاب فایل">
+                                <input type="text" name="file_path"  class="form-control" id="file_{{ $project->id }}" readonly placeholder="انتخاب فایل">
                                 <button class="btn btn-outline-secondary file-selector" type="button" data-record-id="{{ $project->id }}" data-input-id="file_{{ $project->id }}">
                                     انتخاب فایل
                                 </button>
                             </div>
                         </div>
                         <div class="col-12 text-center">
-                            <button type="submit" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
+                            <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                 </form>
                     </div>
@@ -57,7 +57,7 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table id="sample1" class="table table-striped table-bordered yajra-datatable">
+                <table id="minutes" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
                         <th>عنوان</th>
@@ -78,7 +78,7 @@
     @if(Auth::user()->level == 'applicant')
         <script type="text/javascript">
             $(document).ready(function () {
-                const minuteTable = $('#sample1.yajra-datatable').DataTable({
+                const minutesTable = $('#minutes.yajra-datatable').DataTable({
                     processing: true,
                     serverSide: true,
                     ajax: {
@@ -88,31 +88,10 @@
                         }
                     },
                     columns: [
-                        { data: 'title', name: 'title' },
-                        { data: 'date', name: 'date' },
-                        { data: 'type', name: 'type' },
-                        {
-                            data: 'file_path',
-                            name: 'file_path',
-                            orderable: false,
-                            searchable: false,
-                            render: function (data) {
-                                if (!data) {
-                                    return '<span class="text-muted">فاقد فایل</span>';
-                                }
-
-                                let fileUrl = data.startsWith('http')
-                                    ? data
-                                    : `{{ asset('storage') }}/${data}`;
-
-                                return `<a href="${fileUrl}" target="_blank" class="text-primary text-decoration-none">
-                    مشاهده فایل <i class="mdi mdi-file-outline"></i>
-                </a>`;
-                            }
-                        }
-                    ],
-                    columnDefs: [
-                        { targets: '_all', render: $.fn.dataTable.render.text() } // حذف کن یا تغییر بده
+                        { data: 'title'     , name: 'title' },
+                        { data: 'date'      , name: 'date' },
+                        { data: 'type'      , name: 'type' },
+                        { data: 'file_path' , name: 'file_path', orderable: false, searchable: false }
                     ],
                     order: [[0, 'desc']],
                     paging: false,
@@ -124,6 +103,5 @@
                 });
             });
         </script>
-
     @endif
 @endpush
