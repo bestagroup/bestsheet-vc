@@ -35,8 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const $form = $(form);
         const $btn = $form.find('[type="submit"]');
         const originalHtml = $btn.html();
-        const modalEl = $form.closest('.modal')[0]; // ✅ پیدا کردن مودال مرتبط با فرم
+        const modalEl = $form.closest('.modal')[0];
         const modal = modalEl ? (bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl)) : null;
+
+        // جدول هدف
+        const targetTable = $form.data('table-target');
 
         $btn.prop('disabled', true)
             .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
@@ -50,16 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
             success: function (data) {
                 if (data.success) {
                     if (modalEl && modal) {
-                        modalEl.addEventListener('hidden.bs.modal', function handler() {
-                            modalEl.removeEventListener('hidden.bs.modal', handler);
-                            if ($.fn.DataTable.isDataTable('.yajra-datatable')) {
-                                $('.yajra-datatable').DataTable().ajax.reload(null, false);
-                            }
-                        }, { once: true });
-
                         modal.hide();
                         $('.modal-backdrop').remove();
                         $('body').removeClass('modal-open').css('padding-right', '');
+                    }
+
+                    // ✅ فقط جدول مرتبط reload شود
+                    if (targetTable && $.fn.DataTable.isDataTable(targetTable)) {
+                        $(targetTable).DataTable().ajax.reload(null, false);
                     }
 
                     showToast(data.message || '✅ آیتم با موفقیت افزوده شد!', 'success');
@@ -70,9 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             error: function (xhr) {
                 let message = '❌ مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    message = xhr.responseJSON.message;
-                }
+                if (xhr.responseJSON?.message) message = xhr.responseJSON.message;
                 showToast(message, 'error');
             },
 
@@ -81,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
 
 
 
@@ -149,8 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalHtml = $btn.html();
         const url = $form.attr('action');
         const id = $form.data('id') || '';
-        const modalEl = document.getElementById('showModal' + id);
+        const modalEl = $form.closest('.modal')[0];
         const modal = modalEl ? (bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl)) : null;
+
+        // جدول هدف (هر فرم باید data-table-target داشته باشه)
+        const targetTable = $form.data('table-target');
 
         $btn.prop('disabled', true)
             .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...');
@@ -164,53 +167,26 @@ document.addEventListener('DOMContentLoaded', () => {
             success: function (data) {
                 if (data.success) {
                     if (modalEl && modal) {
-                        modalEl.addEventListener('hidden.bs.modal', function handler() {
-                            modalEl.removeEventListener('hidden.bs.modal', handler);
-                            setTimeout(function () {
-                                const table = $('.yajra-datatable').DataTable();
-                                if (table) table.ajax.reload(null, false);
-                            }, 300);
-                            showToast('آیتم با موفقیت ویرایش شد!', 'success');
-                            $btn.prop('disabled', false).html(originalHtml);
-                        }, {once: true});
                         modal.hide();
                         $('.modal-backdrop').remove();
                         $('body').removeClass('modal-open').css('padding-right', '');
-                    } else {
-                        const table = $('.yajra-datatable').DataTable();
-                        table.ajax.url(table.ajax.url()).load(null, false);
+                    }
 
-                        if (typeof showToast === 'function') {
-                            showToast('آیتم با موفقیت ویرایش شد! ', 'success');
-                        }
-                        $btn.prop('disabled', false).html(originalHtml);
+                    // ✅ فقط جدول مرتبط reload شود
+                    if (targetTable && $.fn.DataTable.isDataTable(targetTable)) {
+                        $(targetTable).DataTable().ajax.reload(null, false);
                     }
+
+                    showToast(data.message || 'آیتم با موفقیت ویرایش شد!', 'success');
                 } else {
-                    if (typeof showToast === 'function') {
-                        showToast(data.message || 'خطا در عملیات ویرایش', 'error');
-                    }
-                    if (modalEl && modal) {
-                        modal.hide();
-                        $('.modal-backdrop').remove();
-                        $('body').removeClass('modal-open').css('padding-right', '');
-                    }
-                    $btn.prop('disabled', false).html(originalHtml);
+                    showToast(data.message || 'خطا در عملیات ویرایش', 'error');
                 }
             },
 
             error: function (xhr) {
                 let message = 'مشکلی پیش آمد. لطفاً دوباره تلاش کنید.';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    message = xhr.responseJSON.message;
-                }
-                if (typeof showToast === 'function') {
-                    showToast(message, 'error');
-                }
-                if (modalEl && modal) {
-                    modal.hide();
-                    $('.modal-backdrop').remove();
-                    $('body').removeClass('modal-open').css('padding-right', '');
-                }
+                if (xhr.responseJSON?.message) message = xhr.responseJSON.message;
+                showToast(message, 'error');
             },
 
             complete: function () {
@@ -218,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
 
 
 

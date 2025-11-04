@@ -8,7 +8,8 @@
                 </div>
                 <div class="card-body">
                     <div class="modal-body">
-                        <form data-type="update" data-id="{{ $project->id }}"  class="row g-4 mb-4" method="POST" action="{{ route('company.update', $project->id) }}">
+{{--                        <form data-type="update" data-id="{{ $project->id }}"  class="row g-4 mb-4" method="POST" action="{{ route('company.update', $project->id) }}">--}}
+                            <form onsubmit="handleUpdate(this); return false;" data-type="update" class="row g-4 mb-4" data-table-target="#companyTable" action="{{ route('company.update', $project->id) }}" method="POST" data-id="{{ $project->id }}">
                             @csrf
                             @method('PATCH')
                             <div class="col-12 col-md-6">

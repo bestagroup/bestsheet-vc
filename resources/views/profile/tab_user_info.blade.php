@@ -9,7 +9,7 @@
                     </div>
                     <div class="card-body">
                         <div class="modal-body">
-                            <form data-type="update" data-id="{{ Auth::user()->id }}"  class="row g-4 mb-4" method="POST" action="{{ route('fullregister.update', Auth::user()->id) }}">
+                            <form onsubmit="handleUpdate(this); return false;" data-type="update" class="row g-4 mb-4" data-table-target="#companyTable" action="{{ route('fullregister.update', Auth::user()->id) }}" method="POST" data-id="{{ Auth::user()->id }}">
                                 @csrf
                                 @method('PATCH')
                                 <div class="col-12 col-md-6">

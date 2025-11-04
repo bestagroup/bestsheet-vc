@@ -13,7 +13,7 @@
                 </div>
                 <div class="card-body">
                     <div class="modal-body">
-                        <form id="addform" method="POST" action="{{ route('minute.store') }}" class="row g-4 mb-4">
+                        <form onsubmit="handleCreate(this); return false;" id="addform" class="row g-4 mb-4" data-table-target="#minutes" action="{{ route('minute.store') }}" method="POST">
                             @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}">
                     <div class="col-12 col-md-6">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="col-12 text-center">
-                            <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
+                            <button type="submit" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                 </form>
                     </div>
