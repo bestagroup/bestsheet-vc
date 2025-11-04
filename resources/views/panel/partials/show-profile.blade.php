@@ -7,7 +7,7 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="profileproject-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-profilepriject{{ $project->id }}"
+        <button class="nav-link" id="profileproject-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-profileproject{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-profileproject{{ $project->id }}" aria-selected="true">
             اطلاعات طرح
         </button>
@@ -42,40 +42,97 @@
             تضامین
         </button>
     </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="workflow-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-workflow{{ $project->id }}"
+                type="button" role="tab" aria-controls="tab-workflow{{ $project->id }}" aria-selected="false">
+            گردش کار
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="message-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-message{{ $project->id }}"
+                type="button" role="tab" aria-controls="tab-message{{ $project->id }}" aria-selected="false">
+            پیام ها
+        </button>
+    </li>
 </ul>
 <!-- Tab Content -->
 <div class="tab-content mt-3" id="companyTabsContent{{ $project->id }}">
     <!-- Profile Tab -->
     <div class="tab-pane fade show active" id="tab-profilecompany{{ $project->id }}" role="tabpanel" aria-labelledby="profilecompany-tab{{ $project->id }}">
-        @if($project->logo)
-            <img src="{{ asset('storage/'.$project->logo) }}" class="lazy rounded-circle mb-3" width="80" height="80" alt="لوگو">
-        @endif
-        <p><strong>نام شرکت:</strong>    {{ $project->title }}  </p>
-        <p><strong>معرفی شرکت:</strong>    {{ $project->description }}   </p>
-        <p><strong>مدیرعامل:</strong>     {{ $project->CEO }}           </p>
-        <p><strong>شماره موبایل:</strong> {{ $project->ceo_phone }}     </p>
-        <p><strong>وضعیت پروژه:</strong>  {{ $project->activity_status }}</p>
-    </div>
 
-    <!-- Investment Tab -->
-    <style>
-        input[type="checkbox"].status-green:checked {
-            accent-color: #28a745;
-        }
-        input[type="checkbox"].status-red:checked {
-            accent-color: #dc3545;
-        }
-    </style>
-    <div class="tab-pane fade show" id="tab-profileproject{{ $project->id }}" role="tabpanel" aria-labelledby="profileproject-tab{{ $project->id }}">
         @if($project->logo)
-            <img src="{{ asset('storage/'.$project->logo) }}" class="lazy rounded-circle mb-3" width="80" height="80" alt="لوگو">
+            <div class="text-center mb-3">
+                <img src="{{ asset('storage/'.$project->logo) }}"
+                     class="lazy rounded-circle" width="80" height="80" alt="لوگو">
+            </div>
         @endif
-        <p><strong>نام طرح:</strong>    {{ $project->title }}  </p>
-        <p><strong>معرفی طرح:</strong>    {{ $project->description }}   </p>
-        <p><strong>مدیرعامل:</strong>     {{ $project->CEO }}           </p>
-        <p><strong>شماره موبایل:</strong> {{ $project->ceo_phone }}     </p>
-        <p><strong>وضعیت پروژه:</strong>  {{ $project->activity_status }}</p>
+
+        <div style="overflow-x: auto;">
+            <table class="table table-bordered table-striped"
+                   style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
+                <tbody>
+                <tr>
+                    <th style="width: 30%;">نام شرکت</th>
+                    <td>{{ $project->company_name }}</td>
+                </tr>
+                <tr>
+                    <th>معرفی شرکت</th>
+                    <td>{{ $project->description }}</td>
+                </tr>
+                <tr>
+                    <th>مدیرعامل</th>
+                    <td>{{ $project->CEO }}</td>
+                </tr>
+                <tr>
+                    <th>شماره موبایل</th>
+                    <td>{{ $project->ceo_phone }}</td>
+                </tr>
+                <tr>
+                    <th>وضعیت پروژه</th>
+                    <td>{{ $project->activity_status }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+    <!-- Profile Tab -->
+    <div class="tab-pane fade" id="tab-profileproject{{ $project->id }}" role="tabpanel" aria-labelledby="profileproject-tab{{ $project->id }}">
+        @if($project->logo)
+            <div class="text-center mb-3">
+                <img src="{{ asset('storage/'.$project->logo) }}"
+                     class="lazy rounded-circle" width="80" height="80" alt="لوگو">
+            </div>
+        @endif
+
+        <div style="overflow-x: auto;">
+            <table class="table table-bordered table-striped"
+                   style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
+                <tbody>
+                <tr>
+                    <th style="width: 30%;">نام شرکت</th>
+                    <td>{{ $project->title }}</td>
+                </tr>
+                <tr>
+                    <th>معرفی شرکت</th>
+                    <td>{{ $project->description }}</td>
+                </tr>
+                <tr>
+                    <th>مدیرعامل</th>
+                    <td>{{ $project->CEO }}</td>
+                </tr>
+                <tr>
+                    <th>شماره موبایل</th>
+                    <td>{{ $project->ceo_phone }}</td>
+                </tr>
+                <tr>
+                    <th>وضعیت پروژه</th>
+                    <td>{{ $project->activity_status }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- investment Tab -->
     <div class="tab-pane fade" id="tab-investment{{ $project->id }}" role="tabpanel" aria-labelledby="investment-tab{{ $project->id }}">
         <div class="accordion" id="projectStepsAccordion{{ $project->id }}">
             <div class="row g-4">
@@ -624,21 +681,13 @@
             </tbody>
         </table>
     </div>
-
     <!-- KPI Tab -->
     <div class="tab-pane fade" id="tab-kpi{{ $project->id }}" role="tabpanel" aria-labelledby="kpi-tab{{ $project->id }}">
         <ul class="list-group">
-            @foreach($finances as $payment)
-                @if($payment->project_id == $project->id)
-                    <tr>
-                        <td>{{ number_format($payment->amount) }} تومان</td>
-                        <td>{{ $payment->serial }}</td>
-                        <td>{{ $payment->date }}</td>
-                    </tr>
-                @endif
-            @endforeach
+
         </ul>
     </div>
+    <!-- Commitment Tab -->
     <div class="tab-pane fade" id="tab-commitment{{ $project->id }}" role="tabpanel" aria-labelledby="commitment-tab{{ $project->id }}">
         <table class="table align-middle mb-0">
             <thead class="table-light">
@@ -659,27 +708,22 @@
             </tbody>
         </table>
     </div>
-
+    <!-- Guaranty Tab -->
     <div class="tab-pane fade" id="tab-guaranty{{ $project->id }}" role="tabpanel" aria-labelledby="guaranty-tab{{ $project->id }}">
         <table class="table table-bordered mt-2">
-            <thead>
-            <tr>
-                <th>مبلغ</th>
-                <th>شماره قسط</th>
-                <th>تاریخ پرداخت</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($finances as $payment)
-                @if($payment->project_id == $project->id)
-                    <tr>
-                        <td>{{ number_format($payment->amount) }} تومان</td>
-                        <td>{{ $payment->serial }}</td>
-                        <td>{{ $payment->date }}</td>
-                    </tr>
-                @endif
-            @endforeach
-            </tbody>
+
+        </table>
+    </div>
+    <!-- Workflow Tab -->
+    <div class="tab-pane fade" id="tab-workflow{{ $project->id }}" role="tabpanel" aria-labelledby="workflow-tab{{ $project->id }}">
+        <table class="table table-bordered mt-2">
+
+        </table>
+    </div>
+    <!-- Message Tab -->
+    <div class="tab-pane fade" id="tab-message{{ $project->id }}" role="tabpanel" aria-labelledby="message-tab{{ $project->id }}">
+        <table class="table table-bordered mt-2">
+
         </table>
     </div>
 </div>
