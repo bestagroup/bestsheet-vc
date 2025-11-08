@@ -80,10 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-
-
-
+    window.handleCreate = handleCreate;
 
     /* -------------------------------------------
      *  لود فرم ویرایش به صورت داینامیک
