@@ -240,4 +240,89 @@
                     });
                 });
             </script>
+
+
+
+            <script>
+                (function () {
+
+                    $(document).on('click', '.approve-btn', function(){
+                        const $form = $(this).closest('form');
+                        $form.find('.status-input').val('approved');
+                        $form.find('.real-submit').trigger('click');
+                    });
+
+                    $(document).on('click', '.reject-btn', function(){
+                        const $form = $(this).closest('form');
+                        $form.find('.status-input').val('rejected');
+                        $form.find('.real-submit').trigger('click');
+                    });
+
+                    $(document).on('submit', '.flow-form', function(e) {
+                        e.preventDefault();
+                        handleCreate(this);
+                    });
+
+                    $(document).ajaxSuccess(function (event, xhr, settings, data) {
+                        if (!data || !data.success) return;
+
+                        const $form = $('form[data-flow="true"]').filter(function () {
+                            return $(this).attr('action') === settings.url;
+                        }).last();
+
+                        if (!$form.length) return;
+
+                        const status = $form.find('[name="status"]').val();
+                        const current = parseInt($form.data('current-step'), 10);
+                        const next = parseInt($form.data('next-step'), 10);
+
+                        if (status === 'rejected') {
+                            const $item = $('#step-item-' + current);
+                            $item.removeClass('active');
+                            if ($item.find('.text-danger').length === 0) {
+                                $item.append('<span class="ms-auto text-danger">✖</span>');
+                            }
+                            showToast('مرحله رد شد', 'warning');
+                            return;
+                        }
+
+                        const $curItem = $('#step-item-' + current);
+                        const $nextItem = $('#step-item-' + next);
+
+                        $curItem.removeClass('active');
+                        $curItem.find('.now-badge').remove();
+                        if ($curItem.find('.text-success').length === 0) {
+                            $curItem.append('<span class="ms-auto text-success">✔</span>');
+                        }
+
+                        if ($nextItem.length) {
+                            $nextItem.addClass('active');
+                            $nextItem.find('.now-badge').remove();
+                            $nextItem.append('<span class="badge text-bg-primary now-badge">اکنون</span>');
+                            $('#step-panel-' + current).hide();
+                            $('#step-panel-' + next).show();
+                            showToast('مرحله با موفقیت تائید شد', 'success');
+                        } else {
+                            showToast('🎉 همه مراحل تکمیل شد', 'success');
+                        }
+                    });
+
+                    $('#resetFlow').on('click', function () {
+                        $.post("{{ route('demo.flow.store') }}", {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            project_id: {{ $project->id }},
+                            step_id: 0,
+                            step_title: 'reset',
+                            status: 'approved',
+                            description: 'reset to 1'
+                        }).always(function(){
+                            window.location.reload();
+                        });
+                    });
+
+                })();
+            </script>
+
+
+
     @endpush

@@ -136,525 +136,81 @@
     <div class="tab-pane fade" id="tab-investment{{ $project->id }}" role="tabpanel" aria-labelledby="investment-tab{{ $project->id }}">
         <div class="accordion" id="projectStepsAccordion{{ $project->id }}">
             <div class="row g-4">
+
+                {{-- ستون مراحل (سمت چپ) --}}
                 <div class="col-md-4">
-                    <div class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
-                        @foreach($investsteps as $step)
-                            <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($project->invest_step) ? 'active' : '' }}"
-                                 style="cursor: default; border-right: 5px solid {{ $step->id < $project->invest_step ? '#4caf50' : ($step->id === $project->invest_step ? '#7367f0' : '#ddd') }};">
-                                                        <span class="me-2 d-inline-flex justify-content-center align-items-center rounded-circle"
-                                                              style="width: 28px; height: 28px; background: {{ $step->id < $project->invest_step ? '#c8e6c9' : ($step->id === $project->invest_step ? '#ede7f6' : '#f1f1f1') }};
-                                                                  color: {{ $step->id < $project->invest_step ? '#2e7d32' : ($step->id === $project->invest_step ? '#5e35b1' : '#aaa') }};
-                                                                  font-weight: bold;">
-                                                            {{ $step->id }}
-                                                        </span>
-                                <div class="flex-grow-1">
-                                    <div class="fw-bold {{ $step->id === $project->invest_step ? 'text-dark' : 'text-muted' }}">{{ $step->title }}</div>
-                                    <small class="text-muted">{{ $step->description }}</small>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <span class="fw-bold">مراحل</span>
+                        </div>
+
+                        <div class="list-group list-group-flush step-list">
+                            @foreach($investsteps as $step)
+                                @php $isActive = ($step->id === $project->invest_step); @endphp
+                                <div class="list-group-item {{ $isActive ? 'active' : '' }}"
+                                     id="step-item-{{ $step->id }}"
+                                     data-step="{{ $step->id }}">
+                                    <span class="badge text-bg-primary step-badge">{{ $step->id }}</span>
+                                    <span class="fw-semibold">{{ $step->title }}</span>
+
+                                    @if($step->id < $project->invest_step)
+                                        <span class="ms-auto text-success">✔</span>
+                                    @elseif($isActive)
+                                        <span class="badge text-bg-primary now-badge">اکنون</span>
+                                    @endif
                                 </div>
-                                @if($step->id === $project->invest_step)
-                                    <span class="badge bg-primary ms-auto">اکنون</span>
-                                @elseif($step->id < $project->invest_step)
-                                    <i class="mdi mdi-check-circle-outline text-success ms-auto"></i>
-                                @endif
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+
+                        <div class="card-footer">
+                            <button id="resetFlow" class="btn btn-sm btn-outline-secondary">
+                                ریست به مرحله ۱ (برای تست)
+                            </button>
+                        </div>
                     </div>
                 </div>
-                @foreach($investsteps as $step)
-                    @if($project->invest_step === $step->id)
-                        <div class="col-md-8">
-                            <div class="card border shadow-sm">
-                                <div class="card-header bg-light d-flex align-items-center">
-                                    <span class="badge bg-primary me-2" style="width:26px;">{{ $project->invest_step }}</span>
+
+                {{-- ستون محتوای مرحله (سمت راست) --}}
+                <div class="col-md-8">
+                    @foreach($investsteps as $step)
+                        <div class="step-panel" id="step-panel-{{ $step->id }}"
+                             @if($project->invest_step !== $step->id) style="display:none" @endif>
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white d-flex align-items-center gap-2">
+                                    <span class="badge text-bg-primary step-badge">{{ $step->id }}</span>
                                     <h6 class="mb-0 fw-bold">{{ $step->title }}</h6>
                                 </div>
+
                                 <div class="card-body">
-                                    <p class="text-muted">{{ $step->description }}</p>
-                                    @if($step->id == 1)
-                                        @foreach($files as $file)
-                                            @if($file->subject_id == 4 && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                    <div class="mb-3 text-muted">
+                                        <small>این متن صرفاً برای دموست. هر UI مرتبط با مرحله {{ $step->id }} را می‌توانید اینجا قرار دهید.</small>
+                                    </div>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">تایید مرحله</button>
+                                    {{-- فرم مرحله --}}
+                                    <form action="{{ route('demo.flow.store') }}"
+                                          method="POST"
+                                          onsubmit="handleCreate(this); return false;">
+                                        @csrf
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">رد مرحله</button>
+                                        <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                        <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                        <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                        <input type="hidden" name="status" class="status-input" value="approved">
 
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-
-                                    @elseif($step->id == 2)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 3)
-                                        @foreach($files as $file)
-                                            @if($file->subject_id == 1 && $file->project_id == $project->id)
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                    <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 4)
-                                        @foreach($files as $file)
-                                            @if($file->subject_id == 2 && $file->project_id == $project->id)
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 5)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 6)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [3,6,7,8,9,10,11,12,13,14,15,16]) && $file->project_id == $project->id)
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 7)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 8)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 9)
-                                        @foreach($files as $file)
-                                            @if($file->subject_id == 19)
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 10)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 11)
-                                        @foreach($files as $file)
-                                            @if($file->subject_id == 20)
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 12)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 13)
-                                        <h6 class="fw-bold mb-3">قرارداد نهایی</h6>
-                                        <div class="table-responsive">
-                                            <table class="table align-middle mb-0">
-                                                <thead class="table-light">
-                                                <tr>
-                                                    <th>عنوان قرارداد</th>
-                                                    <th>شماره قرارداد</th>
-                                                    <th>تاریخ عقد</th>
-                                                    <th class="text-center" style="width:90px">فایل</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>قرارداد سرمایه گذاری {{$project->company_name}} </td>
-                                                    <td>33556644</td>
-                                                    <td>1404/03/01</td>
-                                                    <td><a href="{{ asset('#') }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="mdi mdi-eye"></i></a></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                                        <div class="mb-3">
+                                            <label class="form-label">توضیحات (اختیاری)</label>
+                                            <textarea name="description" class="form-control" rows="3" placeholder="توضیحی برای این مرحله بنویسید…"></textarea>
                                         </div>
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                        <button type="submit" class="btn btn-primary">ارسال فرم</button>
+                                    </form>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 14)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [18,21]))
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 15)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [18,22]))
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 16)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [18,23]))
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 17)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [18,24]))
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 18)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 19)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @elseif($step->id == 20)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                            <input type="hidden" name="status" class="status-input">
-
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
-
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
-
-                                            <button type="submit" class="btn-submit d-none"></button>
-                                        </form>
-                                    @endif
                                 </div>
                             </div>
                         </div>
-                    @endif
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
