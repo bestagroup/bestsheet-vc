@@ -402,48 +402,48 @@
     </script>
 
     <script>
-        document.querySelectorAll('.send-btn').forEach(function(button) {
-            button.addEventListener('click', function () {
-                let recordId = this.getAttribute('data-id');
-                let status   = this.getAttribute('data-status');
-                let parent   = this.closest('.record-box'); // 👈 امن‌تر
+        document.addEventListener('click', function (e) {
+            // بررسی اینکه روی دکمه کلیک شده یا نه
+            if (!e.target.classList.contains('send-btn')) return;
 
-                fetch("{{ route('filestatus') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({
-                        id: recordId,
-                        status: status
-                    })
+            let button  = e.target;
+            let recordId = button.dataset.id;
+            let status   = button.dataset.status;
+            let parent   = button.closest('.record-box');
+
+            fetch("{{ route('filestatus') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    id: recordId,
+                    status: status
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("پاسخ سرور:", data);
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP error ' + res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    console.log("پاسخ سرور:", data);
 
-                        if (status === "5") {
-                            // ❌ حذف کل رکورد
-                            parent.remove();
-                        } else if (status === "4") {
-                            // ✅ حذف دکمه‌ها و نمایش متن تایید شد
-                            parent.querySelectorAll('.send-btn').forEach(btn => btn.remove());
-
-                            let msg = document.createElement('span');
-                            msg.textContent = "✔ تایید شد";
-                            msg.style.color = "green";
-                            msg.style.fontWeight = "bold";
-
-                            parent.appendChild(msg);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("خطا:", error);
-                    });
-            });
+                    if (status === "5") {
+                        parent.remove();
+                    } else if (status === "4") {
+                        parent.querySelectorAll('.send-btn').forEach(btn => btn.remove());
+                        let msg = document.createElement('span');
+                        msg.textContent = "✔ تایید شد";
+                        msg.style.color = "green";
+                        msg.style.fontWeight = "bold";
+                        parent.appendChild(msg);
+                    }
+                })
+                .catch(err => console.error("خطا:", err));
         });
     </script>
+
 
     <script>
         $(document).ready(function() {
