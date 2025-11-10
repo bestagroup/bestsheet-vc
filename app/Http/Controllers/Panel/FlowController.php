@@ -100,7 +100,7 @@ class FlowController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'states' ,'cities']));
+        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'states'  ,'cities']));
     }
 
     public function store(Request $request)
@@ -170,8 +170,9 @@ class FlowController extends Controller
         $investsteps    = Investstep::whereStatus(4)->get();
         $files          = MediaFile::where('status' ,'!=' , 5)->get();
         $commitments    = Commitment::whereStatus(4)->get();
-
-        return view('panel.partials.show-profile', compact('project', 'states', 'cities' , 'investsteps' , 'files' , 'commitments' , 'finances'));
+        $project_steps  = Project_step::leftjoin('users', 'project_steps.user_id', '=', 'users.id')
+            ->where('project_steps.project_id' , $id)->select('project_steps.*' , 'users.name as username')->get();
+        return view('panel.partials.show-profile', compact('project', 'states', 'cities' ,'project_steps', 'investsteps' , 'files' , 'commitments' , 'finances'));
     }
 
     public function destroy($id)

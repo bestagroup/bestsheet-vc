@@ -72,19 +72,5 @@ Route::post('gettoken'                  , [App\Http\Controllers\Auth\LoginContro
 Route::get('sendtoken'                  , [App\Http\Controllers\Auth\LoginController::class, 'sendtoken'])->name('sendtoken');
 Route::post('checktoken'                , [App\Http\Controllers\Auth\LoginController::class, 'checktoken'])->name('checktoken');
 
-// --- Demo Flow ---
-use App\Http\Controllers\DemoFlowController;
-
-Route::get('/demo/flow', [DemoFlowController::class, 'index'])->name('demo.flow');
-Route::post('/demo/flow/store', [DemoFlowController::class, 'store'])->name('demo.flow.store');
-
-// --- Demo Flow with DataTable ---
-use App\Http\Controllers\DemoFlowDtController;
-
-Route::get('/demo/flow-dt', [DemoFlowDtController::class, 'index'])->name('demo.flowdt.index');
-Route::get('/demo/flow-dt/data', [DemoFlowDtController::class, 'data'])->name('demo.flowdt.data');           // DataTable rows
-Route::get('/demo/flow-dt/projects/{id}', [DemoFlowDtController::class, 'show'])->name('demo.flowdt.show');  // project + steps
-Route::post('/demo/flow-dt/store', [DemoFlowDtController::class, 'store'])->name('demo.flowdt.store');       // approve/reject
-
 
 Route::get('getdata', [App\Http\Controllers\Api\IndexController::class, 'getdata'])->name('getdata');

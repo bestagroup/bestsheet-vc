@@ -717,9 +717,79 @@
     </div>
     <!-- Workflow Tab -->
     <div class="tab-pane fade" id="tab-workflow{{ $project->id }}" role="tabpanel" aria-labelledby="workflow-tab{{ $project->id }}">
-        <table class="table table-bordered mt-2">
+        <div class="container">
+            <div class="row g-3">
+                @foreach ($project_steps as $step)
+                    @php
+                        $bg = $step->status === 'approved' ? '#e8f5e9' : ($step->status === 'rejected' ? '#ffebee' : '#f8f9fa');
+                        $border = $step->status === 'approved' ? '#4caf50' : ($step->status === 'rejected' ? '#f44336' : '#9e9e9e');
+                        $statusLabel = $step->status === 'approved' ? 'تایید شده' : ($step->status === 'rejected' ? 'رد شده' : 'در انتظار');
+                        $statusBadgeClass = $step->status === 'approved' ? 'bg-success' : ($step->status === 'rejected' ? 'bg-danger' : 'bg-secondary');
+                        $time = isset($step->created_at) ? (function($d){ try { return jdate($d)->format('Y/m/d H:i'); } catch(\Throwable $e) { return $d->format('Y/m/d H:i'); } })($step->created_at) : '—';
+                    @endphp
 
-        </table>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card h-100 shadow-sm" role="article" aria-label="مرحله {{ $step->step_number }}"
+                             style="background-color: {{ $bg }}; border-left: 6px solid {{ $border }};">
+                            <div class="card-header d-flex align-items-center justify-content-between py-2">
+                                <div class="d-flex align-items-center gap-2">
+                            <span class="badge rounded-pill text-dark" style="background: rgba(0,0,0,0.05); min-width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-weight:600;">
+                                {{ $step->step_number }}
+                            </span>
+                                    <h6 class="mb-0 text-truncate" style="max-width: 160px;">{{ $step->title }}</h6>
+                                </div>
+                            </div>
+                            <small class="text-nowrap">
+                                <span class="badge {{ $statusBadgeClass }} text-white">{{ $statusLabel }}</span>
+                            </small>
+                            <div class="card-body d-flex flex-column">
+                                @if(!empty($step->description))
+                                    <p class="card-text mb-2 text-muted small" style="flex:0 0 auto; max-height:72px; overflow:hidden;">
+                                        {{ Str::limit($step->description, 180) }}
+                                    </p>
+                                @else
+                                    <p class="card-text mb-2 text-muted small" style="flex:0 0 auto;">— توضیحی ثبت نشده —</p>
+                                @endif
+
+                                <div class="mt-auto">
+                                    <ul class="list-unstyled mb-0 small text-secondary">
+                                        <li class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-person-fill" aria-hidden="true"></i>
+                                            <span class="text-truncate" style="max-width: 130px;">{{ $step->username ?? ($step->user->name ?? 'کارشناس') }}</span>
+                                        </li>
+
+                                        <li class="d-flex align-items-center gap-2 mt-1">
+                                            <i class="bi bi-clock-fill" aria-hidden="true"></i>
+                                            <span>{{ $time }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- اختیاری: فعال‌سازی tooltip های بوت‌استرپ اگر از آن استفاده می‌کنید -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.forEach(function (el) {
+                    new bootstrap.Tooltip(el);
+                });
+            });
+        </script>
+
+        <style>
+            /* ظاهرسازی کمکی برای کارت‌ها */
+            .card .text-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            @media (max-width: 575.98px) {
+                .card-header h6 { max-width: 110px; }
+            }
+        </style>
+
+
     </div>
     <!-- Message Tab -->
     <div class="tab-pane fade" id="tab-message{{ $project->id }}" role="tabpanel" aria-labelledby="message-tab{{ $project->id }}">
