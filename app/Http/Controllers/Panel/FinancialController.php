@@ -121,7 +121,7 @@ class FinancialController extends Controller
     public function edit($id)
     {
         $finance       = Finance::findOrFail($id);
-        $projects       = Project::where('invest_step' , '>=', 6)->get();
+        $projects      = Project::where('invest_step' , '>=', 6)->get();
 
         return view('panel.partials.edit-form-finance', compact('finance', 'projects'));
     }

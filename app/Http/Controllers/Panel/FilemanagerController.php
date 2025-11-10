@@ -167,7 +167,7 @@ class FilemanagerController extends Controller
     }
 
     public function edit($id){
-        $mediafile     = MediaFile::whereId($id)->first();
+        $mediafile      = MediaFile::whereId($id)->first();
         $subject_files  = subject_file::all();
         $companies      = Project::select('id','title')->get();
 

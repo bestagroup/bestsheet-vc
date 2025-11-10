@@ -443,7 +443,20 @@
                 .catch(err => console.error("خطا:", err));
         });
     </script>
+    <script>
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('approve-btn') && !e.target.classList.contains('reject-btn')) return;
 
+            const form = e.target.closest('.flow-form');
+            const statusInput = form.querySelector('.status-input');
+
+            // مقداردهی به status
+            statusInput.value = e.target.classList.contains('approve-btn') ? 'approved' : 'rejected';
+
+            // فراخوانی اسکریپت عمومی بدون تغییر در خودش
+            handleCreate(form);
+        });
+    </script>
 
     <script>
         $(document).ready(function() {

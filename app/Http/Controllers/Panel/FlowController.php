@@ -17,6 +17,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class FlowController extends Controller
@@ -100,6 +101,55 @@ class FlowController extends Controller
                 ->make(true);
         }
         return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'states' ,'cities']));
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $project_steps = new Project_step();
+
+            $project_steps->project_id = $request->input('project_id');
+            $project_steps->title = $request->input('step_title');
+            $project_steps->step_number = $request->input('step_id');
+            $project_steps->status = $request->input('status'); // approved / rejected
+            $project_steps->description = $request->input('description', '');
+            $project_steps->user_id = Auth::user()->id;
+
+            $result = $project_steps->save();
+
+            $project = Project::findOrfail($request->input('project_id'));
+
+            if ($project_steps->status == 'approved')
+            {
+                $project->invest_step = (int)$request->input('step_id') + 1;
+            }elseif ($project_steps->status == 'rejected')
+            {
+                $project->is_rejected = 1;
+            }
+
+            $project->update();
+
+            if ($result == true) {
+                $success = true;
+                $flag = 'success';
+                $subject = 'عملیات موفق';
+                $message = 'اطلاعات زیرمنو با موفقیت ثبت شد';
+            } elseif ($result != true) {
+                $success = false;
+                $flag = 'error';
+                $subject = 'عملیات نا موفق';
+                $message = 'اطلاعات زیرمنو ثبت نشد، لطفا مجددا تلاش نمایید';
+            }
+
+        } catch (Exception $e) {
+            Log::error('Project store error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json(['success' => false, 'flag' => 'error', 'subject' => 'خطای سرور', 'message' => 'مشکلی در ثبت اطلاعات پیش آمد، لطفاً بعداً تلاش نمایید',
+            ], 500);
+        }
+        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
 
     public function edit($id)

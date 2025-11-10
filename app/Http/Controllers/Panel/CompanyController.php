@@ -205,7 +205,6 @@ class CompanyController extends Controller
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message ,'data' => $data]);
     }
 
-
     public function destroy(Request $request)
     {
         try {

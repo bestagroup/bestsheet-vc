@@ -482,7 +482,7 @@
                         </div>
                         <div class="card-info mt-4 pt-1" data-bs-toggle="modal" data-bs-target="#rejectprojectsModal" style="cursor: pointer;">
                             <p class="text-muted">تعداد طرح رد شده</p>
-                            <h5 class="mb-2">{{DB::table('projects')->where('invest_step' , '==', 0)->count()}}</h5>
+                            <h5 class="mb-2">{{DB::table('projects')->where('is_rejected' , '==', 1)->count()}}</h5>
                         </div>
                         <div class="modal fade" id="rejectprojectsModal" tabindex="-1" aria-labelledby="rejectprojectsModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -504,7 +504,7 @@
                                                     </thead>
                                                     <tbody>
                                                     @foreach($projectis as $project)
-                                                        @if($project->invest_step == 0)
+                                                        @if($project->is_rejected = 1)
                                                             <tr>
                                                                 <td>{{$project->title}}</td>
                                                                 <td>{{ $project->CEO }}</td>
