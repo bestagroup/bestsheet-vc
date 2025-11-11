@@ -46,7 +46,7 @@
                             <p class="text-muted">{{ $step->description }}</p>
                             @if($step->id == 1)
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="4" data-title="فایل پیچ دک"><i class="mdi mdi-file-document-multiple-outline"></i>فایل پیچ دک</button>
-                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/pitch_deck.pptx')}}" target="_blank"}}"> نمونه فایل پیچ دک جهت بارگزاری </a> </div>
+                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/pitch_deck.pptx')}}" target="_blank"}}"> قالب فایل پیچ دک جهت بارگزاری </a> </div>
 
                                 @foreach($files as $file)
                                     @if($file->subject_id == 4)
@@ -58,7 +58,6 @@
                             @elseif($step->id == 3)
                                 <div class="alert alert-info">در حال بررسی ، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 4)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="5" data-title="فایل طرح کسب و کار"><i class="mdi mdi-file-document-multiple-outline"></i>فایل طرح کسب و کار</button>
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="6" data-title="فایل برنامه مالی"><i class="mdi mdi-file-document-multiple-outline"></i>فایل برنامه مالی</button>
 
                                 @foreach($files as $file)
@@ -69,6 +68,8 @@
                             @elseif($step->id == 5)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 6)
+                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Business_Plan.docx')}}" target="_blank"}}"> قالب فایل طرح کسب و کار جهت بارگزاری </a> </div>
+
                                 <div>
                                     <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="7" data-title="مجوزها"><i class="mdi mdi-file-document-multiple-outline"></i> مجوز ها </button>
                                     <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="9" data-title="مدارک ثبتی"><i class="mdi mdi-file-document-multiple-outline"></i> مدارک ثبتی </button>
@@ -86,6 +87,7 @@
                             <div>
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="15" data-title="اظهارنامه مالیاتی"><i class="mdi mdi-file-document-multiple-outline"></i> اظهارنامه مالیاتی </button>
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="16" data-title="صورت مالی حسابرسی شده شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> صورت مالی حسابرسی شده شرکت </button>
+                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="5" data-title="فایل طرح کسب و کار"><i class="mdi mdi-file-document-multiple-outline"></i>فایل طرح کسب و کار</button>
                             </div>
 
                                 @foreach($files as $file)
