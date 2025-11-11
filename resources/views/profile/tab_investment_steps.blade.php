@@ -46,6 +46,7 @@
                             <p class="text-muted">{{ $step->description }}</p>
                             @if($step->id == 1)
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="4" data-title="فایل پیچ دک"><i class="mdi mdi-file-document-multiple-outline"></i>فایل پیچ دک</button>
+                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/pitch_deck.pptx')}}" target="_blank"}}"> نمونه فایل پیچ دک جهت بارگزاری </a> </div>
 
                                 @foreach($files as $file)
                                     @if($file->subject_id == 4)
