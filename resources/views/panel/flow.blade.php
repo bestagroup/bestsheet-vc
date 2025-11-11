@@ -241,13 +241,14 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="uploadModalLabel">{{$thispage['add']}}</h5>
+                    <h5 class="modal-title" id="uploadModalLabel"> بارگزاری </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone dz-clickable border rounded-3 shadow-sm bg-light p-4" id="fileUploadZone" style="min-height: 220px; border-style: dashed;">
-                        @csrf
-                        <input type="hidden" id="recordIdInput" name="record_id">
+                    <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
+                        <input type="hidden" name="record_id"   id="recordIdInput"  >
+                        <input type="hidden" name="subject_id"  id="subjectIdInput" >
+                        <input type="hidden" name="title"       id="fileTitleInput" >
                         <div class="dz-message text-center text-muted">
                             <div class="mb-3">
                                 <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
@@ -346,8 +347,6 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             const fileFormSelector = "#fileUploadZone";
-            //let currentRecordId = null;
-            const recordId = $(this).data('id');
 
             const dz = new Dropzone(fileFormSelector, {
                 url: "{{ route('storemedia') }}",
@@ -357,8 +356,9 @@
                 dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
                 init: function () {
                     this.on("sending", function (file, xhr, formData) {
-
-                        formData.append("record_id", recordId || document.getElementById('recordIdInput').value);
+                        formData.append("record_id", document.getElementById('recordIdInput').value);
+                        formData.append("subject_id", document.getElementById('subjectIdInput').value);
+                        formData.append("title", document.getElementById('fileTitleInput').value);
                     });
                     this.on("success", function (file, response) {
                         const extension = file.name.split('.').pop().toLowerCase();
@@ -373,15 +373,20 @@
             });
 
             $(document).on('click', '.upload-btn', function () {
-                currentRecordId = $(this).data('id');
-                $('#recordIdInput').val(currentRecordId);
+                let recordId = $(this).data('id');
+                let subjectId = $(this).data('subject');
+                let title = $(this).data('title');
+
+                $('#recordIdInput').val(recordId);
+                $('#subjectIdInput').val(subjectId);
+                $('#fileTitleInput').val(title);
 
                 dz.removeAllFiles(true);
-
                 $('#uploadModal').modal('show');
             });
         });
     </script>
+
 
     <script>
         //انتخاب و مدیریت فایل های یک پروژه
@@ -401,7 +406,7 @@
             }
         });
     </script>
-
+{{--    تایید فایل هر مرحله--}}
     <script>
         document.addEventListener('click', function (e) {
             // بررسی اینکه روی دکمه کلیک شده یا نه

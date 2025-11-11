@@ -320,31 +320,8 @@
                                                 <button type="submit" class="d-none real-submit"></button>
                                             </form>
                                     @elseif($step->id == 7)
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="7" data-title="فایل صورتجلسه هیئت مدیره"><i class="mdi mdi-file-document-multiple-outline"></i>فایل صورتجلسه هیئت مدیره</button>
-                                        <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="uploadModalLabel"> بارگزاری </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form method="POST" action="{{ route('storemedia') }}" enctype="multipart/form-data" class="dropzone" id="fileUploadZone" style="min-height: 200px; border-style: dashed; border: 2px dashed #ccc; padding: 20px; margin-bottom: 30px;">
-                                                            <input type="hidden" name="record_id" id="recordIdInput">
-                                                            <input type="hidden" name="subject_id" id="subjectIdInput">
-                                                            <input type="hidden" name="title" id="fileTitleInput">
-                                                            <div class="dz-message text-center text-muted">
-                                                                <div class="mb-3">
-                                                                    <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
-                                                                </div>
-                                                                <h5 class="fw-bold mb-2">برای آپلود فایل، کلیک کنید یا فایل را بکشید اینجا</h5>
-                                                                <p class="small text-secondary mb-0">فرمت‌های مجاز: JPG, PNG, PDF, MP4, DOCX (حداکثر 10 مگابایت)</p>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="26" data-title="فایل صورتجلسه هیئت مدیره"><i class="mdi mdi-file-document-multiple-outline"></i>فایل صورتجلسه هیئت مدیره</button>
+
                                         <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
