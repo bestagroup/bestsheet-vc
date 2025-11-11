@@ -320,6 +320,11 @@
                                                 <button type="submit" class="d-none real-submit"></button>
                                             </form>
                                     @elseif($step->id == 7)
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [26]) && $file->project_id == $project->id)
+                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                            @endif
+                                        @endforeach
                                         <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="26" data-title="فایل صورتجلسه هیئت مدیره"><i class="mdi mdi-file-document-multiple-outline"></i>فایل صورتجلسه هیئت مدیره</button>
 
                                         <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
