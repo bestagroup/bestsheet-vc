@@ -137,8 +137,9 @@
                 <div class="col-md-4">
                     <div class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
                         @foreach($investsteps as $step)
-                            <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($project->invest_step) ? 'active' : '' }}"
-                                 style="cursor: default; border-right: 5px solid {{ $step->id < $project->invest_step ? '#4caf50' : ($step->id === $project->invest_step ? '#7367f0' : '#ddd') }};">
+                            <a href="{{ route('project.invest.step', ['project' => $project->id, 'step' => $step->id]) }}"
+                               class="list-group-item d-flex align-items-center py-2 {{ $step->id === $project->invest_step ? 'active' : '' }}"
+                               style="cursor: pointer;">
                                 <span class="me-2 d-inline-flex justify-content-center align-items-center rounded-circle" style="width: 28px; height: 28px; background: {{ $step->id < $project->invest_step ? '#c8e6c9' : ($step->id === $project->invest_step ? '#ede7f6' : '#f1f1f1') }}; color: {{ $step->id < $project->invest_step ? '#2e7d32' : ($step->id === $project->invest_step ? '#5e35b1' : '#aaa') }}; font-weight: bold;">
                                     {{ $step->id }}
                                 </span>
