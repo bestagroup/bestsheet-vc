@@ -441,7 +441,7 @@
                                             </form>
                                     @elseif($step->id == 10)
                                         @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [27,34]) && $file->project_id == $project->id)
+                                            @if(in_array($file->subject_id, [27,30,34]) && $file->project_id == $project->id)
                                                 <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                             @endif
                                         @endforeach
