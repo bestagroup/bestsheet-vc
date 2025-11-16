@@ -46,11 +46,11 @@
                             <p class="text-muted">{{ $step->description }}</p>
                             @if($step->id == 1)
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="4" data-title="فایل پیچ دک"><i class="mdi mdi-file-document-multiple-outline"></i>فایل پیچ دک</button>
-                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/pitch_deck.pptx')}}" target="_blank"}}"> قالب فایل پیچ دک جهت بارگزاری </a> </div>
+                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/pitch_deck.pptx')}}" target="_blank"}}> قالب فایل پیچ دک جهت بارگزاری </a> </div>
 
                                 @foreach($files as $file)
                                     @if($file->subject_id == 4)
-                                        <div class="alert alert-info"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                        <div class="alert alert-info"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"}}> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                     @endif
                                 @endforeach
                             @elseif($step->id == 2)
@@ -58,17 +58,11 @@
                             @elseif($step->id == 3)
                                 <div class="alert alert-info">در حال بررسی ، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 4)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="6" data-title="فایل برنامه مالی"><i class="mdi mdi-file-document-multiple-outline"></i>فایل برنامه مالی</button>
-
-                                @foreach($files as $file)
-                                    @if($file->subject_id == 5 || $file->subject_id == 6)
-                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
-                                    @endif
-                                @endforeach
+                                <div class="alert alert-info">در حال بررسی ، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 5)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 6)
-                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Business_Plan.docx')}}" target="_blank"}}"> قالب فایل طرح کسب و کار جهت بارگزاری </a> </div>
+                                <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Business_Plan.docx')}}" target="_blank"}}> قالب فایل طرح کسب و کار جهت بارگزاری </a> </div>
 
                                 <div>
                                     <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="7" data-title="مجوزها"><i class="mdi mdi-file-document-multiple-outline"></i> مجوز ها </button>
@@ -83,6 +77,7 @@
                                 <div>
                                     <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="14" data-title="نتایج رتبه بندی اعتباری سهامداران"><i class="mdi mdi-file-document-multiple-outline"></i> نتایج رتبه بندی اعتباری سهامداران </button>
                                     <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="8" data-title="لیست بیمه تمامی اعضای شرکت"><i class="mdi mdi-file-document-multiple-outline"></i> لیست بیمه تمامی اعضای شرکت </button>
+                                    <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="6" data-title="برنامه مالی"><i class="mdi mdi-file-document-multiple-outline"></i>برنامه مالی </button>
                                 </div>
                             <div>
                                 <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="15" data-title="اظهارنامه مالیاتی"><i class="mdi mdi-file-document-multiple-outline"></i> اظهارنامه مالیاتی </button>
@@ -91,7 +86,7 @@
                             </div>
 
                                 @foreach($files as $file)
-                                    @if(in_array($file->subject_id, [7,8,9,10,11,12,13,14,15,16]))
+                                    @if(in_array($file->subject_id, [6,7,8,9,10,11,12,13,14,15,16]))
                                         <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
                                     @endif
                                 @endforeach
@@ -100,13 +95,7 @@
                             @elseif($step->id == 8)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 9)
-                                <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{Auth::user()->project->id}}" data-subject="19" data-title="فایل ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>فایل ارزش گذاری</button>
-
-                                @foreach($files as $file)
-                                    @if($file->subject_id == 19)
-                                        <div class="alert alert-info">فایل پیچ دک بارگزاری شده، برای دانلود <a href="{{asset('storage' , $file->file_path)}}"> کلیک کنید. </a> تاریخ بارگزاری {{jdate($file->created_at)->format('d-m-Y')}}</div>
-                                    @endif
-                                @endforeach
+                                <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 10)
                                 <div class="alert alert-info">در حال بررسی، لطفا منتظر بمانید...</div>
                             @elseif($step->id == 11)

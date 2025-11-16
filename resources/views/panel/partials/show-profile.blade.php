@@ -224,20 +224,14 @@
                                         </form>
                                     @elseif($step->id == 3)
                                     @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [1]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
-                                            @endif
+                                            <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}"> قالب فایل غربالگری جهت بارگزاری </a> </div>
+                                        @if(in_array($file->subject_id, [1]) && $file->project_id == $project->id)
+                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                        @endif
                                         @endforeach
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="1" data-title="غربالگری"><i class="mdi mdi-file-document-multiple-outline"></i>غربالگری</button>
+
+                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                 @csrf
                                                 <input type="hidden" name="project_id" value="{{ $project->id }}">
                                                 <input type="hidden" name="step_id" value="{{ $step->id }}">
@@ -257,21 +251,15 @@
                                                 <button type="submit" class="d-none real-submit"></button>
                                             </form>
                                     @elseif($step->id == 4)
-                                        @foreach($files as $file)
+                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}"> قالب فایل ارزیابی اولیه جهت بارگزاری </a> </div>
+                                    @foreach($files as $file)
                                             @if(in_array($file->subject_id, [2]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                             @endif
                                         @endforeach
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="2" data-title="ارزیابی اولیه"><i class="mdi mdi-file-document-multiple-outline"></i>ارزیابی اولیه</button>
+
+                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                 @csrf
                                                 <input type="hidden" name="project_id" value="{{ $project->id }}">
                                                 <input type="hidden" name="step_id" value="{{ $step->id }}">
@@ -291,7 +279,14 @@
                                                 <button type="submit" class="d-none real-submit"></button>
                                             </form>
                                     @elseif($step->id == 5)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [29,30]) && $file->project_id == $project->id)
+                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                           @endif
+                                        @endforeach
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="29" data-title="صورتجلسه کمیته ریسک"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسه کمیته ریسک</button>
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="30" data-title="صورتجلسه کمیته سرمایه گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسه کمیته سرمایه گذاری</button>
+                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
@@ -311,7 +306,7 @@
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
                                     @elseif($step->id == 6)
-                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}"> قالب فایل طرح کسب و کار جهت بارگزاری </a> </div>
+                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}"> قالب فایل ارزیابی موشکافانه جهت بارگزاری </a> </div>
                                     @foreach($files as $file)
                                             @if(in_array($file->subject_id, [3,6,7,8,9,10,11,12,13,14,15,16]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
@@ -326,7 +321,9 @@
                                                 @endif
                                             @endif
                                         @endforeach
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="3" data-title="ارزیابی موشکافانه"><i class="mdi mdi-file-document-multiple-outline"></i>ارزیابی موشکافانه</button>
+
+                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                 @csrf
                                                 <input type="hidden" name="project_id" value="{{ $project->id }}">
                                                 <input type="hidden" name="step_id" value="{{ $step->id }}">
@@ -348,16 +345,7 @@
                                     @elseif($step->id == 7)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [26]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                             @endif
                                         @endforeach
                                         <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="26" data-title="فایل صورتجلسه هیئت مدیره"><i class="mdi mdi-file-document-multiple-outline"></i>فایل صورتجلسه هیئت مدیره</button>
@@ -384,16 +372,7 @@
                                     @elseif($step->id == 8)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [25]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                             @endif
                                         @endforeach
                                         <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="25" data-title="کاربرگ تایید سرمایه پذیر"><i class="mdi mdi-file-document-multiple-outline"></i>کاربرگ تایید سرمایه پذیر</button>
@@ -418,19 +397,14 @@
                                         </form>
                                     @elseif($step->id == 9)
                                         @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [19]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
+                                            @if(in_array($file->subject_id, [31,32,33]) && $file->project_id == $project->id)
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                             @endif
                                         @endforeach
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="31" data-title="قرارداد با شرکت ارزش گذار"><i class="mdi mdi-file-document-multiple-outline"></i>قرارداد با شرکت ارزش گذار</button>
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="32" data-title="فاکتور ارسالی ارزش گذار"><i class="mdi mdi-file-document-multiple-outline"></i>فاکتور ارسالی ارزش گذار</button>
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="33" data-title="نسخ گزارش ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>نسخ گزارش ارزش گذاری</button>
+
                                             <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                 @csrf
                                                 <input type="hidden" name="project_id" value="{{ $project->id }}">
@@ -452,20 +426,14 @@
                                             </form>
                                     @elseif($step->id == 10)
                                         @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [27]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
+                                            @if(in_array($file->subject_id, [27,34]) && $file->project_id == $project->id)
+                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                             @endif
                                         @endforeach
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="27" data-title="صورتجلسه کمیته ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسه کمیته ارزش گذاری</button>
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="34" data-title="فایل ارائه گزارش ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>فایل ارائه گزارش ارزش گذاری</button>
+
+                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
