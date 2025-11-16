@@ -372,7 +372,16 @@
                                     @elseif($step->id == 8)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [25]) && $file->project_id == $project->id)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
+                                                @if($file->status  == 4)
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
+                                                    </div>
+                                                @elseif($file->status <> 5)
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
+                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    </div>
+                                                @endif
                                             @endif
                                         @endforeach
                                         <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="25" data-title="کاربرگ تایید سرمایه پذیر"><i class="mdi mdi-file-document-multiple-outline"></i>کاربرگ تایید سرمایه پذیر</button>
