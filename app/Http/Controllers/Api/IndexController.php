@@ -27,7 +27,13 @@ class IndexController extends Controller
             ->orderBy('total_amount', 'desc')
             ->get();
 
-
-        return response()->json($finances ,$projects );
+        return response()->json(
+            ['isSuccess' => true,
+                'message' => 'عملیات با موفقیت انجام شد.',
+                'errors' => false,
+                'status_code' => 200,
+                'finances' => $finances,
+                'projects' => $projects,
+            ], 200);
     }
 }
