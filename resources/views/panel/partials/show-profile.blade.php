@@ -68,8 +68,7 @@
         @endif
 
         <div style="overflow-x: auto;">
-            <table class="table table-bordered table-striped"
-                   style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
+            <table class="table table-bordered table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
                 <tbody>
                 <tr>
                     <th style="width: 30%;">نام شرکت</th>
@@ -105,8 +104,7 @@
         @endif
 
         <div style="overflow-x: auto;">
-            <table class="table table-bordered table-striped"
-                   style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
+            <table class="table table-bordered table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
                 <tbody>
                 <tr>
                     <th style="width: 30%;">نام شرکت</th>
@@ -224,7 +222,7 @@
                                         </form>
                                     @elseif($step->id == 3)
                                     @foreach($files as $file)
-                                            <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}"> قالب فایل غربالگری جهت بارگزاری </a> </div>
+                                            <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}> قالب فایل غربالگری جهت بارگزاری </a> </div>
                                         @if(in_array($file->subject_id, [1]) && $file->project_id == $project->id)
                                             <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                         @endif
@@ -251,7 +249,7 @@
                                                 <button type="submit" class="d-none real-submit"></button>
                                             </form>
                                     @elseif($step->id == 4)
-                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}"> قالب فایل ارزیابی اولیه جهت بارگزاری </a> </div>
+                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}> قالب فایل ارزیابی اولیه جهت بارگزاری </a> </div>
                                     @foreach($files as $file)
                                             @if(in_array($file->subject_id, [2]) && $file->project_id == $project->id)
                                                     <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
@@ -306,7 +304,7 @@
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
                                     @elseif($step->id == 6)
-                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}"> قالب فایل ارزیابی موشکافانه جهت بارگزاری </a> </div>
+                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}> قالب فایل ارزیابی موشکافانه جهت بارگزاری </a> </div>
                                     @foreach($files as $file)
                                             @if(in_array($file->subject_id, [3,6,7,8,9,10,11,12,13,14,15,16]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
@@ -406,7 +404,7 @@
                                         </form>
                                     @elseif($step->id == 9)
                                         @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [31,32,33]) && $file->project_id == $project->id)
+                                            @if(in_array($file->subject_id, [19,31,32,33]) && $file->project_id == $project->id)
                                                     <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -</div>
                                             @endif
                                         @endforeach
