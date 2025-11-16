@@ -135,7 +135,7 @@
         <div class="accordion" id="projectStepsAccordion{{ $project->id }}">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
+                    <a class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
                         @foreach($investsteps as $step)
                             <a href="{{ route('project.invest.step', ['project' => $project->id, 'step' => $step->id]) }}"
                                class="list-group-item d-flex align-items-center py-2 {{ $step->id === $project->invest_step ? 'active' : '' }}"
@@ -152,7 +152,7 @@
                                 @elseif($step->id < $project->invest_step)
                                     <i class="mdi mdi-check-circle-outline text-success ms-auto"></i>
                                 @endif
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 </div>
