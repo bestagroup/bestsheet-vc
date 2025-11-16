@@ -111,23 +111,9 @@ class IndexController extends Controller
     }
     public function getcities($stateId)
     {
-        $finances = DB::table('finances as f')
-            ->leftJoin('projects as p', 'f.project_id', '=', 'p.id')
-            ->select('f.amount' , 'f.date' , 'p.title' , 'p.logo')
-            ->where('f.amount' , '>', 0 )
-            ->orderBy('f.date' , 'DESC')
-            ->get();
+        $cities = City::where('state_id', $stateId)->select('id', 'title')->orderBy('title')->get();
 
-        $projects = DB::table('finances as f')
-            ->leftjoin('projects as p', 'f.project_id', '=', 'p.id')
-            ->select('p.CEO','p.title', DB::raw('SUM(f.amount) as total_amount') , 'p.logo')
-            ->groupBy('p.title','p.logo','p.CEO')
-            ->having('total_amount', '>', 0)
-            ->orderBy('total_amount', 'desc')
-            ->get();
-
-
-        return response()->json($finances ,$projects );
+        return response()->json($cities);
 
     }
 
