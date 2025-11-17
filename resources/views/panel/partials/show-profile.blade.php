@@ -929,13 +929,11 @@
                         <tr class="table-light">
                             <th>فایل</th>
                             <th>نام فایل</th>
-                            <th>نام اصلی فایل</th>
                             <th>نوع فایل</th>
                             <th>مرحله</th>
                             <th>سایز فایل</th>
                             <th>تاریخ آپلود</th>
                             <th>پروژه</th>
-                            <th>عملیات</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -956,13 +954,12 @@
                     columns: [
                         {data: 'file_path'      , name: 'file_path' },
                         {data: 'name'           , name: 'name'     },
-                        {data: 'original_name'  , name: 'original_name'     },
                         {data: 'type'           , name: 'type'      },
                         {data: 'step'           , name: 'step'      },
                         {data: 'size'           , name: 'size'      },
                         {data: 'date'           , name: 'date'      },
                         {data: 'title'          , name: 'title'      },
-                        {data: 'action'         , name: 'action', orderable: true, searchable: true},
+                        {orderable: true        , searchable: true},
                     ],
                     language: {
                         url: "{{asset('assets/vendor/js/fa.json')}}"

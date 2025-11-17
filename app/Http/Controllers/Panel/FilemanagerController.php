@@ -304,7 +304,7 @@ class FilemanagerController extends Controller
         if ($request->ajax()) {
             $data = MediaFile::leftjoin('projects', 'projects.id', '=', 'media_files.project_id')
                 ->leftjoin('subject_files', 'subject_files.id', '=', 'media_files.subject_id')
-                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.original_name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title' , 'subject_files.title as step')
+                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title' , 'subject_files.title as step')
                 ->where('media_files.project_id', $id)
                 ->get();
 
@@ -328,9 +328,6 @@ class FilemanagerController extends Controller
                 ->addColumn('step', function ($data) {
                     return ($data->step);
                 })
-                ->addColumn('original_name', function ($data) {
-                    return ($data->original_name);
-                })
                 ->addColumn('title', function ($data) {
                     return ($data->title);
                 })
@@ -350,31 +347,20 @@ class FilemanagerController extends Controller
                     $sizeInBytes = $data->size;
 
                     if ($sizeInBytes >= 1073741824) {
-                        return number_format($sizeInBytes / 1073741824, 2) . ' GB';
+                        return number_format($sizeInBytes / 1073741824, 2) . ' GB ';
                     } elseif ($sizeInBytes >= 1048576) {
-                        return number_format($sizeInBytes / 1048576, 2) . ' MB';
+                        return number_format($sizeInBytes / 1048576, 2) . ' MB ';
                     } elseif ($sizeInBytes >= 1024) {
-                        return number_format($sizeInBytes / 1024, 2) . ' KB';
+                        return number_format($sizeInBytes / 1024, 2) . ' KB ';
                     } else {
-                        return $sizeInBytes . ' B';
+                        return $sizeInBytes . ' B ';
                     }
                     //return ($data->size);
                 })
                 ->addColumn('date', function ($data) {
                     return (jdate($data->updated_at)->format('Y/m/d'));
                 })
-                ->editColumn('action', function ($data) {
-                    $actionBtn = '';
-                    if (auth()->user()->can('can-access', ['filemanager', 'edit'])) {
-                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('filemanager.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
-
-                    }
-                    if (auth()->user()->can('can-access', ['filemanager', 'delete'])) {
-                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
-                    }
-                    return $actionBtn;
-                })
-                ->rawColumns(['action' ,'file_path'])
+                ->rawColumns(['file_path'])
                 ->make(true);
         }
     }
