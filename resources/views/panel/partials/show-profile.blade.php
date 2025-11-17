@@ -952,10 +952,7 @@
                     order: [[0, 'desc']],
                     scrollX: true,
                     scrollCollapse: true,
-                    // fixedColumns: {
-                    //     start: 3
-                    // },
-                    ajax: "{{ 'filemanager/show' ,  $project->id  }}",
+                    ajax: "{{ route('filemanager.show', $project->id) }}",
                     columns: [
                         {data: 'file_path'      , name: 'file_path' },
                         {data: 'name'           , name: 'name'     },
