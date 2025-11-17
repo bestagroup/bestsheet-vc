@@ -298,4 +298,84 @@ class FilemanagerController extends Controller
         return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
 
     }
+
+    public function show(Request $request , $id)
+    {
+        if ($request->ajax()) {
+            $data = MediaFile::leftjoin('projects', 'projects.id', '=', 'media_files.project_id')
+                ->leftjoin('subject_files', 'subject_files.id', '=', 'media_files.subject_id')
+                ->select('media_files.id' , 'media_files.file_path' , 'media_files.name' , 'media_files.original_name' , 'media_files.type' , 'media_files.size' , 'media_files.updated_at' , 'projects.title' , 'subject_files.title as step')
+                ->where('media_files.project_id', $id)
+                ->get();
+
+            return Datatables::of($data)
+                ->addColumn('file_path', function ($data) {
+                    $fileUrl = asset('storage/' . $data->file_path);
+
+                    if ($data->type === 'image') {
+                        return '<img src="' . $fileUrl . '" alt="تصویر" style="width: 80px; height: auto;">';
+                    } elseif ($data->type === 'audio') {
+                        return '<audio controls style="width: 150px;"><source src="' . $fileUrl . '" type="audio/mpeg">مرورگر شما از پخش صوت پشتیبانی نمی‌کند.</audio>';
+                    } elseif ($data->type === 'videos') {
+                        return '<video width="160" height="90" controls><source src="' . $fileUrl . '" type="video/mp4">مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.</video>';
+                    } else {
+                        return '<a href="' . $fileUrl . '">' . $data->original_name . '</a>';
+                    }
+                })
+                ->addColumn('name', function ($data) {
+                    return ($data->name);
+                })
+                ->addColumn('step', function ($data) {
+                    return ($data->step);
+                })
+                ->addColumn('original_name', function ($data) {
+                    return ($data->original_name);
+                })
+                ->addColumn('title', function ($data) {
+                    return ($data->title);
+                })
+                ->addColumn('type', function ($data) {
+                    return match ($data->type) {
+                        'image'        => 'عکس',
+                        'video'        => 'ویدیویی',
+                        'audio'        => 'صوتی',
+                        'document'     => 'سند متنی',
+                        'spreadsheet'  => 'اکسل',
+                        'presentation' => 'پاورپوینت',
+                        'other'        => 'سایر',
+                        default         => 'نامشخص',
+                    };
+                })
+                ->addColumn('size', function ($data) {
+                    $sizeInBytes = $data->size;
+
+                    if ($sizeInBytes >= 1073741824) {
+                        return number_format($sizeInBytes / 1073741824, 2) . ' GB';
+                    } elseif ($sizeInBytes >= 1048576) {
+                        return number_format($sizeInBytes / 1048576, 2) . ' MB';
+                    } elseif ($sizeInBytes >= 1024) {
+                        return number_format($sizeInBytes / 1024, 2) . ' KB';
+                    } else {
+                        return $sizeInBytes . ' B';
+                    }
+                    //return ($data->size);
+                })
+                ->addColumn('date', function ($data) {
+                    return (jdate($data->updated_at)->format('Y/m/d'));
+                })
+                ->editColumn('action', function ($data) {
+                    $actionBtn = '';
+                    if (auth()->user()->can('can-access', ['filemanager', 'edit'])) {
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('filemanager.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
+
+                    }
+                    if (auth()->user()->can('can-access', ['filemanager', 'delete'])) {
+                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
+                    }
+                    return $actionBtn;
+                })
+                ->rawColumns(['action' ,'file_path'])
+                ->make(true);
+        }
+    }
 }

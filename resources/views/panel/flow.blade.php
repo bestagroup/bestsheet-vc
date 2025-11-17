@@ -282,7 +282,9 @@
     <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js'}}"></script>
     <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
 
-     <script type="text/javascript">
+    @yield('filescript')
+
+    <script type="text/javascript">
         $(function () {
             var table = $('.yajra-datatable').DataTable({
                 processing: true,

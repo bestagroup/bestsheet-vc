@@ -54,6 +54,12 @@
             پیام ها
         </button>
     </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="file-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-file{{ $project->id }}"
+                type="button" role="tab" aria-controls="tab-file{{ $project->id }}" aria-selected="false">
+            فایل ها
+        </button>
+    </li>
 </ul>
 <!-- Tab Content -->
 <div class="tab-content mt-3" id="companyTabsContent{{ $project->id }}">
@@ -913,4 +919,62 @@
 
         </table>
     </div>
+    <!-- file Tab -->
+    <div class="tab-pane fade" id="tab-file{{ $project->id }}" role="tabpanel" aria-labelledby="file-tab{{ $project->id }}">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="file" class="table table-striped table-bordered yajra-datatable">
+                        <thead>
+                        <tr class="table-light">
+                            <th>فایل</th>
+                            <th>نام فایل</th>
+                            <th>نام اصلی فایل</th>
+                            <th>نوع فایل</th>
+                            <th>مرحله</th>
+                            <th>سایز فایل</th>
+                            <th>تاریخ آپلود</th>
+                            <th>پروژه</th>
+                            <th>عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                var table = $('#file.yajra-datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    order: [[0, 'desc']],
+                    scrollX: true,
+                    scrollCollapse: true,
+                    // fixedColumns: {
+                    //     start: 3
+                    // },
+                    ajax: "{{ 'filemanager/show' ,  $project->id  }}",
+                    columns: [
+                        {data: 'file_path'      , name: 'file_path' },
+                        {data: 'name'           , name: 'name'     },
+                        {data: 'original_name'  , name: 'original_name'     },
+                        {data: 'type'           , name: 'type'      },
+                        {data: 'step'           , name: 'step'      },
+                        {data: 'size'           , name: 'size'      },
+                        {data: 'date'           , name: 'date'      },
+                        {data: 'title'          , name: 'title'      },
+                        {data: 'action'         , name: 'action', orderable: true, searchable: true},
+                    ],
+                    language: {
+                        url: "{{asset('assets/vendor/js/fa.json')}}"
+                    }
+                });
+            });
+        </script>
+    </div>
 </div>
+
+
+
