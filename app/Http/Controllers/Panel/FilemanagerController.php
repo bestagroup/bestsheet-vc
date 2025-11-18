@@ -328,9 +328,6 @@ class FilemanagerController extends Controller
                 ->addColumn('step', function ($data) {
                     return ($data->step);
                 })
-                ->addColumn('title', function ($data) {
-                    return ($data->title);
-                })
                 ->addColumn('type', function ($data) {
                     return match ($data->type) {
                         'image'        => 'عکس',

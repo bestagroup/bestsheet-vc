@@ -933,7 +933,6 @@
                             <th>مرحله</th>
                             <th>سایز فایل</th>
                             <th>تاریخ آپلود</th>
-                            <th>پروژه</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -958,8 +957,6 @@
                         {data: 'step'           , name: 'step'      },
                         {data: 'size'           , name: 'size'      },
                         {data: 'date'           , name: 'date'      },
-                        {data: 'title'          , name: 'title'      },
-                        {orderable: true        , searchable: true},
                     ],
                     language: {
                         url: "{{asset('assets/vendor/js/fa.json')}}"
