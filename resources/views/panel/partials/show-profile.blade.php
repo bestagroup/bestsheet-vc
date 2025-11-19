@@ -951,12 +951,12 @@
                     scrollCollapse: true,
                     ajax: "{{ route('filemanager.show', $project->id) }}",
                     columns: [
-                        {data: 'file_path'      , name: 'file_path' },
-                        {data: 'name'           , name: 'name'     },
-                        {data: 'type'           , name: 'type'      },
-                        {data: 'step'           , name: 'step'      },
-                        {data: 'size'           , name: 'size'      },
-                        {data: 'date'           , name: 'date'      },
+                        {data: 'file_path'      , name: 'file_path' ?? ''  },
+                        {data: 'name'           , name: 'name'  ?? ''      },
+                        {data: 'type'           , name: 'type'  ?? ''      },
+                        {data: 'step'           , name: 'step'  ?? ''      },
+                        {data: 'size'           , name: 'size'  ?? ''      },
+                        {data: 'date'           , name: 'date'  ?? ''      },
                     ],
                     language: {
                         url: "{{asset('assets/vendor/js/fa.json')}}"
