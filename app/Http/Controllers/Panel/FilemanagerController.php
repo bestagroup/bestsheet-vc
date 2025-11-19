@@ -47,7 +47,7 @@ class FilemanagerController extends Controller
                     } elseif ($data->type === 'videos') {
                         return '<video width="160" height="90" controls><source src="' . $fileUrl . '" type="video/mp4">مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.</video>';
                     } else {
-                        return '<a href="' . $fileUrl . '">' . $data->original_name . '</a>';
+                        return '<a href="' . $fileUrl . '" target="_blank">' . 'دانلود فایل' . '</a>';
                     }
                 })
                 ->addColumn('name', function ($data) {
@@ -319,7 +319,7 @@ class FilemanagerController extends Controller
                     } elseif ($data->type === 'videos') {
                         return '<video width="160" height="90" controls><source src="' . $fileUrl . '" type="video/mp4">مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.</video>';
                     } else {
-                        return '<a href="' . $fileUrl . '">' . $data->original_name . '</a>';
+                        return '<a href="' . $fileUrl . '" target="_blank">' . 'دانلود فایل' . '</a>';
                     }
                 })
                 ->addColumn('name', function ($data) {
