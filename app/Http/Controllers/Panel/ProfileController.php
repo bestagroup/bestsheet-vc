@@ -142,4 +142,44 @@ class ProfileController extends Controller
         }
     }
 
+    public function sales(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Project::where('user_id' , Auth::user()->id)->get();
+
+            return Datatables::of($data)
+                ->addColumn('id', function ($data) {
+                    return ($data->id);
+                })
+                ->addColumn('title', function ($data) {
+                    return ($data->title ?? '');
+                })
+                ->addColumn('company_name', function ($data) {
+                    return ($data->company_name ?? '');
+                })
+                ->addColumn('economic_code', function ($data) {
+                    return ($data->economic_code ?? '');
+                })
+                ->addColumn('registration_number', function ($data) {
+                    return ($data->registration_number ?? '');
+                })
+                ->addColumn('registration_date', function ($data) {
+                    return ($data->registration_date ?? '');
+                })
+                ->addColumn('tel', function ($data) {
+                    return ($data->tel ?? '');
+                })
+                ->addColumn('email', function ($data) {
+                    return ($data->email ?? '');
+                })
+                ->addColumn('website', function ($data) {
+                    return ($data->website ?? '');
+                })
+                ->addColumn('address', function ($data) {
+                    return ($data->address?? '');
+                })
+                ->make(true);
+        }
+    }
+
 }

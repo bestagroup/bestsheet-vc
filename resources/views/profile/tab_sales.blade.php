@@ -13,7 +13,7 @@
                 </div>
                 <div class="card-body">
                     <div class="modal-body">
-                        <form id="addsaleform" method="POST" class="row g-4 mb-4" action="{{route('minute.store')}}">
+                        <form onsubmit="handleCreate(this); return false;" id="addform" class="row g-4 mb-4" data-table-target="#sales" action="{{ route('minute.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                             <div class="col-12 col-md-6">
@@ -83,3 +83,35 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    @if(Auth::user()->level == 'applicant')
+        <script type="text/javascript">
+            $(document).ready(function () {
+                const minutesTable = $('#minutes.yajra-datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('minute.index') }}",
+                        data: function (d) {
+                            d.id = "{{ $project->id }}";
+                        }
+                    },
+                    columns: [
+                        { data: 'title'     , name: 'title' },
+                        { data: 'date'      , name: 'date' },
+                        { data: 'type'      , name: 'type' },
+                        { data: 'file_path' , name: 'file_path', orderable: false, searchable: false }
+                    ],
+                    order: [[0, 'desc']],
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    language: {
+                        url: "{{ asset('assets/vendor/js/fa.json') }}"
+                    }
+                });
+            });
+        </script>
+    @endif
+@endpush

@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="card-body mt-2">
-                    <h4 class="mb-2 fw-semibold">بستر ارزیابی اطلاعات سازمان‌ یافته‌ی تجاری </h4>
+                    <h4 class="mb-2 fw-semibold">سامانه یکپارچه سازی ارتباط و نظارت بر شرکت ها </h4>
                     <p class="mb-4 text-center">(بِست شیت)</p>
 
                     {{-- Flash messages (success/info/warn/error) --}}
