@@ -724,6 +724,21 @@
                                                 <button type="submit" class="d-none real-submit"></button>
                                             </form>
                                     @elseif($step->id == 18)
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [37]) && $file->project_id == $project->id)
+                                                @if($file->status  == 4)
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
+                                                    </div>
+                                                @elseif($file->status <> 5)
+                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگزاری شده -
+                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
+                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="37" data-title="گزارش عملکرد"><i class="mdi mdi-file-document-multiple-outline"></i>گزارش عملکرد</button>
                                         <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
