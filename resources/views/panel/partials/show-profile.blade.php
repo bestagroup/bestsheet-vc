@@ -590,6 +590,9 @@
                                                 @endif
                                             @endif
                                         @endforeach
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="21" data-title="مستندات شاخص کلیدی اول"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی اول</button>
+                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+
                                             <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
                                                 @csrf
                                                 <input type="hidden" name="project_id" value="{{ $project->id }}">
