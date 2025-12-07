@@ -29,6 +29,7 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('company'            , 'CompanyController');
     Route::resource('minute'             , 'MinuteController');
     Route::resource('panel/flow'         , 'FlowController');
+    Route::resource('panel/report'       , 'ReportController');
 
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('userdata'                  , 'ProfileController@userdata')->name('userdata');
