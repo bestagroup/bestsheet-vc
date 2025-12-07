@@ -792,8 +792,14 @@
             </tr>
             </thead>
             <tbody>
+            @php
+                $total = 0;
+            @endphp
             @foreach($finances as $payment)
                 @if($payment->project_id == $project->id)
+                    @php
+                        $total += $payment->amount;
+                    @endphp
                     <tr>
                         <td>{{ number_format($payment->amount) }} ریال</td>
                         <td>{{ $payment->serial }}</td>
@@ -801,6 +807,11 @@
                     </tr>
                 @endif
             @endforeach
+            <tr style="font-weight: bold;">
+                <td>{{ number_format($total) }} ریال</td>
+                <td>جمع</td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
     </div>
