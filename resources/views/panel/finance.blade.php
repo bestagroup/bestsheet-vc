@@ -22,7 +22,7 @@
             </div>
 
             <div class="table-responsive">
-                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
+                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
                 <table id="sample1" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
@@ -108,7 +108,7 @@
                                 <div class="invalid-feedback" id="dateFeedback">توضیحات اجباری می باشد.</div>
                             </div>
                         </div>
-                        <div class="text-end">
+                        <div class="text-center">
                             <button type="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                     </form>
@@ -147,13 +147,13 @@
                 columns: [
                     {data: 'company_name'   , name: 'company_name'    },
                     {data: 'title'          , name: 'title'           },
-                    {data: 'contract_amount', name: 'contract_amount' },
-                    {data: 'contract_date'  , name: 'contract_date'   },
-                    {data: 'installment'    , name: 'installment'     },
-                    {data: 'serial'         , name: 'serial'          },
-                    {data: 'date'           , name: 'date'            },
-                    {data: 'amount'         , name: 'amount'          },
-                    {data: 'action'         , name: 'action', orderable: true, searchable: true},
+                    {data: 'contract_amount', name: 'contract_amount',className:'text-center' },
+                    {data: 'contract_date'  , name: 'contract_date',className:'text-center'   },
+                    {data: 'installment'    , name: 'installment',className:'text-center'     },
+                    {data: 'serial'         , name: 'serial',className:'text-center'          },
+                    {data: 'date'           , name: 'date',className:'text-center'            },
+                    {data: 'amount'         , name: 'amount',className:'text-center'          },
+                    {data: 'action'         , name: 'action', orderable: true, searchable: true,className:'text-center'},
                 ],
                 language: {
                     url: "{{asset('assets/vendor/js/fa.json')}}"

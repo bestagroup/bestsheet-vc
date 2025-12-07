@@ -33,7 +33,7 @@
   --bs-gray: rgba(76, 78, 100, 0.06);
   --bs-primary-rgb: 102, 108, 255;
   --bs-secondary-rgb: 109, 120, 141;
-  --bs-success-rgb: 114, 225, 40;
+  --bs-success-rgb: 25, 135, 84;
   --bs-info-rgb: 38, 198, 249;
   --bs-warning-rgb: 253, 181, 40;
   --bs-danger-rgb: 255, 77, 73;
@@ -6708,8 +6708,8 @@ input:-internal-autofill-selected {
 }
 
 .bg-label-success {
-  background-color: #eafbdf !important;
-  color: #72e128 !important;
+    background-color: #198754 !important;
+    color: #fff !important;
 }
 
 .bg-label-info {
@@ -6723,8 +6723,8 @@ input:-internal-autofill-selected {
 }
 
 .bg-label-danger {
-  background-color: #ffe4e4 !important;
-  color: #ff4d49 !important;
+  background-color: #ff4d49 !important;
+  color: #ffe4e4 !important;
 }
 
 .bg-label-light {
@@ -7496,8 +7496,8 @@ label.btn {
 
 .btn-success {
   color: #fff;
-  background-color: #72e128;
-  border-color: #72e128;
+  background-color: #198754;
+  border-color: #198754;
 }
 .btn-success:hover {
   color: #fff !important;

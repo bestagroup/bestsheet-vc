@@ -55,23 +55,36 @@ class SubmenupanelController extends Controller
                     return ($data->controller);
                 })
                 ->addColumn('status', function ($data) {
+
                     if ($data->status == "0") {
-                        return "عدم نمایش";
+                        $text = 'عدم نمایش';
+                        $cls  = 'bg-label-danger';
                     } elseif ($data->status == "4") {
-                        return "در حال نمایش";
+                        $text = 'در حال نمایش';
+                        $cls  = 'bg-label-success';
+                    } else {
+                        $text = 'نامشخص';
+                        $cls  = 'bg-label-secondary';
                     }
+
+                    return '<span class="badge '.$cls.' px-3 py-2 rounded-pill text-white"
+                                style="font-size: 0.85rem; letter-spacing: 0;">
+                                '.$text.'
+                            </span>';
                 })
                 ->editColumn('action', function ($data) {
+                    $base = 'btn btn-sm btn-icon rounded-pill waves-effect mx-1';
+
                     $actionBtn = '';
                     if (auth()->user()->can('can-access', ['submenupanel', 'edit'])) {
-                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('submenupanel.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="'.$base.' btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('submenupanel.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
                     }
                     if (auth()->user()->can('can-access', ['submenupanel', 'delete'])) {
-                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="'.$base.' btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','status'])
                 ->make(true);
         }
         return view('panel.submenupanel')->with(compact(['thispage' , 'submenupanels' , 'menupanels']));

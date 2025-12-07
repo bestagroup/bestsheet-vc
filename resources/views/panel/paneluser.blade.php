@@ -15,7 +15,7 @@
             </div>
 
             <div class="table-responsive">
-                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
+                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
                 <table id="sample1" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
@@ -115,7 +115,7 @@
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="تکرار رمز عبور">
                             </div>
                         </div>
-                        <div class="text-end">
+                        <div class="text-center">
                             <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                     </form>
@@ -206,7 +206,7 @@
                                     <input type="password" name="password_confirmation" id="password_confirmation_{{$user->id}}" class="form-control">
                                 </div>
                             </div>
-                            <div class="text-end">
+                            <div class="text-center">
                                 <button type="button" id="editsubmit_{{$user->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
                             </div>
                         </form>
@@ -229,9 +229,9 @@
                     {data: 'name'           , name: 'name'      },
                     {data: 'title'          , name: 'title'     },
                     {data: 'email'          , name: 'email'     },
-                    {data: 'phone'          , name: 'title'     },
-                    {data: 'status'         , name: 'status'    },
-                    {data: 'action'         , name: 'action', orderable: true, searchable: true},
+                    {data: 'phone'          , name: 'title',className:'text-center'     },
+                    {data: 'status'         , name: 'status',className:'text-center'    },
+                    {data: 'action'         , name: 'action', orderable: true, searchable: true,className:'text-center'},
                 ],
                 language: {
                     url: "{{asset('assets/vendor/js/fa.json')}}"

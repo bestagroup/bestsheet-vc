@@ -54,7 +54,7 @@
                 <div class="invalid-feedback" id="dateFeedback">توضیحات اجباری می باشد.</div>
             </div>
         </div>
-        <div class="text-end">
+        <div class="text-center">
             <button type="submit" id="editsubmit_{{$finance->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
         </div>
     </form>

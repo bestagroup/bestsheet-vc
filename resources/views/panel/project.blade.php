@@ -296,7 +296,18 @@
                                     تضامین
                                 </button>
                             </li>
-
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="sales-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-sales{{ $project->id }}"
+                                        type="button" role="tab" aria-controls="tab-sales{{ $project->id }}" aria-selected="false">
+                                    اطلاعات فروش
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="contracts-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-contracts{{ $project->id }}"
+                                        type="button" role="tab" aria-controls="tab-contracts{{ $project->id }}" aria-selected="false">
+                                    اطلاعات قراردادها
+                                </button>
+                            </li>
                         </ul>
 
                         <!-- Tab Content -->
@@ -847,7 +858,21 @@
                                 </table>
                             </div>
 
+                            <div class="tab-pane fade" id="tab-sales{{ $project->id }}" role="tabpanel" aria-labelledby="sales-tab{{ $project->id }}">
+                                <div>
+                                    <p>
+                                        تب فروش
+                                    </p>
+                                </div>
+                            </div>
 
+                            <div class="tab-pane fade" id="tab-contracts{{ $project->id }}" role="tabpanel" aria-labelledby="contracts-tab{{ $project->id }}">
+                                <div>
+                                    <p>
+                                        تب قراردادها
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

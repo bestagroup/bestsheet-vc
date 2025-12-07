@@ -68,7 +68,20 @@ class FlowController extends Controller
                     return ($data->flow_level);
                 })
                 ->addColumn('invest_step', function ($data) {
-                    return (($data->invest_step * 100 ) / 20 . '%');
+
+                    $percent = ($data->invest_step * 100) / 20;
+
+                    return '
+                        <div class="d-flex align-items-center" style="min-width:120px;">
+                            <div class="progress flex-grow-1" style="height: 8px; background:#e7e7e7; border-radius:4px;">
+                                <div class="progress-bar bg-primary"
+                                    role="progressbar"
+                                    style="width: '.$percent.'%; border-radius:4px;">
+                                </div>
+                            </div>
+                            <span class="ms-2" style="font-size: 0.85rem;">'.$percent.'%</span>
+                        </div>
+                    ';
                 })
                 ->addColumn('start_date', function ($data) {
                     return ($data->start_date);
@@ -83,21 +96,23 @@ class FlowController extends Controller
                     return (number_format($data->amount_request_accept - $data->total_payment));
                 })
                 ->editColumn('action', function ($data) {
+                    $base = 'btn btn-sm btn-icon rounded-pill waves-effect mx-1';
+
                     $actionBtn = '';
                     if (auth()->user()->can('can-access', ['flow', 'edit'])) {
-                        $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('flow.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="'.$base.' btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('flow.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
 
                     }
                     if (auth()->user()->can('can-access', ['flow', 'delete'])) {
-                        $actionBtn .= '<button type="button" class="btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
+                        $actionBtn .= '<button type="button" class="'.$base.' btn btn-sm btn-icon btn-outline-danger mx-1 delete-btn" data-id="'.$data->id.'"><i class="mdi mdi-delete-outline"></i></button>';
                     }
-                    $actionBtn .= '<button type="button" class="btn btn-sm btn-outline-primary show-btn" data-id="'.$data->id.'" data-url="'.route('flow.show', $data->id).'"><i class="mdi mdi-eye"></i></button>';
+                    $actionBtn .= '<button type="button" class="'.$base.' btn btn-sm btn-outline-primary show-btn" data-id="'.$data->id.'" data-url="'.route('flow.show', $data->id).'"><i class="mdi mdi-eye"></i></button>';
 
-                    $actionBtn .= '<button class="btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="'.$data->id.'"><i class="mdi mdi-file-document-multiple-outline"></i></button>';
+                    $actionBtn .= '<button class="'.$base.' btn btn-sm btn-icon btn-image mx-1 upload-btn" data-id="'.$data->id.'"><i class="mdi mdi-file-document-multiple-outline"></i></button>';
 
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','invest_step'])
                 ->make(true);
         }
         return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'states'  ,'cities']));

@@ -59,27 +59,40 @@ class PaneluserController extends Controller
                     return ($data->phone);
                 })
                 ->addColumn('status', function ($data) {
+
                     if ($data->status == "0") {
-                        return "غیر فعال";
+                        $text = 'غیرفعال';
+                        $cls  = 'bg-label-danger';
                     } elseif ($data->status == "4") {
-                        return "فعال";
+                        $text = 'فعال';
+                        $cls  = 'bg-label-success';
+                    } else {
+                        $text = 'نامشخص';
+                        $cls  = 'bg-label-secondary';
                     }
+
+                    return '<span class="badge '.$cls.' px-3 py-2 rounded-pill text-white"
+                                style="font-size: 0.85rem; letter-spacing: 0;">
+                                '.$text.'
+                            </span>';
                 })
                 ->editColumn('action', function ($data) {
+                    $base = 'btn btn-sm btn-icon rounded-pill waves-effect mx-1';
+
                     $actionBtn = '';
                     if (Gate::allows('can-access', ['paneluser', 'edit'])) {
-                        $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="btn btn-sm btn-icon btn-outline-primary">
+                        $actionBtn .= '<button type="button" data-bs-toggle="modal" data-bs-target="#editModal'.$data->id.'" class="'.$base.' btn btn-sm btn-icon btn-outline-primary">
                         <i class="mdi mdi-pencil-outline"></i>
                       </button> ';
                     }
                     if (Gate::allows('can-access', ['paneluser', 'delete'])) {
-                        $actionBtn .= '<button class="btn btn-sm btn-icon btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal' . $data->id . '" id="#deletesubmit_' . $data->id . '" data-id="#deletesubmit_' . $data->id . '">
+                        $actionBtn .= '<button class="'.$base.' btn btn-sm btn-icon btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal' . $data->id . '" id="#deletesubmit_' . $data->id . '" data-id="#deletesubmit_' . $data->id . '">
                         <i class="mdi mdi-delete-outline"></i>
                        </button>';
                     }
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','status'])
                 ->make(true);
         }
         return view('panel.paneluser')->with(compact(['thispage' , 'menupanels' , 'submenupanels' , 'users' , 'roles']));

@@ -65,7 +65,9 @@ class FinancialController extends Controller
                     return ($data->date);
                 })
                 ->addColumn('action', function ($data) {
-                    $actionBtn ='<button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('finance.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
+                    $base = 'btn btn-sm btn-icon rounded-pill waves-effect mx-1';
+
+                    $actionBtn ='<button type="button" class="'.$base.' btn btn-sm btn-outline-primary edit-btn" data-id="'.$data->id.'" data-url="'.route('finance.edit', $data->id).'"><i class="mdi mdi-pencil-outline"></i></button>';
 
                     return $actionBtn;
                 })

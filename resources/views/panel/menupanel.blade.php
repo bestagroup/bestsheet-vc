@@ -16,7 +16,7 @@
             </div>
 
             <div class="table-responsive">
-                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
+                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
                 <table id="sample1" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
@@ -116,7 +116,7 @@
                                 <label for="status">نمایش/عدم نمایش</label>
                             </div>
                         </div>
-                        <div class="text-end">
+                        <div class="text-center">
                             <button type="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                     </form>
@@ -150,14 +150,14 @@
                 serverSide: true,
                 ajax: "{{route(request()->segment(2).'.index')}}",
                 columns: [
-                    {data: 'id'             , name: 'id'        },
+                    {data: 'id'             , name: 'id',className:'text-center'        },
                     {data: 'title'          , name: 'title'     },
                     {data: 'label'          , name: 'label'     },
                     {data: 'slug'           , name: 'slug'      },
                     {data: 'class'          , name: 'class'     },
                     {data: 'controller'     , name: 'controller'},
-                    {data: 'status'         , name: 'status'    },
-                    {data: 'action'         , name: 'action', orderable: true, searchable: true},
+                    {data: 'status'         , name: 'status',className:'text-center'    },
+                    {data: 'action'         , name: 'action', orderable: true, searchable: true,className:'text-center'},
                 ],
                 language: {
                     url: "{{asset('assets/vendor/js/fa.json')}}"

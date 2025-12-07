@@ -107,7 +107,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="text-end">
+                        <div class="text-center">
                             <button type="button" id="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
                     </form>
@@ -172,7 +172,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="text-end">
+                            <div class="text-center">
                                 <button type="button" id="editsubmit_{{$user->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
                             </div>
                         </form>
@@ -197,8 +197,8 @@
                     {data: 'title'          , name: 'title'     },
                     {data: 'email'          , name: 'email'     },
                     {data: 'phone'          , name: 'title'     },
-                    {data: 'status'         , name: 'status'    },
-                    {data: 'action'         , name: 'action', orderable: true, searchable: true},
+                    {data: 'status'         , name: 'status'    ,className:'text-center'},
+                    {data: 'action'         , name: 'action', orderable: true, searchable: true,className:'text-center'},
                 ],
                 language: {
                     url: "{{asset('assets/vendor/js/fa.json')}}"

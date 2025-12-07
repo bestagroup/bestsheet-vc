@@ -53,7 +53,7 @@
             <label for="status">نمایش/عدم نمایش</label>
         </div>
     </div>
-    <div class="text-end">
+    <div class="text-center">
         <button type="submit" id="editsubmit_{{$menupanel->id}}" class="btn btn-primary" >ذخیره اطلاعات</button>
     </div>
 </form>
