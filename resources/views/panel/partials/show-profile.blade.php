@@ -795,7 +795,7 @@
             @foreach($finances as $payment)
                 @if($payment->project_id == $project->id)
                     <tr>
-                        <td>{{ number_format($payment->amount) }} تومان</td>
+                        <td>{{ number_format($payment->amount) }} ریال</td>
                         <td>{{ $payment->serial }}</td>
                         <td>{{ $payment->date }}</td>
                     </tr>
