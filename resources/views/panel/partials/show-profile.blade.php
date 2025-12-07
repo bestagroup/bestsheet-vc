@@ -33,15 +33,15 @@
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="commitment-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-commitment{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-commitment{{ $project->id }}" aria-selected="false">
-            تعهدات
+            تعهدات و تضامین
         </button>
     </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="guaranty-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-guaranty{{ $project->id }}"
-                type="button" role="tab" aria-controls="tab-guaranty{{ $project->id }}" aria-selected="false">
-            تضامین
-        </button>
-    </li>
+{{--    <li class="nav-item" role="presentation">--}}
+{{--        <button class="nav-link" id="guaranty-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-guaranty{{ $project->id }}"--}}
+{{--                type="button" role="tab" aria-controls="tab-guaranty{{ $project->id }}" aria-selected="false">--}}
+{{--            تضامین--}}
+{{--        </button>--}}
+{{--    </li>--}}
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="workflow-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-workflow{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-workflow{{ $project->id }}" aria-selected="false">
@@ -823,24 +823,32 @@
     </div>
     <!-- Commitment Tab -->
     <div class="tab-pane fade" id="tab-commitment{{ $project->id }}" role="tabpanel" aria-labelledby="commitment-tab{{ $project->id }}">
-        <table class="table align-middle mb-0">
-            <thead class="table-light">
-            <tr>
-                <th>ردیف </th>
-                <th>تعهدات </th>
-            </tr>
-            </thead>
-            <tbody>
-            @forelse($commitments as $item)
+        <div style="overflow-x:auto;">
+            <table class="table align-middle mb-0 table-bordered" style="table-layout: fixed; width: 100%;">
+                <thead class="table-light">
                 <tr>
-                    <td>{{ $item->id }}</td>
-                    <td>{{ $item->title }}</td>
+                    <th style="width: 40px;">ردیف</th>
+                    <th style="width: 60%;">شرح</th>
+                    <th style="width: 60px;">تعهد</th>
+                    <th style="width: 60px;">تضمین</th>
+                    <th style="width: 80px;">فایل</th>
                 </tr>
-            @empty
-                <tr><td colspan="9" class="text-center text-muted py-4">موردی ثبت نشده است.</td></tr>
-            @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @forelse($commitments as $item)
+                    <tr>
+                        <td>{{ $item->id }}</td>
+                        <td style="white-space: normal; word-wrap: break-word;">{{ $item->title }}</td>
+                        <td><span>&#10003;</span></td>
+                        <td></td>
+                        <td>@if($item->file_path) دانلود @endif</td>
+                    </tr>
+                @empty
+                    <tr><td colspan="9" class="text-center text-muted py-4">موردی ثبت نشده است.</td></tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
     <!-- Guaranty Tab -->
     <div class="tab-pane fade" id="tab-guaranty{{ $project->id }}" role="tabpanel" aria-labelledby="guaranty-tab{{ $project->id }}">
