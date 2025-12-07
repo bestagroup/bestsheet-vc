@@ -96,7 +96,7 @@
                             </div>
                         <div class="col-6 col-md-3">
                             <div class="form-floating form-floating-outline">
-                                <input required type="text" data-jdp class="form-control" id="date" name="date" placeholder="تاریخ واریز" >
+                                <input required type="text" data-jdp class="form-control" autocomplete="off" id="date" name="date" placeholder="تاریخ واریز" >
                                 <label for="date">تاریخ واریز</label>
                                 <div class="invalid-feedback" id="dateFeedback">تاریخ واریز اجباری می باشد.</div>
                             </div>
