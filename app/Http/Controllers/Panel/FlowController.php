@@ -183,7 +183,7 @@ class FlowController extends Controller
         $finances       = Finance::all();
         $states         = State::all();
         $cities         = City::all();
-        $kpis           = Kpi::all();
+        $kpis           = Kpi::orderBy('kpi_number' , 'ASC')->get();
         $investsteps    = Investstep::whereStatus(4)->get();
         $files          = MediaFile::where('status' ,'!=' , 5)->get();
         $commitments    = Commitment::whereStatus(4)->get();

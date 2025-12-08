@@ -846,26 +846,24 @@
         <table class="table table-bordered mt-2">
             <thead>
             <tr>
+                <th>شماره شاخص</th>
                 <th>عنوان شاخص</th>
                 <th>شاخصه مبنا</th>
                 <th>شاخص اندازه گیری</th>
                 <th>مقدار</th>
-                <th>واحد انداز گیری</th>
-                <th>مهلت اندازه گیری</th>
-                <th>زمان دوره</th>
+                <th>مهلت / زمان اندازه گیری</th>
             </tr>
             </thead>
             <tbody>
             @foreach($kpis as $kpi)
                 @if($kpi->project_id == $project->id)
                     <tr>
+                        <td>{{ $kpi->kpi_number }}  </td>
                         <td>{{ $kpi->title }}           </td>
                         <td>{{ $kpi->type }}            </td>
                         <td>{{ $kpi->type_value }}      </td>
-                        <td>{{ $kpi->value }}           </td>
-                        <td>{{ $kpi->unit }}            </td>
+                        <td> {{ number_format($kpi->value) .' '. $kpi->unit}} </td>
                         <td>{{ $kpi->deadline }} {{ $kpi->period_time }}</td>
-                        <td>{{ $kpi->kpi_number }}      </td>
                     </tr>
                 @endif
             @endforeach
