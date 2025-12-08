@@ -864,7 +864,7 @@
                         <td>{{ $kpi->type_value }}      </td>
                         <td>{{ $kpi->value }}           </td>
                         <td>{{ $kpi->unit }}            </td>
-                        <td>{{ $kpi->deadline }} {{ $kip->period_time }}</td>
+                        <td>{{ $kpi->deadline }} {{ $kpi->period_time }}</td>
                         <td>{{ $kpi->kpi_number }}      </td>
                     </tr>
                 @endif
