@@ -843,9 +843,34 @@
     </div>
     <!-- KPI Tab -->
     <div class="tab-pane fade" id="tab-kpi{{ $project->id }}" role="tabpanel" aria-labelledby="kpi-tab{{ $project->id }}">
-        <ul class="list-group">
-
-        </ul>
+        <table class="table table-bordered mt-2">
+            <thead>
+            <tr>
+                <th>عنوان شاخص</th>
+                <th>شاخصه مبنا</th>
+                <th>شاخص اندازه گیری</th>
+                <th>مقدار</th>
+                <th>واحد انداز گیری</th>
+                <th>مهلت اندازه گیری</th>
+                <th>زمان دوره</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($kpis as $kpi)
+                @if($kpi->project_id == $project->id)
+                    <tr>
+                        <td>{{ $kpi->title }}           </td>
+                        <td>{{ $kpi->type }}            </td>
+                        <td>{{ $kpi->type_value }}      </td>
+                        <td>{{ $kpi->value }}           </td>
+                        <td>{{ $kpi->unit }}            </td>
+                        <td>{{ $kpi->deadline }} {{ $kip->period_time }}</td>
+                        <td>{{ $kpi->kpi_number }}      </td>
+                    </tr>
+                @endif
+            @endforeach
+            </tbody>
+        </table>
     </div>
     <!-- Commitment Tab -->
     <div class="tab-pane fade" id="tab-commitment{{ $project->id }}" role="tabpanel" aria-labelledby="commitment-tab{{ $project->id }}">

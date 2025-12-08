@@ -14,6 +14,7 @@ use App\Models\Project_step;
 use App\Models\State;
 use App\Models\SubmenuPanel;
 use Exception;
+use Google\Service\DisplayVideo\Kpi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -182,12 +183,13 @@ class FlowController extends Controller
         $finances       = Finance::all();
         $states         = State::all();
         $cities         = City::all();
+        $kpis           = Kpi::all();
         $investsteps    = Investstep::whereStatus(4)->get();
         $files          = MediaFile::where('status' ,'!=' , 5)->get();
         $commitments    = Commitment::whereStatus(4)->get();
         $project_steps  = Project_step::leftjoin('users', 'project_steps.user_id', '=', 'users.id')
             ->where('project_steps.project_id' , $id)->select('project_steps.*' , 'users.name as username')->get();
-        return view('panel.partials.show-profile', compact('project', 'states', 'cities' ,'project_steps', 'investsteps' , 'files' , 'commitments' , 'finances'));
+        return view('panel.partials.show-profile', compact('project', 'states', 'cities' ,'project_steps','kpis' ,  'investsteps' , 'files' , 'commitments' , 'finances'));
     }
 
     public function destroy($id)
