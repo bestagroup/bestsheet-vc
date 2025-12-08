@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class KPI extends Model
 {
     use HasFactory;
+
+    protected $table = 'kpis';
 }
