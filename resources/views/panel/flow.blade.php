@@ -345,6 +345,54 @@
     </script>
 
     <script>
+        Dropzone.autoDiscover = false;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const fileFormSelector = "#fileUploadZone";
+
+            const dz = new Dropzone(fileFormSelector, {
+                url: "{{ route('storemedia') }}",
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                maxFilesize: 100,
+                parallelUploads: 20,
+                uploadMultiple: false,
+                acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
+                init: function () {
+                    this.on("sending", function (file, xhr, formData) {
+                        formData.append("record_id", document.getElementById('recordIdInput').value);
+                        formData.append("subject_id", document.getElementById('subjectIdInput').value);
+                        formData.append("title", document.getElementById('fileTitleInput').value);
+                    });
+                    this.on("success", function (file, response) {
+                        const extension = file.name.split('.').pop().toLowerCase();
+                        previewFile(response.file_path.replace(/^\/+/, ''), extension);
+                        showToast("✅ فایل با موفقیت آپلود شد");
+                        this.removeFile(file);
+                    });
+                    this.on("error", function (file, response) {
+                        showToast("❌ خطا در آپلود فایل", "danger");
+                    });
+                }
+            });
+
+            $(document).on('click', '.upload-btn', function () {
+                let recordId = $(this).data('id');
+                let subjectId = $(this).data('subject');
+                let title = $(this).data('title');
+
+                $('#recordIdInput').val(recordId);
+                $('#subjectIdInput').val(subjectId);
+                $('#fileTitleInput').val(title);
+
+                dz.removeAllFiles(true);
+                $('#uploadModal').modal('show');
+            });
+        });
+    </script>
+
+
+    <script>
         //انتخاب و مدیریت فایل های یک پروژه
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('file-selector')) {
