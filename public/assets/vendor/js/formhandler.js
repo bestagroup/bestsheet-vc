@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dz = new Dropzone(fileFormSelector, {
             url: uploadUrl,
             headers: { 'X-CSRF-TOKEN': csrfToken },
-            maxFilesize: 20,
+            maxFilesize: 50,
             acceptedFiles: 'image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
             init: function () {
