@@ -3,8 +3,7 @@
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
-    <link rel="stylesheet" href="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css">
-    <script type="text/javascript" src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"></script>
+    <link rel="stylesheet" href="{{asset('assets/vendor/libs/jalalidatepicker/jalalidatepicker.min.css')}}" />
     <style>
         jdp-container{z-index:99999999 !important;}
     </style>
@@ -135,89 +134,31 @@
 
 @endsection
 @section('script')
-    <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
-    <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
+    <script src="{{ asset('assets/vendor/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/js/formhandler.js') }}"></script>
+    <script type="text/javascript" src="{{asset('assets/vendor/libs/jalalidatepicker/jalalidatepicker.min.js')}}"></script>
+
     <script type="text/javascript">
         $(function () {
-            var table = $('.yajra-datatable').DataTable({
+            $('.yajra-datatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{route(request()->segment(2).'.index')}}",
+                ajax: "{{ route(request()->segment(2).'.index') }}",
                 columns: [
-                    {data: 'company_name'   , name: 'company_name'    },
-                    {data: 'title'          , name: 'title'           },
-                    {data: 'contract_amount', name: 'contract_amount',className:'text-center' },
-                    {data: 'contract_date'  , name: 'contract_date',className:'text-center'   },
-                    {data: 'installment'    , name: 'installment',className:'text-center'     },
-                    {data: 'serial'         , name: 'serial',className:'text-center'          },
-                    {data: 'date'           , name: 'date',className:'text-center'            },
-                    {data: 'amount'         , name: 'amount',className:'text-center'          },
-                    {data: 'action'         , name: 'action', orderable: true, searchable: true,className:'text-center'},
+                    {data: 'company_name'   , name: 'company_name'},
+                    {data: 'title'          , name: 'title'},
+                    {data: 'contract_amount', name: 'contract_amount', className:'text-center'},
+                    {data: 'contract_date'  , name: 'contract_date'  , className:'text-center'},
+                    {data: 'installment'    , name: 'installment'    , className:'text-center'},
+                    {data: 'serial'         , name: 'serial'         , className:'text-center'},
+                    {data: 'date'           , name: 'date'           , className:'text-center'},
+                    {data: 'amount'         , name: 'amount'         , className:'text-center'},
+                    {data: 'action'         , name: 'action', orderable: true, searchable: true, className:'text-center'},
                 ],
                 language: {
-                    url: "{{asset('assets/vendor/js/fa.json')}}"
+                    url: "{{ asset('assets/vendor/js/fa.json') }}"
                 }
             });
         });
     </script>
-    <script>
-        jalaliDatepicker.startWatch();
-
-        document.querySelector("[data-jdp-miladi-input]").addEventListener("jdp:change", function (e) {
-            var miladiInput = document.getElementById(this.getAttribute("data-jdp-miladi-input"));
-            if (!this.value) {
-                miladiInput.value = "";
-                return;
-            }
-            var date = this.value.split("/");
-            miladiInput.value = jalali_to_gregorian(date[0], date[1], date[2]).join("/")
-        });
-
-        function jalali_to_gregorian(jy, jm, jd) {
-            jy = Number(jy);
-            jm = Number(jm);
-            jd = Number(jd);
-            var gy = (jy <= 979) ? 621 : 1600;
-            jy -= (jy <= 979) ? 0 : 979;
-            var days = (365 * jy) + ((parseInt(jy / 33)) * 8) + (parseInt(((jy % 33) + 3) / 4))
-                + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186);
-            gy += 400 * (parseInt(days / 146097));
-            days %= 146097;
-            if (days > 36524) {
-                gy += 100 * (parseInt(--days / 36524));
-                days %= 36524;
-                if (days >= 365) days++;
-            }
-            gy += 4 * (parseInt((days) / 1461));
-            days %= 1461;
-            gy += parseInt((days - 1) / 365);
-            if (days > 365) days = (days - 1) % 365;
-            var gd = days + 1;
-            var sal_a = [0, 31, ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            var gm
-            for (gm = 0; gm < 13; gm++) {
-                var v = sal_a[gm];
-                if (gd <= v) break;
-                gd -= v;
-            }
-            return [gy, gm, gd];
-        }
-    </script>
-    <script>
-        document.querySelectorAll('.number-input').forEach(function(input) {
-            input.addEventListener('input', function(e) {
-                // حذف ویرگول‌های قبلی و کاراکترهای غیرعددی
-                let value = e.target.value.replace(/,/g, '').replace(/\D/g, '');
-
-                // فرمت سه‌رقمی
-                if (value) {
-                    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                }
-
-                e.target.value = value;
-            });
-        });
-    </script>
-
 @endsection
