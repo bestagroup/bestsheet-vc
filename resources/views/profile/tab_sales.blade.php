@@ -36,8 +36,8 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="price-input form-control" id="monthly_income" name="monthly_income" placeholder="درآمد ماهانه">
-                                    <label for="monthly_income">درآمد ماه</label>
+                                    <input type="text" class="price-input form-control" id="created" name="created" placeholder="تعداد تولید">
+                                    <label for="monthly_income">تعداد تولید</label>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
@@ -54,8 +54,14 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" data-jdp class="price-input  form-control"  autocomplete="off" id="date" name="date" placeholder="تاریخ گزارش">
-                                    <label for="date">تاریخ گزارش</label>
+                                    <input type="text" class="price-input form-control" id="monthly_income" name="monthly_income" placeholder="درآمد ماهانه">
+                                    <label for="monthly_income">درآمد ماه</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" data-jdp class="price-input  form-control"  autocomplete="off" id="date" name="date" placeholder="تاریخ/ماه گزارش">
+                                    <label for="date">تاریخ/ماه گزارش </label>
                                 </div>
                             </div>
                             <div class="col-12 text-center">
@@ -76,6 +82,7 @@
                         <th>تعداد مشتریان</th>
                         <th>تعداد فروش</th>
                         <th>مبلغ فروش</th>
+                        <th>تعداد تولید</th>
                         <th>درآمد ماهانه</th>
                         <th>مجموع هزینه ها جاری</th>
                         <th>مجموع هزینه ها اداری </th>
