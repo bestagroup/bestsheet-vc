@@ -3,6 +3,7 @@
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/jalalidatepicker.min.css') }}"/>
     <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style> table {
@@ -76,6 +77,7 @@
         @push('scripts')
             <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
             <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
+            <script src="{{asset('assets/vendor/js/jalalidatepicker.min.js')}}"></script>
             <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
 
             <script>

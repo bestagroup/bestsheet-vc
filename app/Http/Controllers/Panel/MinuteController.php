@@ -17,7 +17,7 @@ class MinuteController extends Controller
     {
         if ($request->ajax()) {
 
-            $data = Minute::where('company_id' , $request->id)->get();
+            $data = Minute::where('project_id' , $request->id)->get();
             return Datatables::of($data)
                 ->addColumn('title', function ($data) {
                     return ($data->title ?? '');
@@ -28,17 +28,20 @@ class MinuteController extends Controller
                 ->addColumn('type', function ($data) {
                     return ($data->type ?? '');
                 })
-                ->addColumn('file', function ($data) {
-                    if ($data->file_path ?? '') {
-                        $fileUrl = asset('storage/' . $data->file_path);
-                        return '<a href="' . $fileUrl . '" class="btn btn-sm btn-outline-primary" target="_blank">
-                    <i class="mdi mdi-download"></i> دریافت
-                </a>';
-                    }else{
-                        return '';
+                ->addColumn('file_path', function ($data) {
+                    $fileUrl = asset('storage/' . $data->file_path);
+
+                    if ($data->type === 'image') {
+                        return '<img src="' . $fileUrl . '" alt="تصویر" style="width: 80px; height: auto;">';
+                    } elseif ($data->type === 'audio') {
+                        return '<audio controls style="width: 150px;"><source src="' . $fileUrl . '" type="audio/mpeg">مرورگر شما از پخش صوت پشتیبانی نمی‌کند.</audio>';
+                    } elseif ($data->type === 'videos') {
+                        return '<video width="160" height="90" controls><source src="' . $fileUrl . '" type="video/mp4">مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.</video>';
+                    } else {
+                        return '<a href="' . $fileUrl . '" target="_blank">' . 'دانلود فایل' . '</a>';
                     }
                 })
-                ->rawColumns(['file'])
+                ->rawColumns(['file_path'])
                 ->make(true);
         }
         return view('panel.company');
