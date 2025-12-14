@@ -1,7 +1,8 @@
 @extends('layouts.base')
 
 @section('title', 'اطلاعات کارفرما')
-<link rel="stylesheet" href="{{ asset('https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css') }}"/>
+<link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
+<style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
 @section('content')
     <div class="card">
         <div class="card-body">
@@ -11,7 +12,6 @@
             </div>
 
             <div class="table-responsive">
-                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
                 <table id="sample1" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
@@ -179,7 +179,7 @@
     @endforeach
 @endsection
 @section('script')
-    <script src="{{ 'https://cdn.datatables.net/2.2.2/js/dataTables.min.js' }}"></script>
+    <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
 
     <script type="text/javascript">
         $(function () {

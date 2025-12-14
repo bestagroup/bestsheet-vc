@@ -3,7 +3,7 @@
 @section('title', 'مدیریت دسترسی های داشبورد')
 
 @push('head')
-    <link rel="stylesheet" href="{{ asset('https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
 @endpush
 
 @section('content')
@@ -120,8 +120,8 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script src="{{asset('assets/vendor/js/sweetalert2.js')}}"></script>
+    <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

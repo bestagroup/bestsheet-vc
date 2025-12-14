@@ -3,7 +3,8 @@
 @section('title', 'مدیریت منوی سایت')
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
-    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+    <link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
+    <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
 @endsection
 @section('content')
     <div class="card">
@@ -14,7 +15,6 @@
             </div>
 
             <div class="table-responsive">
-                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
                 <table id="sample1" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
@@ -215,7 +215,7 @@
     @endforeach
 @endsection
 @section('script')
-    <script src="{{ 'https://cdn.datatables.net/2.2.2/js/dataTables.min.js' }}"></script>
+    <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
 
     <script type="text/javascript">
         $(function () {
@@ -296,6 +296,7 @@
             });
         });
     </script>
+
     <script>
         jQuery(document).ready(function(){
             jQuery('[id^=editsubmit_]').click(function(e){
@@ -355,6 +356,7 @@
             });
         });
     </script>
+
     <script>
         jQuery(document).ready(function(){
             jQuery('[id^=deletesubmit_]').click(function(e){

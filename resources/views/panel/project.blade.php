@@ -3,7 +3,7 @@
 @section('style')
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
-<link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto !important;word-wrap:break-word;white-space: nowrap;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
 @endsection
 @section('content')
@@ -927,8 +927,8 @@
 @section('script')
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
     <script src="{{'https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js'}}"></script>
-    <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js'}}"></script>
-    <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js'}}"></script>
+    <script src="{{asset('assets/vendor/js/dataTables.fixedColumns.js')}}"></script>
+    <script src="{{asset('assets/vendor/js/fixedColumns.dataTables.js')}}"></script>
 
     <script type="text/javascript">
         $(function () {
@@ -1219,7 +1219,6 @@
             });
         });
     </script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -4,35 +4,13 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/jalalidatepicker.min.css') }}"/>
-    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}"/>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-profile.css') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style> table {
-            margin: 0 auto;
-            width: 100% !important;
-            clear: both;
-            border-collapse: collapse;
-            table-layout: auto !important;
-            word-wrap: break-word;
-            white-space: nowrap;
-        }
 
-        .dt-layout-start {
-            margin-right: 0 !important;
-        }
-
-        .dt-layout-end {
-            margin-left: 0 !important;
-        }</style>
-    <style>.nav-tabs .nav-link.active {
-            border-bottom: 3px solid #7367f0 !important;
-        }</style>
 @endsection
 
-<style>
-    .nav-tabs .nav-link.active {
-        border-bottom: 3px solid #7367f0 !important;
-    }
-</style>
+
 
 @section('content')
     <div class="container mt-4">
@@ -117,7 +95,7 @@
                     });
                 </script>
 
-            <script>
+                <script>
                     $(document).ready(function() {
                         // فعال‌سازی سرچ روی همه select ها
                         $('.select2').select2({
@@ -191,6 +169,7 @@
                     });
                 });
             </script>
+
             <script>
                 document.querySelectorAll('.upload-btn').forEach(btn => {
                     btn.addEventListener('click', function () {
@@ -211,6 +190,7 @@
 
 
             </script>
+
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     let activeInputId = null;
@@ -229,6 +209,7 @@
                     };
                 });
             </script>
+
             <script>
                 document.querySelectorAll('.price-input').forEach(input => {
                     input.addEventListener('input', function (e) {

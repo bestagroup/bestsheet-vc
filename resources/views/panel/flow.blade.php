@@ -2,7 +2,7 @@
 @section('title', 'مدیریت طرح ها')
 @section('style')
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
-<link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
 <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: auto !important;word-wrap:break-word;white-space: nowrap;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -278,8 +278,8 @@
 @endsection
 @section('script')
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
-    <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js'}}"></script>
-    <script src="{{'https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js'}}"></script>
+    <script src="{{asset('assets/vendor/js/dataTables.fixedColumns.js')}}"></script>
+    <script src="{{asset('assets/vendor/js/fixedColumns.dataTables.js')}}"></script>
     <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
 
     @yield('filescript')
@@ -391,7 +391,6 @@
         });
     </script>
 
-
     <script>
         //انتخاب و مدیریت فایل های یک پروژه
         document.addEventListener('click', function (e) {
@@ -410,7 +409,7 @@
             }
         });
     </script>
-{{--    تایید فایل هر مرحله--}}
+
     <script>
         document.addEventListener('click', function (e) {
             // بررسی اینکه روی دکمه کلیک شده یا نه
@@ -453,6 +452,7 @@
                 .catch(err => console.error("خطا:", err));
         });
     </script>
+
     <script>
         document.addEventListener('click', function(e) {
             if (!e.target.classList.contains('approve-btn') && !e.target.classList.contains('reject-btn')) return;

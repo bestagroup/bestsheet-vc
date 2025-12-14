@@ -27264,3 +27264,5 @@ a.bg-vimeo:hover, a.bg-vimeo:focus {
 .footer.bg-lighter hr {
   border-color: rgba(210, 210, 232, 0.06);
 }
+
+jdp-container{z-index:99999999 !important;}

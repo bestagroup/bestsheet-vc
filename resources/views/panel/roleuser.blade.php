@@ -4,113 +4,9 @@
 
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
-    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
-    <style>
-        /* برای اینکه داخل مودال روی همه چیز دیده شود */
-        .select2-container {
-            z-index: 9999 !important;
-        }
-
-        /* ظرف اصلی چند انتخابی – شبیه input متریال، راست‌چین و مرتب */
-        .select2-container--default .select2-selection--multiple {
-            direction: rtl;
-            text-align: right;
-            min-height: 44px;
-            border-radius: 8px;
-            border: 1px solid #ced4da;
-            padding: 4px 6px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 4px;
-            cursor: text;
-        }
-
-        /* خود input کوچک داخل فیلد */
-        .select2-container--default .select2-search--inline .select2-search__field {
-            margin-top: 0;
-            padding: 4px 0;
-            font-size: .85rem;
-        }
-
-        /* استایل هر آیتم انتخاب شده (chip) */
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 999px;
-            padding: 2px 8px;
-            margin: 2px 2px;
-            border: none;
-            font-size: .8rem;
-            /* رنگ پس‌زمینه و متن از تم فعلی می‌آد */
-            background-color: rgba(0,0,0,0.06);
-            color: inherit;
-        }
-
-        /* دکمه حذف روی chip (x) */
-        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-            margin-left: 4px;
-            margin-right: 0;
-            font-size: 1rem;
-            line-height: 1;
-        }
-
-        /* در RTL ترتیب text و X را برعکس کن */
-        .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
-            flex-direction: row-reverse;
-        }
-
-        .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice__remove {
-            margin-right: 4px;
-            margin-left: 0;
-            padding-left: 0;
-            border-right: 1px;
-        }
-
-        /* Dropdown هم راست‌چین و تمیز */
-        .select2-container--default .select2-results > .select2-results__options {
-            direction: rtl;
-            text-align: right;
-            font-size: .85rem;
-        }
-
-
-
-
-        /* استایل آیتم‌های انتخاب‌شده (chip) */
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;      /* متن سمت راست، ضربدر سمت چپ */
-            flex-direction: row;
-            border-radius: 999px;
-            padding: 2px 10px;
-            margin: 2px 3px;
-            border: none;
-            font-size: .85rem;
-            background-color: rgba(0,0,0,0.06);
-            color: inherit;
-        }
-
-        /* خود ضربدر (×) */
-        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-            float: none;                     /* حذف float پیش‌فرض */
-            position: static;                /* از حالت عجیب پیش‌فرض دربیاد */
-            margin: 0 0 0 .4rem;             /* فاصله بین ضربدر و متن */
-            padding: 0 .3rem 0 0;
-            border: none !important;                    /* خط عمودی کنارش حذف بشه */
-            border-right: 1px solid rgba(0,0,0,0.12); !important; /* خط جداساز ظریف مثل اسکرین دوم */
-            font-size: .9rem;
-            line-height: 1;
-            color: inherit;
-        }
-
-        /* در حالت RTL، متن راست‌چین بماند */
-        .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
-            text-align: right;
-            padding-left: 2px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/page-role-users.css')}}" />
+    <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
 
 @endsection
 @section('content')
@@ -124,7 +20,6 @@
             </div>
 
             <div class="table-responsive">
-                <style> table{margin: 0 auto;width: 100% !important;clear: both;border-collapse: collapse;table-layout: fixed;word-wrap:break-word;} .dt-layout-start{margin-right: 0 !important;} .dt-layout-end{margin-left: 0 !important;}</style>
                 <table id="sample1" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
@@ -307,7 +202,7 @@
 
 @endsection
 @section('script')
-    <script src="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'}}"></script>
+    <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
     <script src="{{asset('assets/vendor/js/dataTables.min.js')}}"></script>
     <script type="text/javascript">
         $(function () {

@@ -2,7 +2,7 @@
 @section('title', 'لیست کاربران داشبورد')
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
-    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
+    <link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
 @endsection
 @section('content')
     <div class="card">
@@ -240,6 +240,7 @@
 
         });
     </script>
+
     <script>
         jQuery(function($){
             function showToast(message, type = 'success') {
@@ -305,6 +306,7 @@
             });
         });
     </script>
+
     <script>
         jQuery(function($){
             function showToast(message, type = 'success') {
@@ -377,6 +379,7 @@
             }
         });
     </script>
+
     <script>
         jQuery(function ($) {
             function showToast(message, type = 'success') {
