@@ -179,7 +179,10 @@ class FlowController extends Controller
 
     public function show($id)
     {
-        $project = Project::findOrFail($id);
+        $project = Project::leftjoin('users' , 'users.id' , '=' , 'projects.user_id')
+            ->select('projects.*', 'users.name as ceo_name' , 'users.phone')
+            ->where('projects.id' , $id)
+            ->first();
         $finances       = Finance::all();
         $states         = State::all();
         $cities         = City::all();

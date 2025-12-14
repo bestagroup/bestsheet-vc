@@ -86,11 +86,11 @@
                 </tr>
                 <tr>
                     <th>مدیرعامل</th>
-                    <td>{{ $project->CEO }}</td>
+                    <td>{{ $project->ceo_name }}</td>
                 </tr>
                 <tr>
                     <th>شماره موبایل</th>
-                    <td>{{ $project->ceo_phone }}</td>
+                    <td>{{ $project->phone }}</td>
                 </tr>
                 <tr>
                     <th>وضعیت پروژه</th>
@@ -122,11 +122,11 @@
                 </tr>
                 <tr>
                     <th>مدیرعامل</th>
-                    <td>{{ $project->CEO }}</td>
+                    <td>{{ $project->ceo_name }}</td>
                 </tr>
                 <tr>
                     <th>شماره موبایل</th>
-                    <td>{{ $project->ceo_phone }}</td>
+                    <td>{{ $project->phone }}</td>
                 </tr>
                 <tr>
                     <th>وضعیت پروژه</th>
