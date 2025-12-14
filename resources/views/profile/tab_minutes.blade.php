@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="date" name="date" placeholder="تاریخ برگزاری">
+                            <input type="text" data-jdp class="form-control" autocomplete="off" id="date" name="date" placeholder="تاریخ برگزاری">
                             <label for="date">تاریخ برگزاری</label>
                         </div>
                     </div>
@@ -91,11 +91,11 @@
                         { data: 'title'     , name: 'title' },
                         { data: 'date'      , name: 'date' },
                         { data: 'type'      , name: 'type' },
-                        { data: 'file_path' , name: 'file_path', orderable: false, searchable: false }
+                        { data: 'file_path' , name: 'file_path', orderable: true, searchable: true }
                     ],
                     order: [[0, 'desc']],
-                    paging: false,
-                    searching: false,
+                    paging: true,
+                    searching: true,
                     info: false,
                     language: {
                         url: "{{ asset('assets/vendor/js/fa.json') }}"

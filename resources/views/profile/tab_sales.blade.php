@@ -8,7 +8,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">اطلاعات مالی</h5>
+                    <h5 class="modal-title" id="addModalLabel">اطلاعات فروش و مالی</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="card-body">
@@ -36,8 +36,8 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="price-input form-control" id="monthly_income" name="monthly_income" placeholder="درآمد ماهانه">
-                                    <label for="monthly_income">درآمد ماه</label>
+                                    <input type="text" class="price-input form-control" id="created" name="created" placeholder="تعداد تولید">
+                                    <label for="monthly_income">تعداد تولید</label>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
@@ -54,8 +54,14 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" data-jdp class="price-input  form-control"  autocomplete="off" id="date" name="date" placeholder="سال و ماه گزارش">
-                                    <label for="date">سال و ماه گزارش</label>
+                                    <input type="text" class="price-input form-control" id="monthly_income" name="monthly_income" placeholder="درآمد ماهانه">
+                                    <label for="monthly_income">درآمد ماه</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" data-jdp class="price-input  form-control"  autocomplete="off" id="date" name="date" placeholder="تاریخ/ماه گزارش">
+                                    <label for="date">تاریخ/ماه گزارش </label>
                                 </div>
                             </div>
                             <div class="col-12 text-center">
@@ -76,6 +82,7 @@
                         <th>تعداد مشتریان</th>
                         <th>تعداد فروش</th>
                         <th>مبلغ فروش</th>
+                        <th>تعداد تولید</th>
                         <th>درآمد ماهانه</th>
                         <th>مجموع هزینه ها جاری</th>
                         <th>مجموع هزینه ها اداری </th>
@@ -90,34 +97,34 @@
     </div>
 </div>
 
-@push('scripts')
-    @if(Auth::user()->level == 'applicant')
-        <script type="text/javascript">
-            $(document).ready(function () {
-                const minutesTable = $('#minutes.yajra-datatable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "{{ route('minute.index') }}",
-                        data: function (d) {
-                            d.id = "{{ $project->id }}";
-                        }
-                    },
-                    columns: [
-                        { data: 'title'     , name: 'title' },
-                        { data: 'date'      , name: 'date' },
-                        { data: 'type'      , name: 'type' },
-                        { data: 'file_path' , name: 'file_path', orderable: false, searchable: false }
-                    ],
-                    order: [[0, 'desc']],
-                    paging: false,
-                    searching: false,
-                    info: false,
-                    language: {
-                        url: "{{ asset('assets/vendor/js/fa.json') }}"
-                    }
-                });
-            });
-        </script>
-    @endif
-@endpush
+{{--@push('scripts')--}}
+{{--    @if(Auth::user()->level == 'applicant')--}}
+{{--        <script type="text/javascript">--}}
+{{--            $(document).ready(function () {--}}
+{{--                const minutesTable = $('#minutes.yajra-datatable').DataTable({--}}
+{{--                    processing: true,--}}
+{{--                    serverSide: true,--}}
+{{--                    ajax: {--}}
+{{--                        url: "{{ route('minute.index') }}",--}}
+{{--                        data: function (d) {--}}
+{{--                            d.id = "{{ $project->id }}";--}}
+{{--                        }--}}
+{{--                    },--}}
+{{--                    columns: [--}}
+{{--                        { data: 'title'     , name: 'title' },--}}
+{{--                        { data: 'date'      , name: 'date' },--}}
+{{--                        { data: 'type'      , name: 'type' },--}}
+{{--                        { data: 'file_path' , name: 'file_path', orderable: false, searchable: false }--}}
+{{--                    ],--}}
+{{--                    order: [[0, 'desc']],--}}
+{{--                    paging: false,--}}
+{{--                    searching: false,--}}
+{{--                    info: false,--}}
+{{--                    language: {--}}
+{{--                        url: "{{ asset('assets/vendor/js/fa.json') }}"--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        </script>--}}
+{{--    @endif--}}
+{{--@endpush--}}
