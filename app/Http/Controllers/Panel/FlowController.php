@@ -70,7 +70,7 @@ class FlowController extends Controller
                     return ($data->flow_level);
                 })
                 ->addColumn('percentageshare', function ($data) {
-                    return ($data->percentageshare);
+                    return ($data->percentageshare . '%');
                 })
                 ->addColumn('invest_step', function ($data) {
 
