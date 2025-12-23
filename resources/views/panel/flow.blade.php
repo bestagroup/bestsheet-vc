@@ -26,6 +26,7 @@
                         <th>مدیرعامل شرکت</th>
                         <th>مرحله فرایند شرکت</th>
                         <th>درصد پیشرفت</th>
+                        <th>درصد سهام دریافتی</th>
                         <th>تاریخ شروع قرارداد</th>
                         <th>کل مبلغ درخواستی</th>
                         <th>مجموع مبلغ واریزی</th>
@@ -303,6 +304,7 @@
                     {data: 'CEO'                            , name: 'CEO'},
                     {data: 'flow_level'                     , name: 'flow_level'},
                     {data: 'invest_step'                    , name: 'invest_step',className:'text-center'},
+                    {data: 'percentageshare'                , name: 'percentageshare',className:'text-center'},
                     {data: 'start_date'                     , name: 'start_date',className:'text-center'},
                     {data: 'amount_request_accept'          , name: 'amount_request_accept',className:'text-center'},
                     {data: 'amount_deposited'               , name: 'amount_deposited',className:'text-center'},

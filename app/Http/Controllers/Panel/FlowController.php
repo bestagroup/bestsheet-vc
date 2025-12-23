@@ -51,6 +51,7 @@ class FlowController extends Controller
                     DB::raw('(SELECT i.title FROM investsteps i WHERE i.id = p.invest_step LIMIT 1) as flow_level'),
                     'p.start_date',
                     'p.invest_step',
+                    'p.percentageshare',
                     'p.amount_request_accept',
                     DB::raw('(SELECT COALESCE(SUM(f.amount),0) FROM finances f WHERE f.project_id = p.id) as total_payment')
                 )
@@ -67,6 +68,9 @@ class FlowController extends Controller
                 })
                 ->addColumn('flow_level', function ($data) {
                     return ($data->flow_level);
+                })
+                ->addColumn('percentageshare', function ($data) {
+                    return ($data->percentageshare);
                 })
                 ->addColumn('invest_step', function ($data) {
 
