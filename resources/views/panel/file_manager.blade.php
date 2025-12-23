@@ -23,7 +23,8 @@
                         <th>مرحله</th>
                         <th>سایز فایل</th>
                         <th>تاریخ آپلود</th>
-                        <th>پروژه</th>
+                        <th>نام طرح</th>
+                        <th>نام شرکت</th>
                         <th>عملیات</th>
                     </tr>
                     </thead>
@@ -120,14 +121,15 @@
                 order: [[0, 'desc']],
                 ajax: "{{route(request()->segment(2).'.index')}}",
                 columns: [
-                    {data: 'file_path'      , name: 'file_path' },
-                    {data: 'name'           , name: 'name'     },
-                    {data: 'original_name'  , name: 'original_name'     },
-                    {data: 'type'           , name: 'type'      },
-                    {data: 'step'           , name: 'step'      },
-                    {data: 'size'           , name: 'size'      },
-                    {data: 'date'           , name: 'date'      },
-                    {data: 'title'          , name: 'title'      },
+                    {data: 'file_path'      , name: 'file_path'     },
+                    {data: 'name'           , name: 'name'          },
+                    {data: 'original_name'  , name: 'original_name' },
+                    {data: 'type'           , name: 'type'          },
+                    {data: 'step'           , name: 'step'          },
+                    {data: 'size'           , name: 'size'          },
+                    {data: 'date'           , name: 'date'          },
+                    {data: 'title'          , name: 'title'         },
+                    {data: 'company_name'   , name: 'company_name'  },
                     {data: 'action'         , name: 'action', orderable: true, searchable: true},
                 ],
                 language: {
