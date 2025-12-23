@@ -127,6 +127,12 @@
             <div class="invalid-feedback" id="ceo_national_codeFeedback">کد ملی مدیرعامل اجباری می باشد و با دقت وارد شود</div>
         </div>
     </div>
+    <div class="col-12 col-md-4">
+        <div class="form-floating form-floating-outline">
+            <textarea rows="2" class="form-control" id="percentageshare_{{$project->id}}" name="percentageshare" placeholder="درصد سهام">{{ $project->percentageshare }}</textarea>
+            <label for="percentageshare">درصد سهام</label>
+        </div>
+    </div>
     <div class="col-12 col-md-6">
         <div class="form-floating form-floating-outline">
             <textarea rows="2" class="form-control" id="address_{{$project->id}}" name="address" placeholder="آدرس">{{ $project->address }}</textarea>
