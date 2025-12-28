@@ -304,7 +304,8 @@ document.addEventListener('DOMContentLoaded', () => {
             maxFilesize: 100,
             parallelUploads: 20,
             uploadMultiple: false,
-            acceptedFiles: `image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`,
+            acceptedFiles: `image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+            application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.presentationml.presentation`,
             dictDefaultMessage: "فایل‌ها را اینجا رها کنید یا کلیک کنید برای انتخاب",
             init: function () {
                 this.on("sending", function (file, xhr, formData) {
