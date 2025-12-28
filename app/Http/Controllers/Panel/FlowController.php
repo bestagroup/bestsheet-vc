@@ -128,12 +128,12 @@ class FlowController extends Controller
         try {
             $project_steps = new Project_step();
 
-            $project_steps->project_id = $request->input('project_id');
-            $project_steps->title = $request->input('step_title');
+            $project_steps->project_id  = $request->input('project_id');
+            $project_steps->title       = $request->input('step_title');
             $project_steps->step_number = $request->input('step_id');
-            $project_steps->status = $request->input('status'); // approved / rejected
+            $project_steps->status      = $request->input('status'); // approved / rejected
             $project_steps->description = $request->input('description', '');
-            $project_steps->user_id = Auth::user()->id;
+            $project_steps->user_id     = Auth::user()->id;
 
             $result = $project_steps->save();
 
@@ -145,6 +145,7 @@ class FlowController extends Controller
             }elseif ($project_steps->status == 'rejected')
             {
                 $project->is_rejected = 1;
+                $project->reject_step = (int)$request->input('step_id');
             }
 
             $project->update();
