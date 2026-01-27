@@ -3,7 +3,6 @@
 @section('title', 'مدیریت زیر منوهای داشبورد')
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dataTables.dataTables.min.css') }}"/>
-    <link rel="stylesheet" href="{{'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'}}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')

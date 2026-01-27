@@ -456,18 +456,82 @@
     </script>
 
     <script>
-        document.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('approve-btn') && !e.target.classList.contains('reject-btn')) return;
+        (function () {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
-            const form = e.target.closest('.flow-form');
-            const statusInput = form.querySelector('.status-input');
+            function refreshProfileModal(projectId) {
+                if (!projectId) return;
+                const parts = window.location.pathname.split('/').filter(Boolean);
+                const base = '/' + parts.slice(0, 2).join('/');
 
-            // مقداردهی به status
-            statusInput.value = e.target.classList.contains('approve-btn') ? 'approved' : 'rejected';
+                // تب فعال فعلی را به خاطر بسپار تا بعد از رفرش همان تب باز بماند
+                const activeTabId  = $('#showModalBody .nav-link.active').attr('id');
+                const activePaneId = $('#showModalBody .tab-pane.active').attr('id');
 
-            // فراخوانی اسکریپت عمومی بدون تغییر در خودش
-            handleCreate(form);
-        });
+                const $body = $('#showModalBody');
+                $body.html('<div class="text-center text-muted py-5">در حال بارگذاری...</div>');
+
+                $.get(`${base}/${projectId}`)
+                    .done(function (html) {
+                        $body.html(html);
+
+                        // بازگرداندن تب قبلی (اگر هنوز وجود دارد)
+                        if (activeTabId && activePaneId) {
+                            const $newTab  = $body.find(`#${activeTabId}`);
+                            const $newPane = $body.find(`#${activePaneId}`);
+                            if ($newTab.length && $newPane.length) {
+                                $body.find('.nav-link').removeClass('active');
+                                $body.find('.tab-pane').removeClass('show active');
+                                $newTab.addClass('active');
+                                $newPane.addClass('show active');
+                            }
+                        }
+                    })
+                    .fail(function () {
+                        $body.html('<div class="text-center text-danger py-5">خطا در بروزرسانی اطلاعات</div>');
+                    });
+            }
+
+            // ست کردن وضعیت و ارسال فرم
+            $(document).on('click', '.approve-btn, .reject-btn', function () {
+                const $form = $(this).closest('.flow-form');
+                if (!$form.length) return;
+
+                $form.find('.status-input').val($(this).hasClass('approve-btn') ? 'approved' : 'rejected');
+                $form.trigger('submit');
+            });
+
+            // ارسال AJAX برای فرم‌های گردش کار داخل پروفایل شرکت
+            $(document).on('submit', '.flow-form', function (e) {
+                e.preventDefault();
+                const $form = $(this);
+                const projectId = $form.find('input[name="project_id"]').val();
+                const $buttons = $form.find('.approve-btn, .reject-btn');
+
+                $buttons.prop('disabled', true);
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: $form.attr('method') || 'POST',
+                    data: $form.serialize(),
+                    headers: { 'X-CSRF-TOKEN': csrfToken },
+                })
+                    .done(function (resp) {
+                        if (resp && resp.success) {
+                            refreshProfileModal(projectId);
+                            toastr.success(resp.message || 'مرحله با موفقیت ثبت شد');
+                        } else {
+                            toastr.error(resp?.message || 'خطا در ثبت مرحله');
+                        }
+                    })
+                    .fail(function () {
+                        toastr.error('اشکال ارتباط با سرور');
+                    })
+                    .always(function () {
+                        $buttons.prop('disabled', false);
+                    });
+            });
+        })();
     </script>
 
     <script>

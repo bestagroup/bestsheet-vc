@@ -33,6 +33,13 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('panel/flow'         , 'FlowController');
     Route::resource('panel/report'       , 'ReportController');
 
+    Route::resource('panel/ticketing', 'TicketingController');
+    Route::post('panel/ticketing/{ticket}/reply', 'TicketingController@reply')->name('ticketing.reply');
+
+    Route::view('/panel/correspondence', 'panel.correspondence', [
+        'thispage' => ['list' => 'مکاتبات داخلی']
+    ]);
+
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('userdata'                  , 'ProfileController@userdata')->name('userdata');
     Route::get('companydata'               , 'ProfileController@companydata')->name('companydata');

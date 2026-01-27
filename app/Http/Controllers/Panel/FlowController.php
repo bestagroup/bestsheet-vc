@@ -139,13 +139,17 @@ class FlowController extends Controller
 
             $project = Project::findOrfail($request->input('project_id'));
 
-            if ($project_steps->status == 'approved')
-            {
-                $project->invest_step = (int)$request->input('step_id') + 1;
-            }elseif ($project_steps->status == 'rejected')
-            {
+            $currentStep = (int) $request->input('step_id');
+            $maxStep     = Investstep::max('id') ?? $project->invest_step ?? 1;
+
+            if ($project_steps->status === 'approved') {
+                $project->invest_step = min($maxStep, $currentStep + 1);
+                $project->is_rejected = 0;
+                $project->reject_step = null;
+            } elseif ($project_steps->status === 'rejected') {
                 $project->is_rejected = 1;
-                $project->reject_step = (int)$request->input('step_id');
+                $project->reject_step = $currentStep;
+                $project->invest_step = max(1, $currentStep - 1);
             }
 
             $project->update();
