@@ -494,6 +494,7 @@
 
             // ست کردن وضعیت و ارسال فرم
             $(document).on('click', '.approve-btn, .reject-btn', function () {
+                if ($(this).is(':disabled')) return;
                 const $form = $(this).closest('.flow-form');
                 if (!$form.length) return;
 

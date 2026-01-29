@@ -149,7 +149,7 @@ class FlowController extends Controller
             } elseif ($project_steps->status === 'rejected') {
                 $project->is_rejected = 1;
                 $project->reject_step = $currentStep;
-                $project->invest_step = max(1, $currentStep - 1);
+                $project->invest_step = $currentStep;
             }
 
             $project->update();

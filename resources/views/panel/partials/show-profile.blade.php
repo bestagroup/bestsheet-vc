@@ -163,14 +163,22 @@
                 </div>
                 @foreach($investsteps as $step)
                     @if($project->invest_step === $step->id)
+                        @php
+                            $isRejectedStep = $project->is_rejected == 1 && $project->reject_step == $step->id;
+                        @endphp
                         <div class="col-md-8">
                             <div class="card border shadow-sm">
                                 <div class="card-header bg-light d-flex align-items-center">
                                     <span class="badge bg-primary me-2" style="width:26px;">{{ $project->invest_step }}</span>
                                     <h6 class="mb-0 fw-bold">{{ $step->title }}</h6>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" data-rejected="{{ $isRejectedStep ? '1' : '0' }}">
                                     <p class="text-muted">{{ $step->description }}</p>
+                                    @if($isRejectedStep)
+                                        <div class="alert alert-danger mb-3" role="alert">
+                                            این مرحله رد شده است؛ امکان اقدام مجدد وجود ندارد.
+                                        </div>
+                                    @endif
                                     @if($step->id == 1)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [4]) && $file->project_id == $project->id)
@@ -193,13 +201,13 @@
                                                 <input type="hidden" name="step_title" value="{{ $step->title }}">
                                                 <input type="hidden" name="status" class="status-input">
 
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                                <textarea name="description" class="form-control mb-2" rows="4" {{ $isRejectedStep ? 'disabled' : '' }}></textarea>
 
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
+                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;" {{ $isRejectedStep ? 'disabled' : '' }}>
                                                     تایید مرحله
                                                 </button>
 
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
+                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;" {{ $isRejectedStep ? 'disabled' : '' }}>
                                                     رد مرحله
                                                 </button>
 
@@ -968,6 +976,14 @@
                 tooltipTriggerList.forEach(function (el) {
                     new bootstrap.Tooltip(el);
                 });
+
+                // غیرفعال‌سازی فرمِ مرحله‌ای که رد شده است
+                document.querySelectorAll('[data-rejected="1"]').forEach(function (container) {
+                    container.querySelectorAll('.flow-form textarea, .flow-form button').forEach(function (ctrl) {
+                        ctrl.setAttribute('disabled', 'disabled');
+                        ctrl.classList.add('disabled');
+                    });
+                });
             });
         </script>
 
@@ -976,6 +992,12 @@
             .card .text-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             @media (max-width: 575.98px) {
                 .card-header h6 { max-width: 110px; }
+            }
+
+            /* پنهان‌سازی دکمه‌های تأیید/رد در مرحله‌ی رد شده */
+            [data-rejected="1"] .approve-btn,
+            [data-rejected="1"] .reject-btn {
+                display: none !important;
             }
         </style>
 
@@ -1034,6 +1056,3 @@
         </script>
     </div>
 </div>
-
-
-
