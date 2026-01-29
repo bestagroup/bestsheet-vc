@@ -1,61 +1,70 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" id="companyTabs{{ $project->id }}" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="profilecompany-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-profilecompany{{ $project->id }}"
+        <button class="nav-link active" id="profilecompany-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-profilecompany{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-profilecompany{{ $project->id }}" aria-selected="true">
             اطلاعات شرکت
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="profileproject-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-profileproject{{ $project->id }}"
+        <button class="nav-link" id="profileproject-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-profileproject{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-profileproject{{ $project->id }}" aria-selected="true">
             اطلاعات طرح
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="investment-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-investment{{ $project->id }}"
+        <button class="nav-link" id="investment-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-investment{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-investment{{ $project->id }}" aria-selected="false">
             سرمایه‌گذاری
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="payments-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-payments{{ $project->id }}"
+        <button class="nav-link" id="payments-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-payments{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-payments{{ $project->id }}" aria-selected="false">
             پرداخت‌ها
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="kpi-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-kpi{{ $project->id }}"
+        <button class="nav-link" id="kpi-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-kpi{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-kpi{{ $project->id }}" aria-selected="false">
             KPI
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="commitment-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-commitment{{ $project->id }}"
+        <button class="nav-link" id="commitment-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-commitment{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-commitment{{ $project->id }}" aria-selected="false">
             تعهدات و تضامین
         </button>
     </li>
-{{--    <li class="nav-item" role="presentation">--}}
-{{--        <button class="nav-link" id="guaranty-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-guaranty{{ $project->id }}"--}}
-{{--                type="button" role="tab" aria-controls="tab-guaranty{{ $project->id }}" aria-selected="false">--}}
-{{--            تضامین--}}
-{{--        </button>--}}
-{{--    </li>--}}
+    {{--    <li class="nav-item" role="presentation">--}}
+    {{--        <button class="nav-link" id="guaranty-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-guaranty{{ $project->id }}"--}}
+    {{--                type="button" role="tab" aria-controls="tab-guaranty{{ $project->id }}" aria-selected="false">--}}
+    {{--            تضامین--}}
+    {{--        </button>--}}
+    {{--    </li>--}}
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="workflow-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-workflow{{ $project->id }}"
+        <button class="nav-link" id="workflow-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-workflow{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-workflow{{ $project->id }}" aria-selected="false">
             گردش کار
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="message-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-message{{ $project->id }}"
+        <button class="nav-link" id="message-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-message{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-message{{ $project->id }}" aria-selected="false">
             پیام ها
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="file-tab{{ $project->id }}" data-bs-toggle="tab" data-bs-target="#tab-file{{ $project->id }}"
+        <button class="nav-link" id="file-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-file{{ $project->id }}"
                 type="button" role="tab" aria-controls="tab-file{{ $project->id }}" aria-selected="false">
             فایل ها
         </button>
@@ -64,7 +73,8 @@
 <!-- Tab Content -->
 <div class="tab-content mt-3" id="companyTabsContent{{ $project->id }}">
     <!-- Profile Tab -->
-    <div class="tab-pane fade show active" id="tab-profilecompany{{ $project->id }}" role="tabpanel" aria-labelledby="profilecompany-tab{{ $project->id }}">
+    <div class="tab-pane fade show active" id="tab-profilecompany{{ $project->id }}" role="tabpanel"
+         aria-labelledby="profilecompany-tab{{ $project->id }}">
 
         @if($project->logo)
             <div class="text-center mb-3">
@@ -74,7 +84,8 @@
         @endif
 
         <div style="overflow-x: auto;">
-            <table class="table table-bordered table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
+            <table class="table table-bordered table-striped"
+                   style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
                 <tbody>
                 <tr>
                     <th style="width: 30%;">نام شرکت</th>
@@ -101,7 +112,8 @@
         </div>
     </div>
     <!-- Profile Tab -->
-    <div class="tab-pane fade" id="tab-profileproject{{ $project->id }}" role="tabpanel" aria-labelledby="profileproject-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-profileproject{{ $project->id }}" role="tabpanel"
+         aria-labelledby="profileproject-tab{{ $project->id }}">
         @if($project->logo)
             <div class="text-center mb-3">
                 <img src="{{ asset('storage/'.$project->logo) }}"
@@ -110,7 +122,8 @@
         @endif
 
         <div style="overflow-x: auto;">
-            <table class="table table-bordered table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
+            <table class="table table-bordered table-striped"
+                   style="table-layout: fixed; width: 100%; word-wrap: break-word; white-space: normal;">
                 <tbody>
                 <tr>
                     <th style="width: 30%;">نام شرکت</th>
@@ -137,19 +150,24 @@
         </div>
     </div>
     <!-- investment Tab -->
-    <div class="tab-pane fade" id="tab-investment{{ $project->id }}" role="tabpanel" aria-labelledby="investment-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-investment{{ $project->id }}" role="tabpanel"
+         aria-labelledby="investment-tab{{ $project->id }}">
         <div class="accordion" id="projectStepsAccordion{{ $project->id }}">
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="list-group shadow-sm rounded" style="overflow-y:auto; max-height:620px;">
                         @foreach($investsteps as $step)
-                            <div class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($project->invest_step) ? 'active' : '' }}"
-                                 style="cursor: default; border-right: 5px solid {{ $step->id < $project->invest_step ? '#4caf50' : ($step->id === $project->invest_step ? '#7367f0' : '#ddd') }};">
-                                <span class="me-2 d-inline-flex justify-content-center align-items-center rounded-circle" style="width: 28px; height: 28px; background: {{ $step->id < $project->invest_step ? '#c8e6c9' : ($step->id === $project->invest_step ? '#ede7f6' : '#f1f1f1') }}; color: {{ $step->id < $project->invest_step ? '#2e7d32' : ($step->id === $project->invest_step ? '#5e35b1' : '#aaa') }}; font-weight: bold;">
+                            <div
+                                class="list-group-item d-flex align-items-center py-2 {{ $step->id === ($project->invest_step) ? 'active' : '' }}"
+                                style="cursor: default; border-right: 5px solid {{ $step->id < $project->invest_step ? '#4caf50' : ($step->id === $project->invest_step ? '#7367f0' : '#ddd') }};">
+                                <span
+                                    class="me-2 d-inline-flex justify-content-center align-items-center rounded-circle"
+                                    style="width: 28px; height: 28px; background: {{ $step->id < $project->invest_step ? '#c8e6c9' : ($step->id === $project->invest_step ? '#ede7f6' : '#f1f1f1') }}; color: {{ $step->id < $project->invest_step ? '#2e7d32' : ($step->id === $project->invest_step ? '#5e35b1' : '#aaa') }}; font-weight: bold;">
                                     {{ $step->id }}
                                 </span>
                                 <div class="flex-grow-1">
-                                    <div class="fw-bold {{ $step->id === $project->invest_step ? 'text-dark' : 'text-muted' }}">{{ $step->title }}</div>
+                                    <div
+                                        class="fw-bold {{ $step->id === $project->invest_step ? 'text-dark' : 'text-muted' }}">{{ $step->title }}</div>
                                     <small class="text-muted">{{ $step->description }}</small>
                                 </div>
                                 @if($step->id === $project->invest_step)
@@ -168,8 +186,9 @@
                         @endphp
                         <div class="col-md-8">
                             <div class="card border shadow-sm">
-                                <div class="card-header bg-light d-flex align-items-center">
-                                    <span class="badge bg-primary me-2" style="width:26px;">{{ $project->invest_step }}</span>
+                                <div class="card-header d-flex align-items-center border-1">
+                                    <span class="badge bg-primary me-2"
+                                          style="width:26px;">{{ $project->invest_step }}</span>
                                     <h6 class="mb-0 fw-bold">{{ $step->title }}</h6>
                                 </div>
                                 <div class="card-body" data-rejected="{{ $isRejectedStep ? '1' : '0' }}">
@@ -183,122 +202,80 @@
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [4]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}">
+                                                        <span>فایل <a href="{{asset('storage/' . $file->file_path)}}"
+                                                                      target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -</span>
+                                                        <div class="record-actions">
+                                                            <button class="send-btn btn btn-primary"
+                                                                    data-id="{{ $file->id }}" data-status="4">تایید
+                                                            </button>
+                                                            <button class="send-btn btn btn-delete"
+                                                                    data-id="{{ $file->id }}" data-status="5">رد
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
-
-                                                <textarea name="description" class="form-control mb-2" rows="4" {{ $isRejectedStep ? 'disabled' : '' }}></textarea>
-
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;" {{ $isRejectedStep ? 'disabled' : '' }}>
-                                                    تایید مرحله
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;" {{ $isRejectedStep ? 'disabled' : '' }}>
-                                                    رد مرحله
-                                                </button>
-
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
-
-                                    @elseif($step->id == 2)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form w-100">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <div class="flow-action-box p-3 p-md-4 mb-3">
+                                                <div
+                                                    class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+                                                    <div class="flow-action-meta">
+                                                        <span
+                                                            class="badge bg-primary text-white px-3 py-2 rounded-pill">مرحله {{ $step->id }}</span>
+                                                        <span class="d-inline-flex align-items-center gap-1">
+                                                                <i class="mdi mdi-file-document-edit-outline text-primary"></i>
+                                                                ثبت نظر و تصمیم
+                                                            </span>
+                                                    </div>
+                                                    <span class="badge bg-label-secondary text-dark">فرآیند فعال</span>
+                                                </div>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                                <label for="description-step-{{ $step->id }}"
+                                                       class="form-label small text-muted mb-2">توضیحات
+                                                    (اختیاری)</label>
+                                                <textarea id="description-step-{{ $step->id }}" name="description"
+                                                          class="form-control soft-input mb-3"
+                                                          rows="4" {{ $isRejectedStep ? 'disabled' : '' }}></textarea>
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+                                                <div class="d-flex gap-2 flex-wrap justify-content-center text-center">
+                                                    <button type="button"
+                                                            class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                            style="min-width:170px;" {{ $isRejectedStep ? 'disabled' : '' }}>
+                                                        <i class="mdi mdi-check-circle-outline"></i>
+                                                        تایید مرحله
+                                                    </button>
+
+                                                    <button type="button"
+                                                            class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                            style="min-width:170px;" {{ $isRejectedStep ? 'disabled' : '' }}>
+                                                        <i class="mdi mdi-close-circle-outline"></i>
+                                                        رد مرحله
+                                                    </button>
+                                                </div>
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
-                                    @elseif($step->id == 3)
-                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}> قالب فایل غربالگری جهت بارگذاری </a> </div>
-                                    @foreach($files as $file)
-                                        @if(in_array($file->subject_id, [1]) && $file->project_id == $project->id)
-                                            <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -</div>
-                                        @endif
-                                        @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="1" data-title="غربالگری"><i class="mdi mdi-file-document-multiple-outline"></i>غربالگری</button>
-
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
-
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                    تایید مرحله
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                    رد مرحله
-                                                </button>
-
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
-                                    @elseif($step->id == 4)
-                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}> قالب فایل ارزیابی اولیه جهت بارگذاری </a> </div>
-                                    @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [2]) && $file->project_id == $project->id)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="2" data-title="ارزیابی اولیه"><i class="mdi mdi-file-document-multiple-outline"></i>ارزیابی اولیه</button>
-
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
-
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                    تایید مرحله
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                    رد مرحله
-                                                </button>
-
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
-                                    @elseif($step->id == 5)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [29,30]) && $file->project_id == $project->id)
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -</div>
-                                           @endif
-                                        @endforeach
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="29" data-title="صورتجلسه کمیته ریسک"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسه کمیته ریسک</button>
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="30" data-title="صورتجلسه کمیته سرمایه گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسه کمیته سرمایه گذاری</button>
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                    @elseif($step->id == 2)
+                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
@@ -307,179 +284,457 @@
 
                                             <textarea name="description" class="form-control mb-2" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center mt-4">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
+
+                                    @elseif($step->id == 3)
+                                        <div class="alert alert-warning text-center"><a
+                                                href="{{asset('storage/uploads/sinavc/Screening.docx')}}"
+                                                target="_blank" }}> قالب فایل غربالگری جهت بارگذاری </a></div>
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [1]) && $file->project_id == $project->id)
+                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}">
+                                                    فایل <a href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                    تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="1" data-title="غربالگری">
+                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                            غربالگری
+                                        </button>
+
+                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
+
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
+
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
+                                    @elseif($step->id == 4)
+                                        <div class="alert alert-warning text-center"><a
+                                                href="{{asset('storage/uploads/sinavc/Screening.docx')}}"
+                                                target="_blank" }}> قالب فایل ارزیابی اولیه جهت بارگذاری </a></div>
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [2]) && $file->project_id == $project->id)
+                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}">
+                                                    فایل <a href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                    تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="2" data-title="ارزیابی اولیه">
+                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                            ارزیابی اولیه
+                                        </button>
+
+                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
+
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
+
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
+                                    @elseif($step->id == 5)
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [29,30]) && $file->project_id == $project->id)
+                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}">
+                                                    فایل <a href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                    تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="29" data-title="صورتجلسه کمیته ریسک">
+                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                            صورتجلسه کمیته ریسک
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="30" data-title="صورتجلسه کمیته سرمایه گذاری">
+                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                            صورتجلسه کمیته سرمایه گذاری
+                                        </button>
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
+
+                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
                                     @elseif($step->id == 6)
-                                        <div class="alert alert-warning"> <a href="{{asset('storage/uploads/sinavc/Screening.docx')}}" target="_blank"}}> قالب فایل ارزیابی موشکافانه جهت بارگذاری </a> </div>
-                                    @foreach($files as $file)
+                                        <div class="alert alert-warning text-center"><a
+                                                href="{{asset('storage/uploads/sinavc/Screening.docx')}}"
+                                                target="_blank" }}> قالب فایل ارزیابی موشکافانه جهت بارگذاری </a></div>
+                                        @foreach($files as $file)
                                             @if(in_array($file->subject_id, [3,6,7,8,9,10,11,12,13,14,15,16]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="3" data-title="ارزیابی موشکافانه"><i class="mdi mdi-file-document-multiple-outline"></i>ارزیابی موشکافانه</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="3" data-title="ارزیابی موشکافانه">
+                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                            ارزیابی موشکافانه
+                                        </button>
 
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
-
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                    تایید مرحله
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                    رد مرحله
-                                                </button>
-
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
-                                    @elseif($step->id == 7)
-
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
-
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                    تایید مرحله
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                    رد مرحله
-                                                </button>
-
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
-                                    @elseif($step->id == 8)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [25]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="25" data-title="کاربرگ تایید سرمایه پذیر"><i class="mdi mdi-file-document-multiple-outline"></i>کاربرگ تایید سرمایه پذیر</button>
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
 
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
+                                    @elseif($step->id == 7)
+
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
+
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
+
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
+                                    @elseif($step->id == 8)
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [25]) && $file->project_id == $project->id)
+                                                @if($file->status  == 4)
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
+                                                    </div>
+                                                @elseif($file->status <> 5)
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="25" data-title="کاربرگ تایید سرمایه پذیر">
+                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                            کاربرگ تایید سرمایه پذیر
+                                        </button>
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
+
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
+
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
                                     @elseif($step->id == 9)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [19,31,32,33]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
-                                                @endif                                            @endif
+                                                @endif
+                                            @endif
                                         @endforeach
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="31" data-title="قرارداد با شرکت ارزش گذار"><i class="mdi mdi-file-document-multiple-outline"></i>قرارداد با شرکت ارزش گذار</button>
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="32" data-title="فاکتور ارسالی ارزش گذار"><i class="mdi mdi-file-document-multiple-outline"></i>فاکتور ارسالی ارزش گذار</button>
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="33" data-title="نسخ گزارش ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>نسخ گزارش ارزش گذاری</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="31" data-title="قرارداد با شرکت ارزش گذار"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>قرارداد با شرکت ارزش
+                                            گذار
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="32" data-title="فاکتور ارسالی ارزش گذار"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>فاکتور ارسالی ارزش
+                                            گذار
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="33" data-title="نسخ گزارش ارزش گذاری"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>نسخ گزارش ارزش گذاری
+                                        </button>
 
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
-
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                    تایید مرحله
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                    رد مرحله
-                                                </button>
-
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
-                                    @elseif($step->id == 10)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [27,30,34]) && $file->project_id == $project->id)
-                                                @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
-                                                    </div>
-                                                @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
-                                                    </div>
-                                                @endif                                                 @endif
-                                        @endforeach
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="27" data-title="صورتجلسه کمیته ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسه کمیته ارزش گذاری</button>
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="34" data-title="فایل ارائه گزارش ارزش گذاری"><i class="mdi mdi-file-document-multiple-outline"></i>فایل ارائه گزارش ارزش گذاری</button>
-
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
+                                    @elseif($step->id == 10)
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [27,30,34]) && $file->project_id == $project->id)
+                                                @if($file->status  == 4)
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <span style="color: green; font-weight: bold;">✔ تایید شد</span>
+                                                    </div>
+                                                @elseif($file->status <> 5)
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="27" data-title="صورتجلسه کمیته ارزش گذاری"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>صورتجلسه کمیته ارزش
+                                            گذاری
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="34" data-title="فایل ارائه گزارش ارزش گذاری"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>فایل ارائه گزارش ارزش
+                                            گذاری
+                                        </button>
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
+
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
+
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
@@ -487,63 +742,112 @@
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [38]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                             <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="38" data-title="فایل صورتجلسه هیئت مدیره"><i class="mdi mdi-file-document-multiple-outline"></i>فایل صورتجلسه هیئت مدیره</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="38" data-title="فایل صورتجلسه هیئت مدیره"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>فایل صورتجلسه هیئت
+                                            مدیره
+                                        </button>
 
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
-
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
-
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                    تایید مرحله
-                                                </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                    رد مرحله
-                                                </button>
-
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
-                                    @elseif($step->id == 12)
-                                        @foreach($files as $file)
-                                            @if(in_array($file->subject_id, [28 , 36]) && $file->project_id == $project->id)
-                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -</div>
-                                            @endif
-                                        @endforeach
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="36" data-title="راستی آزمایی حقوقی"><i class="mdi mdi-file-document-multiple-outline"></i>راستی آزمایی حقوقی</button>
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="28" data-title="نسخ قرارداد"><i class="mdi mdi-file-document-multiple-outline"></i>نسخ قرارداد</button>
-
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
+                                    @elseif($step->id == 12)
+                                        @foreach($files as $file)
+                                            @if(in_array($file->subject_id, [28 , 36]) && $file->project_id == $project->id)
+                                                <div class="alert alert-info record-box" id="record-{{ $file->id }}">
+                                                    فایل <a href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                    تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="36" data-title="راستی آزمایی حقوقی"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>راستی آزمایی حقوقی
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="28" data-title="نسخ قرارداد"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>نسخ قرارداد
+                                        </button>
+
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
+
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
+
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+                                                    تایید مرحله
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+                                                    رد مرحله
+                                                </button>
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
@@ -551,35 +855,78 @@
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [20]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="20" data-title="قرارداد نهایی"><i class="mdi mdi-file-document-multiple-outline"></i>قرارداد نهایی</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="20" data-title="قرارداد نهایی"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>قرارداد نهایی
+                                        </button>
 
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+
+
+                                                    تایید مرحله
+
+
+                                                </button>
+
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+
+
+                                                    رد مرحله
+
+
+                                                </button>
+
+
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
@@ -587,222 +934,472 @@
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [18,21]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="21" data-title="مستندات شاخص کلیدی اول"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی اول</button>
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="21" data-title="مستندات شاخص کلیدی اول"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی
+                                            اول
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="18" data-title="صورتجلسات"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات
+                                        </button>
 
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
 
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
                                                     تایید مرحله
                                                 </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
                                                     رد مرحله
                                                 </button>
 
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
+
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
                                     @elseif($step->id == 15)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [18,22]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="22" data-title="مستندات شاخص کلیدی دوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی دوم</button>
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="22" data-title="مستندات شاخص کلیدی دوم"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی
+                                            دوم
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="18" data-title="صورتجلسات"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات
+                                        </button>
 
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
 
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-check-circle-outline"></i>
                                                     تایید مرحله
                                                 </button>
-
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+                                                    <i class="mdi mdi-close-circle-outline"></i>
                                                     رد مرحله
                                                 </button>
+                                            </div>
 
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
                                     @elseif($step->id == 16)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [18,23]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="23" data-title="مستندات شاخص کلیدی سوم"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی سوم</button>
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="23" data-title="مستندات شاخص کلیدی سوم"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی
+                                            سوم
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="18" data-title="صورتجلسات"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات
+                                        </button>
 
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
 
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+
+
                                                     تایید مرحله
+
+
                                                 </button>
 
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+
+
                                                     رد مرحله
+
+
                                                 </button>
 
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
+
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
                                     @elseif($step->id == 17)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [18,24]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="24" data-title="مستندات شاخص کلیدی چهارم و سایر"><i class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی چهارم و سایر</button>
-                                            <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="18" data-title="صورتجلسات"><i class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات</button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="24" data-title="مستندات شاخص کلیدی چهارم و سایر"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>مستندات شاخص کلیدی
+                                            چهارم و سایر
+                                        </button>
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="18" data-title="صورتجلسات"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>صورتجلسات
+                                        </button>
 
-                                            <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
-                                                @csrf
-                                                <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                                <input type="hidden" name="step_id" value="{{ $step->id }}">
-                                                <input type="hidden" name="step_title" value="{{ $step->title }}">
-                                                <input type="hidden" name="status" class="status-input">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
+                                            @csrf
+                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
+                                            <input type="hidden" name="step_id" value="{{ $step->id }}">
+                                            <input type="hidden" name="step_title" value="{{ $step->title }}">
+                                            <input type="hidden" name="status" class="status-input">
 
-                                                <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                                <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
+
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+
+
                                                     تایید مرحله
+
+
                                                 </button>
 
-                                                <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+
+
                                                     رد مرحله
+
+
                                                 </button>
 
-                                                <button type="submit" class="d-none real-submit"></button>
-                                            </form>
+
+                                            </div>
+
+                                            <button type="submit" class="d-none real-submit"></button>
+                                        </form>
                                     @elseif($step->id == 18)
                                         @foreach($files as $file)
                                             @if(in_array($file->subject_id, [37]) && $file->project_id == $project->id)
                                                 @if($file->status  == 4)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
                                                         <span style="color: green; font-weight: bold;">✔ تایید شد</span>
                                                     </div>
                                                 @elseif($file->status <> 5)
-                                                    <div class="alert alert-info record-box" id="record-{{ $file->id }}"> فایل <a href="{{asset('storage/' . $file->file_path)}}" target="_blank"> {{$file->original_name}} </a> در تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده -
-                                                        <button class="send-btn btn btn-primary" data-id="{{ $file->id }}" data-status="4">تایید</button>
-                                                        <button class="send-btn btn btn-delete" data-id="{{ $file->id }}" data-status="5">رد</button>
+                                                    <div class="alert alert-info record-box"
+                                                         id="record-{{ $file->id }}"> فایل <a
+                                                            href="{{asset('storage/' . $file->file_path)}}"
+                                                            target="_blank"> {{$file->original_name}} </a> در
+                                                        تاریخ {{jdate($file->created_at)->format('d-m-Y')}} بارگذاری شده
+                                                        -
+                                                        <button class="send-btn btn btn-primary"
+                                                                data-id="{{ $file->id }}" data-status="4">تایید
+                                                        </button>
+                                                        <button class="send-btn btn btn-delete"
+                                                                data-id="{{ $file->id }}" data-status="5">رد
+                                                        </button>
                                                     </div>
                                                 @endif
                                             @endif
                                         @endforeach
-                                        <button class="btn btn-md btn-image mx-1 upload-btn" style="min-width: 170px;margin: 30px auto;" data-id="{{$project->id}}" data-subject="37" data-title="گزارش عملکرد"><i class="mdi mdi-file-document-multiple-outline"></i>گزارش عملکرد</button>
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <button class="btn upload-btn upload-wide" data-id="{{$project->id}}"
+                                                data-subject="37" data-title="گزارش عملکرد"><i
+                                                class="mdi mdi-file-document-multiple-outline"></i>گزارش عملکرد
+                                        </button>
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+
+
+                                                    تایید مرحله
+
+
+                                                </button>
+
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+
+
+                                                    رد مرحله
+
+
+                                                </button>
+
+
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
                                     @elseif($step->id == 19)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+
+
+                                                    تایید مرحله
+
+
+                                                </button>
+
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+
+
+                                                    رد مرحله
+
+
+                                                </button>
+
+
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
                                     @elseif($step->id == 20)
-                                        <form action="{{ route('flow.store') }}" method="POST" class="flow-form d-inline">
+                                        <form action="{{ route('flow.store') }}" method="POST"
+                                              class="flow-form d-inline">
                                             @csrf
                                             <input type="hidden" name="project_id" value="{{ $project->id }}">
                                             <input type="hidden" name="step_id" value="{{ $step->id }}">
                                             <input type="hidden" name="step_title" value="{{ $step->title }}">
                                             <input type="hidden" name="status" class="status-input">
 
-                                            <textarea name="description" class="form-control mb-2" rows="4"></textarea>
+                                            <textarea name="description" class="form-control mb-4" rows="4"></textarea>
 
-                                            <button type="button" class="btn btn-success approve-btn" style="min-width:150px; margin:5px auto;">
-                                                تایید مرحله
-                                            </button>
+                                            <div class="d-flex gap-2 flex-wrap justify-content-center">
 
-                                            <button type="button" class="btn btn-danger reject-btn" style="min-width:150px; margin:5px auto;">
-                                                رد مرحله
-                                            </button>
+
+                                                <button type="button"
+                                                        class="btn btn-success approve-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-check-circle-outline"></i>
+
+
+                                                    تایید مرحله
+
+
+                                                </button>
+
+
+                                                <button type="button"
+                                                        class="btn btn-danger reject-btn d-flex align-items-center gap-1 px-3"
+                                                        style="min-width:170px;">
+
+
+                                                    <i class="mdi mdi-close-circle-outline"></i>
+
+
+                                                    رد مرحله
+
+
+                                                </button>
+
+
+                                            </div>
 
                                             <button type="submit" class="d-none real-submit"></button>
                                         </form>
@@ -816,7 +1413,8 @@
         </div>
     </div>
     <!-- Payments Tab  -->
-    <div class="tab-pane fade" id="tab-payments{{ $project->id }}" role="tabpanel" aria-labelledby="payments-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-payments{{ $project->id }}" role="tabpanel"
+         aria-labelledby="payments-tab{{ $project->id }}">
         <table class="table table-bordered mt-2">
             <thead>
             <tr>
@@ -850,7 +1448,8 @@
         </table>
     </div>
     <!-- KPI Tab -->
-    <div class="tab-pane fade" id="tab-kpi{{ $project->id }}" role="tabpanel" aria-labelledby="kpi-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-kpi{{ $project->id }}" role="tabpanel"
+         aria-labelledby="kpi-tab{{ $project->id }}">
         <table class="table table-bordered mt-2">
             <thead>
             <tr>
@@ -879,7 +1478,8 @@
         </table>
     </div>
     <!-- Commitment Tab -->
-    <div class="tab-pane fade" id="tab-commitment{{ $project->id }}" role="tabpanel" aria-labelledby="commitment-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-commitment{{ $project->id }}" role="tabpanel"
+         aria-labelledby="commitment-tab{{ $project->id }}">
         <div style="overflow-x:auto;">
             <table class="table align-middle mb-0 table-bordered" style="table-layout: fixed; width: 100%;">
                 <thead class="table-light">
@@ -898,23 +1498,29 @@
                         <td style="white-space: normal; word-wrap: break-word;">{{ $item->title }}</td>
                         <td><span>&#10003;</span></td>
                         <td></td>
-                        <td>@if($item->file_path) دانلود @endif</td>
+                        <td>@if($item->file_path)
+                                دانلود
+                            @endif</td>
                     </tr>
                 @empty
-                    <tr><td colspan="9" class="text-center text-muted py-4">موردی ثبت نشده است.</td></tr>
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-4">موردی ثبت نشده است.</td>
+                    </tr>
                 @endforelse
                 </tbody>
             </table>
         </div>
     </div>
     <!-- Guaranty Tab -->
-    <div class="tab-pane fade" id="tab-guaranty{{ $project->id }}" role="tabpanel" aria-labelledby="guaranty-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-guaranty{{ $project->id }}" role="tabpanel"
+         aria-labelledby="guaranty-tab{{ $project->id }}">
         <table class="table table-bordered mt-2">
 
         </table>
     </div>
     <!-- Workflow Tab -->
-    <div class="tab-pane fade" id="tab-workflow{{ $project->id }}" role="tabpanel" aria-labelledby="workflow-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-workflow{{ $project->id }}" role="tabpanel"
+         aria-labelledby="workflow-tab{{ $project->id }}">
         <div class="container">
             <div class="row g-3">
                 @foreach ($project_steps as $step)
@@ -931,7 +1537,8 @@
                              style="background-color: {{ $bg }}; border-left: 6px solid {{ $border }};">
                             <div class="card-header d-flex align-items-center justify-content-between py-2">
                                 <div class="d-flex align-items-center gap-2">
-                            <span class="badge rounded-pill text-dark" style="background: rgba(0,0,0,0.05); min-width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-weight:600;">
+                            <span class="badge rounded-pill text-dark"
+                                  style="background: rgba(0,0,0,0.05); min-width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-weight:600;">
                                 {{ $step->step_number }}
                             </span>
                                     <h6 class="mb-0 text-truncate" style="max-width: 160px;">{{ $step->title }}</h6>
@@ -942,18 +1549,21 @@
                             </small>
                             <div class="card-body d-flex flex-column">
                                 @if(!empty($step->description))
-                                    <p class="card-text mb-2 text-muted small" style="flex:0 0 auto; max-height:72px; overflow:hidden;">
+                                    <p class="card-text mb-2 text-muted small"
+                                       style="flex:0 0 auto; max-height:72px; overflow:hidden;">
                                         {{ Str::limit($step->description, 180) }}
                                     </p>
                                 @else
-                                    <p class="card-text mb-2 text-muted small" style="flex:0 0 auto;">— توضیحی ثبت نشده —</p>
+                                    <p class="card-text mb-2 text-muted small" style="flex:0 0 auto;">— توضیحی ثبت نشده
+                                        —</p>
                                 @endif
 
                                 <div class="mt-auto">
                                     <ul class="list-unstyled mb-0 small text-secondary">
                                         <li class="d-flex align-items-center gap-2">
                                             <i class="bi bi-person-fill" aria-hidden="true"></i>
-                                            <span class="text-truncate" style="max-width: 130px;">{{ $step->username ?? ($step->user->name ?? 'کارشناس') }}</span>
+                                            <span class="text-truncate"
+                                                  style="max-width: 130px;">{{ $step->username ?? ($step->user->name ?? 'کارشناس') }}</span>
                                         </li>
 
                                         <li class="d-flex align-items-center gap-2 mt-1">
@@ -989,9 +1599,16 @@
 
         <style>
             /* ظاهرسازی کمکی برای کارت‌ها */
-            .card .text-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .card .text-truncate {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             @media (max-width: 575.98px) {
-                .card-header h6 { max-width: 110px; }
+                .card-header h6 {
+                    max-width: 110px;
+                }
             }
 
             /* پنهان‌سازی دکمه‌های تأیید/رد در مرحله‌ی رد شده */
@@ -999,18 +1616,36 @@
             [data-rejected="1"] .reject-btn {
                 display: none !important;
             }
+
+            /* استایل فرم مرحله */
+            .flow-action-box {
+                background: linear-gradient(135deg, #f9fafb 0%, #f4f6fb 50%, #f9fafb 100%);
+                border: 1px solid rgba(0, 0, 0, .06);
+                border-radius: 12px;
+                box-shadow: 0 6px 18px rgba(15, 23, 42, .06);
+            }
+
+            .flow-action-meta {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: #6b7280;
+                font-size: 13px;
+            }
         </style>
 
 
     </div>
     <!-- Message Tab -->
-    <div class="tab-pane fade" id="tab-message{{ $project->id }}" role="tabpanel" aria-labelledby="message-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-message{{ $project->id }}" role="tabpanel"
+         aria-labelledby="message-tab{{ $project->id }}">
         <table class="table table-bordered mt-2">
 
         </table>
     </div>
     <!-- file Tab -->
-    <div class="tab-pane fade" id="tab-file{{ $project->id }}" role="tabpanel" aria-labelledby="file-tab{{ $project->id }}">
+    <div class="tab-pane fade" id="tab-file{{ $project->id }}" role="tabpanel"
+         aria-labelledby="file-tab{{ $project->id }}">
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -1041,12 +1676,12 @@
                     scrollCollapse: true,
                     ajax: "{{ route('filemanager.show', $project->id) }}",
                     columns: [
-                        {data: 'file_path'      , name: 'file_path' ?? ''  },
-                        {data: 'name'           , name: 'name'  ?? ''      },
-                        {data: 'type'           , name: 'type'  ?? ''      },
-                        {data: 'step'           , name: 'step'  ?? ''      },
-                        {data: 'size'           , name: 'size'  ?? ''      },
-                        {data: 'date'           , name: 'date'  ?? ''      },
+                        {data: 'file_path', name: 'file_path' ?? ''},
+                        {data: 'name', name: 'name' ?? ''},
+                        {data: 'type', name: 'type' ?? ''},
+                        {data: 'step', name: 'step' ?? ''},
+                        {data: 'size', name: 'size' ?? ''},
+                        {data: 'date', name: 'date' ?? ''},
                     ],
                     language: {
                         url: "{{asset('assets/vendor/js/fa.json')}}"
@@ -1056,3 +1691,4 @@
         </script>
     </div>
 </div>
+
