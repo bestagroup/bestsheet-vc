@@ -94,7 +94,7 @@ class SubmenupanelController extends Controller
     public function store(Request $request)
     {
         try {
-            $priority      = Submenu::max('priority');
+            $priority      = SubmenuPanel::select('id')->orderBy('id' , 'DESC')->first();
             $submenu_panel = new SubmenuPanel();
             $submenu_panel->title        = $request->input('title');
             $submenu_panel->label        = $request->input('label');
