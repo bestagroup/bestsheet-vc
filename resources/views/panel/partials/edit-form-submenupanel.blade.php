@@ -30,16 +30,16 @@
     </div>
     <div class="col-12 col-md-4">
         <div class="form-floating form-floating-outline">
-            <input required type="text" class="form-control" id="class_{{$menupanel->id}}" name="class"
-                   placeholder="کلاس داشبورد" value="{{ $menupanel->class }}">
+            <input required type="text" class="form-control" id="class_{{$submenupanel->id}}" name="class"
+                   placeholder="کلاس داشبورد" value="{{ $submenupanel->class }}">
             <label for="class">کلاس داشبورد</label>
             <div class="invalid-feedback" id="classFeedback">کلاس داشبورد اجباری می باشد.</div>
         </div>
     </div>
     <div class="col-12 col-md-4">
         <div class="form-floating form-floating-outline">
-            <input required type="text" class="form-control" id="controller_{{$menupanel->id}}" name="controller"
-                   placeholder="کنترلر داشبورد" value="{{ $menupanel->controller }}">
+            <input required type="text" class="form-control" id="controller_{{$submenupanel->id}}" name="controller"
+                   placeholder="کنترلر داشبورد" value="{{ $submenupanel->controller }}">
             <label for="controller">کنترلر داشبورد</label>
             <div class="invalid-feedback" id="controllerFeedback">کنترلر داشبورد اجباری می باشد.</div>
         </div>
