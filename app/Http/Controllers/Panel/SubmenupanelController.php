@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\MenuPanel;
 use App\Models\Permission;
+use App\Models\Submenu;
 use App\Models\SubmenuPanel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,7 +103,7 @@ class SubmenupanelController extends Controller
             $submenu_panel->controller   = $request->input('controller');
             $submenu_panel->user_id      = Auth::user()->id;
             $submenu_panel->priority     = $priority->id + 1;
-            $submenu_panel->status       = $request->input('status');
+            $submenu_panel->status       = 4;
             $result1 = $submenu_panel->save();
 
             $permission = new Permission();
@@ -161,6 +162,7 @@ class SubmenupanelController extends Controller
     {
 
         $submenu_panel = SubmenuPanel::findOrfail($id);
+        $permission_slug = $submenu_panel->slug;
         $submenu_panel->title        = $request->input('title');
         $submenu_panel->label        = $request->input('label');
         $submenu_panel->menu_id      = $request->input('menupanel_id');
@@ -174,6 +176,11 @@ class SubmenupanelController extends Controller
 //        $menu->priority         = $request->input('priority');
 
         $result = $submenu_panel->update();
+        $newsubmenu_panel = SubmenuPanel::findOrfail($id);
+        $permision = Permission::whereSlug($permission_slug)->first();
+        $permision->title        =  $newsubmenu_panel->title;
+        $permision->slug         =  $newsubmenu_panel->slug;
+        $permision->update();
         try{
             if ($result == true) {
                 $success = true;
