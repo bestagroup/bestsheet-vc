@@ -32,14 +32,10 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('sale'               , 'SaleController');
     Route::resource('panel/flow'         , 'FlowController');
     Route::resource('panel/report'       , 'ReportController');
-    Route::resource('panel/correspondence', 'CorrespondenceControllerController');
+    Route::resource('panel/correspondence', 'CorrespondenceController');
 
     Route::resource('panel/ticketing', 'TicketingController');
     Route::post('panel/ticketing/{ticket}/reply', 'TicketingController@reply')->name('ticketing.reply');
-
-    Route::view('/panel/correspondence', 'panel.correspondence', [
-        'thispage' => ['list' => 'مکاتبات داخلی']
-    ]);
 
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('userdata'                  , 'ProfileController@userdata')->name('userdata');

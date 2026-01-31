@@ -50,32 +50,31 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="composeForm">
+                    <form id="composeForm" enctype="multipart/form-data">
+                        @csrf
                         <div class="mb-3">
-                            <label for="composeSubject" class="form-label">موضوع</label>
-                            <input id="composeSubject" type="text" class="form-control" placeholder="موضوع پیام">
+                            <label class="form-label">موضوع</label>
+                            <input name="subject" id="composeSubject" class="form-control">
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">گیرندگان</label>
-                            <select id="composeRecipients" class="form-control select2" multiple="multiple" style="width: 100%;"></select>
-                            <div class="form-text">چند نفر را می‌توانید انتخاب کنید.</div>
+                            <select name="recipients[]" id="composeRecipients" class="form-control select2" multiple></select>
                         </div>
+
                         <div class="mb-3">
-                            <label for="composeBody" class="form-label">متن پیام</label>
-                            <textarea id="composeBody" class="form-control" rows="4" placeholder="متن پیام"></textarea>
+                            <label class="form-label">متن پیام</label>
+                            <textarea name="body" id="composeBody" class="form-control"></textarea>
                         </div>
+
                         <div class="mb-3">
-                            <label class="form-label d-block">ضمیمه</label>
-                            <input type="file" id="composeAttachment" class="form-control">
+                            <label class="form-label">ضمیمه</label>
+                            <input type="file" name="attachments[]" id="composeAttachment" class="form-control" multiple>
                         </div>
+
+                        <button type="submit" id="btnComposeSend" class="btn btn-primary">ارسال <span class="mdi mdi-send ms-1"></span></button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
                     </form>
-                </div>
-                <div class="modal-footer text-center d-flex justify-content-center">
-                    <button id="btnComposeSend" class="btn btn-primary">
-                        ارسال
-                        <span class="mdi mdi-send ms-1"></span>
-                    </button>
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
                 </div>
             </div>
         </div>
@@ -112,5 +111,65 @@
 @endsection
 
 @section('script')
+    <script>
+        window.CORRESPONDENCE_DATA = {
+            authUserId: {{ auth()->id() }},
+            users: {!! json_encode(
+            $users->mapWithKeys(function ($u) {
+                $parts = preg_split('/\s+/u', trim($u->name));
+                $initials = collect($parts)->map(fn ($p) => mb_substr($p, 0, 1))->implode('');
+
+                return [
+                    $u->id => [
+                        'id' => $u->id,
+                        'name' => $u->name,
+                        'initials' => $initials,
+                        'color' => sprintf('#%06X', crc32($u->id) & 0xFFFFFF),
+                    ]
+                ];
+            })->toArray(),
+            JSON_UNESCAPED_UNICODE
+        ) !!},
+            conversations: {!! json_encode(
+            $conversations->map(function ($c) {
+                return [
+                    'id' => 'c'.$c->id,
+                    'subject' => $c->subject,
+                    'type' => 'internal',
+                    'participants' => collect([$c->sender_id])
+                        ->merge($c->recipients->pluck('id'))
+                        ->unique()
+                        ->values()
+                        ->toArray(),
+                    'archived' => false,
+                    'muted' => false,
+                    'unread' => $c->recipients
+                        ->where('id', auth()->id())
+                        ->whereNull('pivot.read_at')
+                        ->count(),
+                    'lastActivity' => $c->updated_at,
+                    'messages' => collect([$c])
+                        ->merge($c->replies)
+                        ->sortBy('created_at')
+                        ->map(function ($m) {
+                            return [
+                                'id' => 'm'.$m->id,
+                                'senderId' => $m->sender_id,
+                                'body' => $m->body,
+                                'time' => $m->created_at,
+                                'direction' => $m->sender_id === auth()->id() ? 'outgoing' : 'incoming',
+                                'edited' => false,
+                                'deleted' => false,
+                            ];
+                        })
+                        ->values()
+                        ->toArray(),
+                ];
+            })->values()->toArray(),
+            JSON_UNESCAPED_UNICODE
+        ) !!}
+        };
+    </script>
+
     <script src="{{ asset('js/correspondence-mock.js') }}"></script>
 @endsection

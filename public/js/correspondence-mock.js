@@ -1,76 +1,6 @@
 (function () {
-    // Mock users
-    const users = {
-        1: {id: 1, name: 'امیر رضایی', initials: 'ار', color: '#3d5afe'},
-        2: {id: 2, name: 'نگار محمدی', initials: 'نم', color: '#ff7043'},
-        3: {id: 3, name: 'حسین امینی', initials: 'حا', color: '#26a69a'},
-        4: {id: 4, name: 'مهسا قنبری', initials: 'مق', color: '#7e57c2'},
-        5: {id: 5, name: 'کریم صادقی', initials: 'کس', color: '#ef6c00'}
-    };
 
-    // Mock conversations & messages
-    const conversations = [
-        {
-            id: 'c1',
-            subject: 'پیگیری قرارداد همکاری ۱۴۰۵',
-            type: 'internal',
-            participants: [1, 2, 3],
-            archived: false,
-            muted: false,
-            unread: 2,
-            lastActivity: '2026-01-26T13:45:00Z',
-            messages: [
-                {id: 'm1', senderId: 2, body: 'سلام؛ نسخه نهایی قرارداد را ارسال کردم، لطفاً تا عصر بازبینی کنید.', time: '2026-01-26T11:05:00Z', direction: 'incoming', edited: true, deleted: false},
-                {id: 'm2', senderId: 1, body: 'دریافت شد، بندهای مالی را بررسی می‌کنم.', time: '2026-01-26T11:40:00Z', direction: 'outgoing', edited: false, deleted: false},
-                {id: 'm3', senderId: 3, body: 'من هم از منظر حقوقی چک می‌کنم و اطلاع می‌دهم.', time: '2026-01-26T12:35:00Z', direction: 'incoming', edited: false, deleted: false},
-                {id: 'm4', senderId: 2, body: 'مهلت امضا تا دوشنبه است؛ حتماً امروز جمع‌بندی کنیم.', time: '2026-01-26T13:45:00Z', direction: 'incoming', edited: false, deleted: false}
-            ]
-        },
-        {
-            id: 'c2',
-            subject: 'گزارش ماهانه واحد پشتیبانی',
-            type: 'internal',
-            participants: [1, 4],
-            archived: false,
-            muted: true,
-            unread: 0,
-            lastActivity: '2026-01-25T09:10:00Z',
-            messages: [
-                {id: 'm1', senderId: 4, body: 'آمار تیکت‌ها و SLA در فایل پیوست است. نظر دهید.', time: '2026-01-25T08:15:00Z', direction: 'incoming', edited: false, deleted: false},
-                {id: 'm2', senderId: 1, body: 'ممنون، نرخ رفع در ۴۸ ساعت باید بالاتر برود؛ جلسه می‌گذاریم.', time: '2026-01-25T09:10:00Z', direction: 'outgoing', edited: false, deleted: false}
-            ]
-        },
-        {
-            id: 'c3',
-            subject: 'هماهنگی جلسه سرمایه‌گذاران',
-            type: 'external',
-            participants: [1, 2, 5],
-            archived: true,
-            muted: false,
-            unread: 0,
-            lastActivity: '2026-01-20T15:30:00Z',
-            messages: [
-                {id: 'm1', senderId: 5, body: 'جلسه با VC ها برای سه‌شنبه ۲ بهمن ساعت ۱۰ نهایی شد.', time: '2026-01-20T14:00:00Z', direction: 'incoming', edited: false, deleted: false},
-                {id: 'm2', senderId: 1, body: 'عالیه. دک خلاصه مالی را تا فردا صبح می‌فرستم.', time: '2026-01-20T15:30:00Z', direction: 'outgoing', edited: false, deleted: false}
-            ]
-        },
-        {
-            id: 'c4',
-            subject: 'درخواست پشتیبانی فوری دیتاسنتر',
-            type: 'external',
-            participants: [1, 3, 5],
-            archived: false,
-            muted: false,
-            unread: 5,
-            lastActivity: '2026-01-27T07:55:00Z',
-            messages: [
-                {id: 'm1', senderId: 5, body: 'CPU نود dtx-04 به ۹۵٪ رسیده، نیاز به بررسی فوری.', time: '2026-01-27T07:10:00Z', direction: 'incoming', edited: false, deleted: false},
-                {id: 'm2', senderId: 3, body: 'سرویس لاگ را چک می‌کنم، احتمالاً یکی از کران‌ها قفل کرده.', time: '2026-01-27T07:22:00Z', direction: 'incoming', edited: false, deleted: false},
-                {id: 'm3', senderId: 1, body: 'تا ۱۰ دقیقه آینده در دسترس هستم، لاگ را بفرستید.', time: '2026-01-27T07:40:00Z', direction: 'outgoing', edited: false, deleted: false},
-                {id: 'm4', senderId: 5, body: 'لاگ پیوست شد. ظاهراً پردازش ایمیل‌های معوق است.', time: '2026-01-27T07:55:00Z', direction: 'incoming', edited: false, deleted: false}
-            ]
-        }
-    ];
+    const {users, conversations, authUserId} = window.CORRESPONDENCE_DATA;
 
     const state = {
         activeConversationId: null,
@@ -101,7 +31,30 @@
         actionMuteModal: document.getElementById('actionMuteModal'),
         actionAddModal: document.getElementById('actionAddModal')
     };
+    (function () {
+        const form = document.getElementById('composeForm');
+        if (!form) return;
 
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            fetch('/correspondence', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            })
+                .then(r => r.json())
+                .then(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('composeModal'))?.hide();
+                    form.reset();
+                    $(form.querySelector('#composeRecipients')).val(null).trigger('change');
+                });
+        });
+    })();
     function init() {
         setTimeout(() => {
             if (els.skeleton) els.skeleton.classList.add('d-none');
