@@ -2,6 +2,7 @@
 @section('title', 'مکاتبات')
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/css/page-correspondence.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
     <div id="correspondence-skeleton" class="card conversation-card mb-3">

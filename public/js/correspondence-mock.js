@@ -31,30 +31,6 @@
         actionMuteModal: document.getElementById('actionMuteModal'),
         actionAddModal: document.getElementById('actionAddModal')
     };
-    (function () {
-        const form = document.getElementById('composeForm');
-        if (!form) return;
-
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-
-            fetch('/correspondence', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: formData
-            })
-                .then(r => r.json())
-                .then(() => {
-                    bootstrap.Modal.getInstance(document.getElementById('composeModal'))?.hide();
-                    form.reset();
-                    $(form.querySelector('#composeRecipients')).val(null).trigger('change');
-                });
-        });
-    })();
     function init() {
         setTimeout(() => {
             if (els.skeleton) els.skeleton.classList.add('d-none');
@@ -358,47 +334,49 @@
         const subject = (els.composeSubject?.value || '').trim();
         const body = (els.composeBody?.value || '').trim();
         const recipientIds = $(els.composeRecipients || []).val() || [];
-        const attachmentName = els.composeAttachment?.files?.[0]?.name || '';
 
-        if (!subject || !body || !recipientIds.length) {
-            showToast('موضوع، متن و گیرندگان الزامی است.');
+        if (!body || !recipientIds.length) {
+            showToast('متن و گیرندگان الزامی است.');
             return;
         }
 
-        const now = new Date().toISOString();
-        const newId = `c-${Date.now()}`;
-        const participants = Array.from(new Set([1, ...recipientIds.map(Number)]));
+        const formData = new FormData();
+        formData.append('subject', subject);
+        formData.append('body', body);
 
-        const newConv = {
-            id: newId,
-            subject,
-            type: 'internal',
-            participants,
-            archived: false,
-            muted: false,
-            unread: 0,
-            lastActivity: now,
-            messages: [
-                {
-                    id: `m-${Date.now()}`,
-                    senderId: 1,
-                    body: body + (attachmentName ? `\n\n[ضمیمه: ${attachmentName}]` : ''),
-                    time: now,
-                    direction: 'outgoing',
-                    edited: false,
-                    deleted: false
-                }
-            ]
-        };
+        recipientIds.forEach(id => formData.append('recipients[]', id));
 
-        conversations.unshift(newConv);
-        state.activeConversationId = newId;
-        renderMessageList();
-        const modal = bootstrap.Modal.getInstance(els.composeModal) || new bootstrap.Modal(els.composeModal);
-        modal.hide();
-        resetComposeForm();
-        showToast('پیام ارسال شد (شبیه‌سازی).');
+        if (els.composeAttachment?.files?.length) {
+            Array.from(els.composeAttachment.files).forEach(file => {
+                formData.append('attachments[]', file);
+            });
+        }
+        const postUrl = "correspondence";
+        fetch(postUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+            .then(res => {
+                if (!res.ok) throw new Error();
+                return res.json();
+            })
+            .then(() => {
+                const modal = bootstrap.Modal.getInstance(els.composeModal)
+                    || new bootstrap.Modal(els.composeModal);
+                modal.hide();
+
+                resetComposeForm();
+                showToast('پیام با موفقیت ارسال شد.');
+            })
+            .catch(() => {
+                showToast('خطا در ارسال پیام.');
+            });
     }
+
 
     function resetComposeForm() {
         if (els.composeSubject) els.composeSubject.value = '';
