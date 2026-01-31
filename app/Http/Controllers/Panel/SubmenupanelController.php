@@ -103,7 +103,7 @@ class SubmenupanelController extends Controller
             $submenu_panel->controller   = $request->input('controller');
             $submenu_panel->user_id      = Auth::user()->id;
             $submenu_panel->priority     = $priority->id + 1;
-            $submenu_panel->status       = $request->input('status');
+            $submenu_panel->status       = 4;
             $result1 = $submenu_panel->save();
 
             $permission = new Permission();
