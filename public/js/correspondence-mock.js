@@ -127,13 +127,14 @@
             return `<div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
                         <div class="p-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-600 truncate" title="${msg.subject}">${msg.subject}</span>
+                                <span class="fw-600 truncate" title="${msg.subject}"> موضوع :  ${msg.subject}</span>
                                 ${unreadBadge}
                             </div>
-                            <div class="text-muted truncate" title="${msg.senderName}">${msg.senderName}</div>
-                            <div class="text-muted truncate mt-1">${msg.preview}</div>
+                            <div class="text-muted truncate mt-1"> متن پیام :   ${msg.preview}</div>
+                            <hr>
+                            <div class="text-muted truncate" style="float:left;font-size: 11px" title="${msg.senderName}"> ارسال شده توسط :  ${msg.senderName}</div>
                             <div class="d-flex justify-content-between align-items-center mt-1">
-                                <small class="text-muted">${formatRelative(msg.time)}</small>
+                                <small class="text-muted" style="font-size: 11px">${formatRelative(msg.time)}</small>
                                 <div class="badges-inline">${flags}</div>
                             </div>
                         </div>

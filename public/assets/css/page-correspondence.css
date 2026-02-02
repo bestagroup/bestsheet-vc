@@ -54,6 +54,8 @@
     border-radius: 14px;
     transition: all .18s ease;
     cursor: pointer;
+    border: 1px solid #e1e1e166;
+    margin: 10px;
 }
 
 .conversation-item:hover {

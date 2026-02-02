@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Message;
+use App\Models\MessageAttachment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CorrespondenceController extends Controller
@@ -70,12 +72,14 @@ class CorrespondenceController extends Controller
 
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
+                    $extension      = $file->getClientOriginalExtension();
+                    $fileName = uniqid() . '.' . $extension;
                     MessageAttachment::create([
-                        'message_id' => $message->id,
+                        'message_id'    => $message->id,
                         'original_name' => $file->getClientOriginalName(),
-                        'path' => $file->store('messages'),
-                        'size' => $file->getSize(),
-                        'mime_type' => $file->getMimeType(),
+                        'path'          => $file->storeAs("messages/".$message->id , $fileName, 'public'),
+                        'size'          => $file->getSize(),
+                        'mime_type'     => $file->getMimeType(),
                     ]);
                 }
             }
