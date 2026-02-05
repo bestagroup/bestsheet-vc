@@ -113,6 +113,9 @@
 
 @section('script')
     <script>
+
+    </script>
+    <script>
         window.CORRESPONDENCE_DATA = {
             authUserId: {{ auth()->id() }},
             users: {!! json_encode(
@@ -122,10 +125,10 @@
 
                 return [
                     $u->id => [
-                        'id' => $u->id,
-                        'name' => $u->name,
-                        'initials' => $initials,
-                        'color' => sprintf('#%06X', crc32($u->id) & 0xFFFFFF),
+                        'id'        => $u->id,
+                        'name'      => $u->name,
+                        'initials'  => $initials,
+                        'color'     => sprintf('#%06X', crc32($u->id) & 0xFFFFFF),
                     ]
                 ];
             })->toArray(),
@@ -134,9 +137,9 @@
             conversations: {!! json_encode(
             $conversations->map(function ($c) {
                 return [
-                    'id' => 'c'.$c->id,
-                    'subject' => $c->subject,
-                    'type' => 'internal',
+                    'id'            => 'c'.$c->id,
+                    'subject'       => $c->subject,
+                    'type'          => 'internal',
                     'participants' => collect([$c->sender_id])
                         ->merge($c->recipients->pluck('id'))
                         ->unique()
@@ -149,23 +152,47 @@
                         ->whereNull('pivot.read_at')
                         ->count(),
                     'lastActivity' => $c->updated_at,
-                    'messages' => collect([$c])
-                        ->merge($c->replies)
-                        ->sortBy('created_at')
-                        ->map(function ($m) {
-                            return [
-                                'id' => 'm'.$m->id,
-                                'senderId' => $m->sender_id,
-                                'body' => $m->body,
-                                'time' => $m->created_at,
-                                'direction' => $m->sender_id === auth()->id() ? 'outgoing' : 'incoming',
-                                'edited' => false,
-                                'deleted' => false,
-                            ];
-                        })
-                        ->values()
-                        ->toArray(),
-                ];
+                    'messages' => [
+                        'root' => [
+                            'id'        => 'm'.$c->id,
+                            'senderId'  => $c->sender_id,
+                            'body'      => $c->body,
+                            'time'      => $c->created_at,
+                            'direction' => $c->sender_id === auth()->id() ? 'outgoing' : 'incoming',
+                            'attachments' => $c->attachments->map(function ($a) {
+                                return [
+                                    'id'   => $a->id,
+                                    'name' => $a->original_name,
+                                    'url'  => asset('storage/'.$a->path),
+                                    'size' => $a->size,
+                                    'mime' => $a->mime_type,
+                                ];
+                            })->toArray(),
+                        ],
+                        'replies' => $c->replies
+                            ->sortBy('created_at')
+                            ->map(function ($r) {
+                                return [
+                                    'id'        => 'm'.$r->id,
+                                    'senderId'  => $r->sender_id,
+                                    'body'      => $r->body,
+                                    'time'      => $r->created_at,
+                                    'direction' => $r->sender_id === auth()->id() ? 'outgoing' : 'incoming',
+                                    'attachments' => $r->attachments->map(function ($a) {
+                                        return [
+                                            'id'   => $a->id,
+                                            'name' => $a->original_name,
+                                            'url'  => asset('storage/'.$a->path),
+                                            'size' => $a->size,
+                                            'mime' => $a->mime_type,
+                                        ];
+                                    })->toArray(),
+                                ];
+                            })
+                            ->values()
+                            ->toArray(),
+                        ]
+                        ];
             })->values()->toArray(),
             JSON_UNESCAPED_UNICODE
         ) !!}

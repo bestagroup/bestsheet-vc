@@ -46,11 +46,6 @@ class CorrespondenceController extends Controller
         return view('panel.correspondence', compact('users', 'conversations', 'thispage'));
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -58,17 +53,25 @@ class CorrespondenceController extends Controller
             'body'          => 'required|string',
             'recipients'    => 'required|array',
             'recipients.*'  => 'exists:users,id',
+            'parent_id'     => 'nullable|exists:messages,id',
             'attachments.*' => 'file|max:20480',
         ]);
 
         return DB::transaction(function () use ($request, $data) {
             $message = Message::create([
-                'sender_id'     => auth()->id(),
-                'subject'       => $data['subject'] ?? null,
-                'body'          => $data['body'],
+                'sender_id' => auth()->id(),
+                'subject'   => $data['subject'] ?? null,
+                'body'      => $data['body'],
+                'parent_id' => $data['parent_id'] ?? null,
             ]);
 
-            $message->recipients()->attach($data['recipients']);
+
+            if (!empty($data['parent_id'])) {
+                $parent = Message::with('recipients')->findOrFail($data['parent_id']);
+                $message->recipients()->sync($parent->recipients->pluck('id'));
+            } else {
+                $message->recipients()->attach($data['recipients']);
+            }
 
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
@@ -90,37 +93,5 @@ class CorrespondenceController extends Controller
             ], 201);
         });
 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(r $r)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(r $r)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, r $r)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(r $r)
-    {
-        //
     }
 }

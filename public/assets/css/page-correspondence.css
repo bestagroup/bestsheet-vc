@@ -230,3 +230,10 @@ html[dir="rtl"] .tooltip {
     direction: rtl;
     text-align: right;
 }
+.message-attachments a {
+    font-size: 13px;
+    color: #0d6efd;
+}
+.message-attachments a:hover {
+    text-decoration: underline;
+}

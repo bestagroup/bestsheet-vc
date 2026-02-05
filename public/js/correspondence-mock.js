@@ -1,5 +1,4 @@
 (function () {
-
     const {users, conversations, authUserId} = window.CORRESPONDENCE_DATA;
 
     const state = {
@@ -31,15 +30,19 @@
         actionMuteModal: document.getElementById('actionMuteModal'),
         actionAddModal: document.getElementById('actionAddModal')
     };
+    function renderAvatar(user) {
+        if (!user) return '';
+        const initials = (user.name || '').split(' ').map(p => p[0]).join('').toUpperCase();
+        const color = user.color || '#cccccc';
+        return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
+    }
     function init() {
         setTimeout(() => {
             if (els.skeleton) els.skeleton.classList.add('d-none');
             if (els.body) els.body.classList.remove('d-none');
             initializeUi();
             state.activeConversationId = conversations[0]?.id || null;
-            if (state.activeConversationId) {
-                markAsRead(state.activeConversationId);
-            }
+            if (state.activeConversationId) markAsRead(state.activeConversationId);
             renderMessageList();
         }, 450);
 
@@ -84,7 +87,8 @@
             const chip = e.target.closest('.chip');
             if (!chip) return;
             state.chip = chip.dataset.filter;
-            Array.from(els.filterChips.querySelectorAll('.chip')).forEach(c => c.classList.toggle('active', c === chip));
+            Array.from(els.filterChips.querySelectorAll('.chip'))
+                .forEach(c => c.classList.toggle('active', c === chip));
             renderMessageList();
         });
 
@@ -147,7 +151,7 @@
                 state.activeMessageId = item.dataset.id;
                 markAsRead(item.dataset.conv);
                 renderMessageList();
-                openMessageModal();
+                openMessageModal(item.dataset.conv);
             });
         });
     }
@@ -155,23 +159,24 @@
     function flattenMessages() {
         const list = [];
         conversations.forEach(conv => {
-            conv.messages.forEach(m => {
-                list.push({
-                    id: m.id,
-                    conversationId: conv.id,
-                    subject: conv.subject,
-                    senderId: m.senderId,
-                    senderName: users[m.senderId]?.name || 'نامشخص',
-                    body: m.body || '',
-                    time: m.time,
-                    archived: conv.archived,
-                    muted: conv.muted,
-                    unread: conv.unread,
-                    type: conv.type,
-                    deleted: m.deleted,
-                    direction: m.direction,
-                    preview: m.deleted ? 'پیام حذف شده' : (m.body || '')
-                });
+            // root
+            const root = conv.messages.root;
+            list.push({
+                id: root.id,
+                conversationId: conv.id,
+                subject: conv.subject,
+                senderId: root.senderId,
+                senderName: users[root.senderId]?.name || 'نامشخص',
+                body: root.body || '',
+                time: root.time,
+                archived: conv.archived,
+                muted: conv.muted,
+                unread: conv.unread,
+                type: conv.type,
+                deleted: false,
+                direction: root.direction,
+                attachments: root.attachments || [],
+                preview: root.body || ''
             });
         });
         return list;
@@ -195,95 +200,69 @@
         return msg.subject.toLowerCase().includes(q) || msg.senderName.toLowerCase().includes(q) || msg.body.toLowerCase().includes(q);
     }
 
-    function openMessageModal() {
-        const msg = flattenMessages().find(m => m.id === state.activeMessageId);
-        if (!msg) return;
-        const conv = conversations.find(c => c.id === msg.conversationId);
+    function openMessageModal(conversationId) {
+        const conv = conversations.find(c => c.id === conversationId);
         if (!conv) return;
 
-        if (els.viewSubject) els.viewSubject.textContent = msg.subject;
+        const root = conv.messages.root;
+        if (els.viewSubject) els.viewSubject.textContent = conv.subject;
         if (els.viewParticipants) els.viewParticipants.innerHTML = conv.participants.map(id => renderAvatar(users[id])).join('');
-        toggleHeaderActions(conv.archived, conv.muted);
+
+        // ست کردن conversationId روی مودال
+        els.viewModal.dataset.conversationId = conv.id;
 
         if (els.viewMessages) {
-            const tags = [];
-            if (msg.archived) tags.push('<span class="badge bg-info text-dark">آرشیو</span>');
-            if (msg.muted) tags.push('<span class="badge bg-secondary">بی‌صدا</span>');
-            const body = msg.body || '';
-            els.viewMessages.innerHTML = `
-                <div class="message-card">
-                    <div class="message-card-header">
-                        <div class="fw-600">${msg.senderName}</div>
-                        <div class="message-card-meta">
-                            <span>${formatDateTime(msg.time)}</span>
-                            <div class="message-card-tags">${tags.join('')}</div>
-                        </div>
-                    </div>
-                    <div class="message-body">${msg.deleted ? 'پیام حذف شده است.' : body.replace(/\\n/g, '<br>')}</div>
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <button class="btn btn-sm btn-outline-primary" data-action="reply" data-message-id="${msg.id}">
-                            <span class="mdi mdi-reply"></span> پاسخ
-                        </button>
-                        <div class="message-actions"></div>
-                    </div>
-                </div>`;
-            reInitTooltips();
+            els.viewMessages.innerHTML = renderThread(conv);
         }
+
+        toggleHeaderActions(conv.archived, conv.muted);
 
         const modal = bootstrap.Modal.getInstance(els.viewModal) || new bootstrap.Modal(els.viewModal);
         modal.show();
     }
 
-    function renderAvatar(user) {
-        if (!user) return '';
-        return `<span class="participant-avatar" style="background:${user.color};" title="${user.name}">${user.initials}</span>`;
+    function renderThread(conv) {
+        let html = '';
+        const rootMsg = conv.messages.root;
+        html += renderMessage(rootMsg, false);
+
+        conv.messages.replies.forEach(r => {
+            html += renderMessage(r, true);
+        });
+
+        return html;
     }
 
-    function renderMessage(msg, conv) {
+    function renderMessage(msg, isReply) {
         const sender = users[msg.senderId];
-        const cardClasses = ['message-card'];
-        if (msg.deleted) cardClasses.push('deleted');
+        let attachmentsHtml = '';
 
-        const tags = [];
-        tags.push(msg.direction === 'incoming'
-            ? '<span class="badge bg-info text-dark">دریافتی</span>'
-            : '<span class="badge bg-success">ارسالی</span>');
-        const actions = `<div class="message-actions">
-                <a href="#!" data-action="reply" data-message-id="${msg.id}" data-bs-toggle="tooltip" title="پاسخ"><span class="mdi mdi-reply"></span></a>
-           </div>`;
-
-        const content = msg.deleted ? 'پیام حذف شده است.' : msg.body;
+        if (msg.attachments && msg.attachments.length) {
+            attachmentsHtml = `
+                <div class="message-attachments mt-2">
+                    ${msg.attachments.map(a => `
+                        <a href="${a.url}" target="_blank" class="d-block text-decoration-none">
+                            📎 ${a.name}
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+        }
 
         return `
-            <div class="${cardClasses.join(' ')}">
-                <div class="message-card-header">
-                    <div class="fw-600 truncate" title="${sender?.name || 'نامشخص'}">${sender?.name || 'نامشخص'}</div>
-                    <div class="message-card-meta">
-                        <span>${formatDateTime(msg.time)}</span>
-                        <div class="message-card-tags">${tags.join('')}</div>
-                    </div>
-                </div>
-                <div class="message-body">${content}</div>
-                <div class="d-flex justify-content-between align-items-center mt-1">
-                    <span class="text-muted">فرستنده: ${sender?.name || ''}</span>
-                    ${actions}
-                </div>
+            <div class="message-card ${isReply ? 'ms-4 mt-2 border-start ps-3' : ''}">
+                <div class="fw-600">${sender?.name || ''}</div>
+                <small class="text-muted">${formatDateTime(msg.time)}</small>
+                <div class="message-body mt-2">${msg.body}</div>
+                ${attachmentsHtml}
+                ${!isReply ? `
+                    <button class="btn btn-sm btn-outline-primary mt-2"
+                        data-action="reply"
+                        data-message-id="${msg.id}">
+                        پاسخ
+                    </button>` : ''}
             </div>
         `;
-    }
-
-    function groupByDate(messages) {
-        return messages.reduce((acc, msg) => {
-            const dateKey = msg.time.split('T')[0];
-            if (!acc[dateKey]) acc[dateKey] = [];
-            acc[dateKey].push(msg);
-            return acc;
-        }, {});
-    }
-
-    function formatDate(dateStr) {
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('fa-IR', {weekday: 'long', day: '2-digit', month: 'long'});
     }
 
     function formatDateTime(dateStr) {
@@ -304,31 +283,38 @@
         const conv = conversations.find(c => c.id === conversationId);
         if (!conv) return;
         conv.unread = 0;
-        conv.lastActivity = conv.messages[conv.messages.length - 1]?.time || conv.lastActivity;
+        conv.lastActivity = conv.messages.root.time || conv.lastActivity;
     }
 
     function handleMessageAction(action, messageId) {
         const conv = conversations.find(c => c.id === state.activeConversationId);
         if (!conv) return;
-        const msg = conv.messages.find(m => m.id === messageId);
+        const msg = flattenMessages().find(m => m.id === messageId);
         if (!msg) return;
 
-        if (action === 'delete') {
-            return; // حذف غیرفعال شد
-        } else if (action === 'reply') {
-            if (els.composeBody) {
-                els.composeBody.value = `↪ ${msg.body}\n\n`;
-            }
-            if (els.composeSubject) {
-                els.composeSubject.value = `Re: ${conv.subject}`;
-            }
-            // ابتدا مودال مشاهده را می‌بندیم تا Compose روی آن قرار گیرد
-            const viewModalInstance = bootstrap.Modal.getInstance(els.viewModal);
-            viewModalInstance?.hide();
-            const composeModalInstance = bootstrap.Modal.getInstance(els.composeModal) || new bootstrap.Modal(els.composeModal);
-            composeModalInstance.show();
-        }
-        openMessageModal();
+        if (action === 'delete') return; // حذف غیرفعال شد
+        if (action === 'reply') handleReply(messageId);
+
+        openMessageModal(conv.id);
+    }
+
+    function handleReply(messageId) {
+        // parent message id
+        els.composeForm.dataset.parentId = messageId.replace('m','');
+
+        // بستن مودال مشاهده
+        const viewModalInstance = bootstrap.Modal.getInstance(els.viewModal);
+        viewModalInstance?.hide();
+
+        // ریست فیلدها
+        const conv = conversations.find(c => c.id === els.viewModal.dataset.conversationId);
+        els.composeSubject.value = conv?.subject || '';
+        els.composeBody.value = '';
+
+        // باز کردن مودال ارسال
+        setTimeout(() => {
+            bootstrap.Modal.getOrCreateInstance(els.composeModal).show();
+        }, 300);
     }
 
     function handleComposeSend() {
@@ -352,6 +338,7 @@
                 formData.append('attachments[]', file);
             });
         }
+
         const postUrl = "correspondence";
         fetch(postUrl, {
             method: 'POST',
@@ -366,10 +353,8 @@
                 return res.json();
             })
             .then(() => {
-                const modal = bootstrap.Modal.getInstance(els.composeModal)
-                    || new bootstrap.Modal(els.composeModal);
+                const modal = bootstrap.Modal.getInstance(els.composeModal) || new bootstrap.Modal(els.composeModal);
                 modal.hide();
-
                 resetComposeForm();
                 showToast('پیام با موفقیت ارسال شد.');
             })
@@ -378,13 +363,11 @@
             });
     }
 
-
     function resetComposeForm() {
         if (els.composeSubject) els.composeSubject.value = '';
         if (els.composeBody) els.composeBody.value = '';
         if (els.composeAttachment) els.composeAttachment.value = '';
         $(els.composeRecipients || []).val(null).trigger('change');
-        // nothing
     }
 
     function toggleArchive() {
@@ -406,12 +389,8 @@
     }
 
     function toggleHeaderActions(isArchived, isMuted) {
-        if (els.actionArchiveModal) {
-            els.actionArchiveModal.classList.toggle('active', isArchived);
-        }
-        if (els.actionMuteModal) {
-            els.actionMuteModal.classList.toggle('active', isMuted);
-        }
+        if (els.actionArchiveModal) els.actionArchiveModal.classList.toggle('active', isArchived);
+        if (els.actionMuteModal) els.actionMuteModal.classList.toggle('active', isMuted);
     }
 
     function showToast(message) {
