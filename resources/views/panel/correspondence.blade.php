@@ -73,7 +73,7 @@
                             <input type="file" name="attachments[]" id="composeAttachment" class="form-control" multiple>
                         </div>
 
-                        <button type="submit" id="btnComposeSend" class="btn btn-primary">ارسال <span class="mdi mdi-send ms-1"></span></button>
+                        <button type="button" id="btnComposeSend" class="btn btn-primary">ارسال <span class="mdi mdi-send ms-1"></span></button>
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
                     </form>
                 </div>
@@ -116,6 +116,10 @@
         window.PUSHER_APP_KEY = "{{ config('broadcasting.connections.pusher.key') }}";
         window.PUSHER_APP_CLUSTER = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
     </script>
+    <script>
+        window.CORRESPONDENCE_POST_URL = "{{ route('correspondence.store') }}";
+    </script>
+
     <script src="{{'https://js.pusher.com/8.2.0/pusher.min.js'}}"></script>
 
     <script>

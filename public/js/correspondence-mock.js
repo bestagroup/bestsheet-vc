@@ -345,7 +345,7 @@
             });
         }
 
-        const postUrl = "correspondence";
+        const postUrl = window.CORRESPONDENCE_POST_URL;
         fetch(postUrl, {
             method: 'POST',
             headers: {
