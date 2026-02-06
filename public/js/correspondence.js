@@ -391,7 +391,7 @@
     }
 
     function initRealtime(){
-        const channel = pusher.subscribe('private-correspondence');
+        const channel = pusher.subscribe('correspondence');
         channel.bind('App\\Events\\MessageSent', function(data){
             const conv = conversations.find(c=>c.id==data.conversation_id);
             if(!conv) return;
