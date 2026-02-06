@@ -28,7 +28,6 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('panel/company'      , 'CompanyController');
     Route::resource('company'            , 'CompanyController');
     Route::resource('minute'             , 'MinuteController');
-    Route::resource('sale'               , 'SaleController');
     Route::resource('panel/flow'         , 'FlowController');
     Route::resource('panel/report'       , 'ReportController');
     Route::resource('panel/correspondence', 'CorrespondenceController');
