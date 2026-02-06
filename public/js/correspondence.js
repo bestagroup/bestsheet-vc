@@ -39,7 +39,6 @@
             renderMessageList();
         }, 300);
 
-        bindEvents();
         initCompose();
         initRealtime();
     }
