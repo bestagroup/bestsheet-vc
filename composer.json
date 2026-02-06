@@ -23,6 +23,7 @@
         "mews/captcha": "^3.3",
         "morilog/jalali": "*",
         "php-open-source-saver/jwt-auth": "^2.1",
+        "pusher/pusher-php-server": "^7.2",
         "realrashid/sweet-alert": "^7.1",
         "setasign/fpdi": "^2.6",
         "spatie/ignition": "^1.15",

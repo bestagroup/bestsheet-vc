@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\MessageAttachment;
@@ -45,7 +46,6 @@ class CorrespondenceController extends Controller
 
         return view('panel.correspondence', compact('users', 'conversations', 'thispage'));
     }
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -58,6 +58,8 @@ class CorrespondenceController extends Controller
         ]);
 
         return DB::transaction(function () use ($request, $data) {
+
+            // 1️⃣ ایجاد پیام
             $message = Message::create([
                 'sender_id' => auth()->id(),
                 'subject'   => $data['subject'] ?? null,
@@ -65,7 +67,7 @@ class CorrespondenceController extends Controller
                 'parent_id' => $data['parent_id'] ?? null,
             ]);
 
-
+            // 2️⃣ گیرندگان
             if (!empty($data['parent_id'])) {
                 $parent = Message::with('recipients')->findOrFail($data['parent_id']);
                 $message->recipients()->sync($parent->recipients->pluck('id'));
@@ -73,25 +75,39 @@ class CorrespondenceController extends Controller
                 $message->recipients()->attach($data['recipients']);
             }
 
+            // 3️⃣ پیوست‌ها
+            $attachments = [];
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
-                    $extension      = $file->getClientOriginalExtension();
-                    $fileName = uniqid() . '.' . $extension;
-                    MessageAttachment::create([
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName  = uniqid() . '.' . $extension;
+
+                    $attachment = MessageAttachment::create([
                         'message_id'    => $message->id,
                         'original_name' => $file->getClientOriginalName(),
-                        'path'          => $file->storeAs("messages/".$message->id , $fileName, 'public'),
+                        'path'          => $file->storeAs("messages/".$message->id, $fileName, 'public'),
                         'size'          => $file->getSize(),
                         'mime_type'     => $file->getMimeType(),
                     ]);
+
+                    $attachments[] = [
+                        'id'   => $attachment->id,
+                        'name' => $attachment->original_name,
+                        'url'  => asset('storage/'.$attachment->path),
+                        'size' => $attachment->size,
+                        'mime' => $attachment->mime_type,
+                    ];
                 }
             }
 
+            // 4️⃣ 🔥 broadcast دقیقاً اینجاست (بعد از همه‌چیز)
+            broadcast(new MessageSent($message))->toOthers();
+
+            // 5️⃣ پاسخ
             return response()->json([
                 'id' => $message->id,
                 'created_at' => $message->created_at,
             ], 201);
         });
-
     }
 }

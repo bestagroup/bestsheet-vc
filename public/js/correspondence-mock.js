@@ -36,6 +36,11 @@
         const color = user.color || '#cccccc';
         return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
     }
+    const pusher = new Pusher('PUSHER_APP_KEY', {
+        cluster: 'PUSHER_APP_CLUSTER',
+        forceTLS: true
+    });
+
     function init() {
         setTimeout(() => {
             if (els.skeleton) els.skeleton.classList.add('d-none');
@@ -47,6 +52,7 @@
         }, 450);
 
         bindEvents();
+        initRealtime();
         initComposeModal();
     }
 
@@ -409,6 +415,38 @@
         const toast = new bootstrap.Toast(toastEl, {delay: 2200});
         toast.show();
         toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+    }
+    function initRealtime() {
+
+        const channel = pusher.subscribe(`private-correspondence.${authUserId}`);
+
+        channel.bind('new-message', function (data) {
+
+            const conv = conversations.find(c => c.id == data.conversation_id);
+
+            if (!conv) return;
+
+            // پیام ریشه
+            if (!data.parent_id) {
+                conv.messages.root = data.message;
+            } else {
+                conv.messages.replies.push(data.message);
+            }
+
+            conv.lastActivity = data.message.time;
+
+            if (state.activeConversationId != conv.id) {
+                conv.unread = (conv.unread || 0) + 1;
+            }
+
+            // اگر مکالمه بازه، زنده آپدیت کن
+            if (state.activeConversationId == conv.id && els.viewMessages) {
+                els.viewMessages.innerHTML = renderThread(conv);
+            }
+
+            renderMessageList();
+            showToast('پیام جدید دریافت شد');
+        });
     }
 
     document.addEventListener('DOMContentLoaded', init);

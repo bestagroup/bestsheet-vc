@@ -113,8 +113,11 @@
 
 @section('script')
     <script>
-
+        window.PUSHER_APP_KEY = "{{ config('broadcasting.connections.pusher.key') }}";
+        window.PUSHER_APP_CLUSTER = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
     </script>
+    <script src="{{'https://js.pusher.com/8.2.0/pusher.min.js'}}"></script>
+
     <script>
         window.CORRESPONDENCE_DATA = {
             authUserId: {{ auth()->id() }},
