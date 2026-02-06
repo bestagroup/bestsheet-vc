@@ -2,24 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MessageAttachment extends Model
 {
-    use HasFactory;
-
-    protected $guarded = [];
-
-    protected $casts = [
-        'size' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+    protected $fillable = [
+        'message_id',
+        'path',
+        'original_name',
+        'mime_type',
+        'size',
     ];
 
-    public function message(): BelongsTo
+    /* ---------------- Relations ---------------- */
+
+    public function message()
     {
         return $this->belongsTo(Message::class);
+    }
+
+    /* ---------------- Accessors ---------------- */
+
+    public function getUrlAttribute(): string
+    {
+        return asset('storage/' . $this->path);
     }
 }

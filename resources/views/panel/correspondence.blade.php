@@ -1,216 +1,197 @@
 @extends('layouts.base')
+
 @section('title', 'مکاتبات')
+
 @section('style')
     <link rel="stylesheet" href="{{ asset('assets/css/page-correspondence.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
+
 @section('content')
-    <div id="correspondence-skeleton" class="card conversation-card mb-3">
+
+    {{-- Skeleton --}}
+    <div id="correspondence-skeleton" class="card mb-3">
         <div class="card-body">
-            <div class="skeleton line" style="width: 30%; height: 20px;"></div>
-            <div class="skeleton line" style="width: 100%; height: 48px;"></div>
-            <div class="skeleton line" style="width: 70%; height: 20px;"></div>
-            <div class="skeleton line" style="width: 100%; height: 320px;"></div>
+            <div class="skeleton line w-25 mb-2"></div>
+            <div class="skeleton line w-100 mb-3"></div>
+            <div class="skeleton line w-75 mb-2"></div>
+            <div class="skeleton line w-100" style="height:300px"></div>
         </div>
     </div>
 
-    <div id="correspondence-body" class="correspondence-page d-none">
-        <div class="card conversation-card">
+    {{-- Body --}}
+    <div id="correspondence-body" class="d-none">
+
+        <div class="card">
             <div class="card-body">
-                <div class="conversation-search mb-3">
-                    <div class="position-relative">
-                        <span class="mdi mdi-magnify prefix"></span>
-                        <input id="searchConversation" type="text" class="form-control ps-5" placeholder="جستجو مکالمه">
-                    </div>
+
+                {{-- Search --}}
+                <div class="mb-3">
+                    <input id="searchConversation" type="text"
+                           class="form-control"
+                           placeholder="جستجوی مکالمه">
                 </div>
-                <div class="filter-chips" id="filterChips">
+
+                {{-- Filters --}}
+                <div id="filterChips" class="mb-3">
                     <span class="chip active" data-filter="all">همه</span>
-                    <span class="chip" data-filter="unread">خوانده‌نشده</span>
-                    <span class="chip" data-filter="archived">آرشیو</span>
-                    <span class="chip" data-filter="muted">بی‌صدا</span>
-                    <span class="chip" data-filter="sent">ارسالی</span>
-                    <span class="chip" data-filter="type-internal">نوع: داخلی</span>
-                    <span class="chip" data-filter="type-external">نوع: برون‌سازمانی</span>
+                    <span class="chip" data-filter="unread">خوانده نشده</span>
                 </div>
-                <div class="conversation-list mt-3" id="conversationList"></div>
+
+                {{-- List --}}
+                <div id="conversationList"></div>
+
             </div>
         </div>
+
     </div>
 
-    <!-- دکمه شناور نوشتن پیام جدید -->
-    <button id="btnOpenCompose" type="button" class="btn btn-primary fab-compose" data-bs-toggle="modal" data-bs-target="#composeModal" title="نوشتن پیام جدید">
+    {{-- Compose Button --}}
+    <button id="btnOpenCompose"
+            class="btn btn-primary fab-compose"
+            data-bs-toggle="modal"
+            data-bs-target="#composeModal">
         <span class="mdi mdi-plus"></span>
     </button>
 
-    <!-- Modal نوشتن پیام (استاندارد Bootstrap پروژه) -->
-    <div class="modal fade" id="composeModal" tabindex="-1" aria-labelledby="composeModalLabel" aria-hidden="true">
+    {{-- Compose Modal --}}
+    <div class="modal fade" id="composeModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
+
                 <div class="modal-header">
-                    <h5 class="modal-title" id="composeModalLabel">پیام جدید</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    <h5 class="modal-title">پیام جدید</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
                     <form id="composeForm" enctype="multipart/form-data">
                         @csrf
+
                         <div class="mb-3">
-                            <label class="form-label">موضوع</label>
-                            <input name="subject" id="composeSubject" class="form-control">
+                            <label>موضوع</label>
+                            <input id="composeSubject" name="subject" class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">گیرندگان</label>
-                            <select name="recipients[]" id="composeRecipients" class="form-control select2" multiple></select>
+                            <label>گیرندگان</label>
+                            <select id="composeRecipients"
+                                    name="recipients[]"
+                                    class="form-control select2"
+                                    multiple>
+                                @foreach($users as $u)
+                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">متن پیام</label>
-                            <textarea name="body" id="composeBody" class="form-control"></textarea>
+                            <label>متن پیام</label>
+                            <textarea id="composeBody" name="body"
+                                      class="form-control"></textarea>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">ضمیمه</label>
-                            <input type="file" name="attachments[]" id="composeAttachment" class="form-control" multiple>
+                            <label>ضمیمه</label>
+                            <input id="composeAttachment"
+                                   type="file"
+                                   name="attachments[]"
+                                   class="form-control"
+                                   multiple>
                         </div>
 
-                        <button type="button" id="btnComposeSend" class="btn btn-primary">ارسال <span class="mdi mdi-send ms-1"></span></button>
-                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">انصراف</button>
+                        <button type="button"
+                                id="btnComposeSend"
+                                class="btn btn-primary">
+                            ارسال
+                        </button>
+
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Modal مشاهده مکالمه -->
-    <div class="modal fade" id="viewConversationModal" tabindex="-1" aria-labelledby="viewConversationLabel" aria-hidden="true">
+    {{-- View Conversation Modal --}}
+    <div class="modal fade" id="viewConversationModal" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <div>
-                        <h5 class="modal-title" id="viewSubject">...</h5>
+                        <h5 id="viewSubject"></h5>
                         <div id="viewParticipants"></div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
-                    <div class="d-flex gap-2 mb-3">
-                        <button class="btn btn-outline-secondary btn-sm" id="actionArchiveModal">
-                            <span class="mdi mdi-archive-outline me-1"></span> آرشیو
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm" id="actionMuteModal">
-                            <span class="mdi mdi-volume-off me-1"></span> بی‌صدا
-                        </button>
-                    </div>
-                    <div id="viewMessages" class="message-scroll" style="max-height:65vh;"></div>
+                    <div id="viewMessages"
+                         style="max-height:65vh;overflow:auto"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">بستن</button>
-                </div>
+
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('script')
+
+    {{-- Pusher Config --}}
     <script>
-        window.PUSHER_APP_KEY = "{{ config('broadcasting.connections.pusher.key') }}";
-        window.PUSHER_APP_CLUSTER = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
-    </script>
-    <script>
+        window.PUSHER_CONFIG = {
+            key: "{{ config('broadcasting.connections.pusher.key') }}",
+            cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}"
+        };
+
         window.CORRESPONDENCE_POST_URL = "{{ route('correspondence.store') }}";
     </script>
 
+    {{-- DATA --}}
     <script>
         window.CORRESPONDENCE_DATA = {
             authUserId: {{ auth()->id() }},
             users: {!! json_encode(
-        $users->mapWithKeys(function ($u) {
-            $parts = preg_split('/\s+/u', trim($u->name));
-            $initials = collect($parts)->map(fn ($p) => mb_substr($p, 0, 1))->implode('');
-
-            return [
-                $u->id => [
-                    'id'        => $u->id,
-                    'name'      => $u->name,
-                    'initials'  => $initials,
-                    'color'     => sprintf('#%06X', crc32($u->id) & 0xFFFFFF),
-                ]
-            ];
-        })->toArray(),
-        JSON_UNESCAPED_UNICODE
-    ) !!},
+                $users->mapWithKeys(fn($u) => [
+                    $u->id => [
+                        'id' => $u->id,
+                        'name' => $u->name,
+                    ]
+                ]),
+                JSON_UNESCAPED_UNICODE
+            ) !!},
             conversations: {!! json_encode(
-        $conversations->map(function ($c) {
-            return [
-                'id'            => 'c'.$c->id,
-                'subject'       => $c->subject,
-                'type'          => 'internal',
-                'participants' => collect([$c->sender_id])
-                    ->merge($c->recipients->pluck('id'))
-                    ->unique()
-                    ->values()
-                    ->toArray(),
-                'archived' => false,
-                'muted' => false,
-                'unread' => $c->recipients
-                    ->where('id', auth()->id())
-                    ->whereNull('pivot.read_at')
-                    ->count(),
-                'lastActivity' => $c->updated_at,
-                'messages' => [
-                    'root' => [
-                        'id'        => 'm'.$c->id,
-                        'senderId'  => $c->sender_id,
-                        'body'      => $c->body,
-                        'time'      => $c->created_at,
-                        'direction' => $c->sender_id === auth()->id() ? 'outgoing' : 'incoming',
-                        'attachments' => $c->attachments->map(function ($a) {
-                            return [
-                                'id'   => $a->id,
-                                'name' => $a->original_name,
-                                'url'  => asset('storage/'.$a->path),
-                                'size' => $a->size,
-                                'mime' => $a->mime_type,
-                            ];
-                        })->toArray(),
-                    ],
-                    'replies' => $c->replies
-                        ->sortBy('created_at')
-                        ->map(function ($r) {
-                            return [
-                                'id'        => 'm'.$r->id,
-                                'senderId'  => $r->sender_id,
-                                'body'      => $r->body,
-                                'time'      => $r->created_at,
-                                'direction' => $r->sender_id === auth()->id() ? 'outgoing' : 'incoming',
-                                'attachments' => $r->attachments->map(function ($a) {
-                                    return [
-                                        'id'   => $a->id,
-                                        'name' => $a->original_name,
-                                        'url'  => asset('storage/'.$a->path),
-                                        'size' => $a->size,
-                                        'mime' => $a->mime_type,
-                                    ];
-                                })->toArray(),
-                            ];
-                        })
-                        ->values()
-                        ->toArray(),
-                ]
-            ];
-        })->values()->toArray(),
-        JSON_UNESCAPED_UNICODE
-    ) !!},
-        };
-
-        // ---- تنظیمات Pusher برای JS ----
-        window.PUSHER_CONFIG = {
-            key: "{{ env('PUSHER_APP_KEY') }}",
-            cluster: "{{ env('PUSHER_APP_CLUSTER') }}"
+                $conversations->map(function ($c) {
+                    return [
+                        'id' => $c->id,
+                        'subject' => $c->subject,
+                        'participants' => $c->users->pluck('id')->toArray(),
+                        'unread' => $c->pivot->unread_count ?? 0,
+                        'lastActivity' => optional($c->lastMessage)->created_at,
+                        'messages' => [
+                            'root' => $c->lastMessage ? [
+                                'id' => 'm'.$c->lastMessage->id,
+                                'senderId' => $c->lastMessage->sender_id,
+                                'body' => $c->lastMessage->body,
+                                'time' => $c->lastMessage->created_at,
+                                'attachments' => $c->lastMessage->attachments->map(fn($a) => [
+                                    'id' => $a->id,
+                                    'name' => $a->original_name,
+                                    'url' => $a->url,
+                                ])->toArray()
+                            ] : null,
+                            'replies' => []
+                        ]
+                    ];
+                })->values(),
+                JSON_UNESCAPED_UNICODE
+            ) !!}
         };
     </script>
 
     <script src="{{'https://js.pusher.com/8.2.0/pusher.min.js'}}"></script>
+    <script src="{{ asset('js/correspondence.js') }}"></script>
 
-    <script src="{{ asset('js/correspondence-mock.js') }}"></script>
 @endsection

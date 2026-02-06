@@ -2,44 +2,44 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Message extends Model
 {
-    use HasFactory;
-    protected $guarded = [];
-
+    protected $fillable = [
+        'conversation_id',
+        'sender_id',
+        'parent_id',
+        'body',
+    ];
     protected $casts = [
         'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
-    public function sender(): BelongsTo
+
+
+    /* ---------------- Relations ---------------- */
+
+    public function conversation()
+    {
+        return $this->belongsTo(Conversation::class);
+    }
+
+    public function sender()
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function parent(): BelongsTo
+    public function parent()
     {
         return $this->belongsTo(Message::class, 'parent_id');
     }
 
-    public function replies(): HasMany
+    public function replies()
     {
-        return $this->hasMany(Message::class, 'parent_id');
+        return $this->hasMany(Message::class, 'parent_id')->orderBy('created_at');
     }
 
-    public function recipients(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'message_recipients')
-            ->withPivot('read_at')
-            ->withTimestamps();
-    }
-
-    public function attachments(): HasMany
+    public function attachments()
     {
         return $this->hasMany(MessageAttachment::class);
     }

@@ -115,4 +115,21 @@ class User extends Authenticatable
         return $this->hasOne(Company::class);
     }
 
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class)
+            ->withPivot([
+                'unread_count',
+                'muted_at',
+                'archived_at',
+                'last_read_at'
+            ])
+            ->withTimestamps();
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
 }

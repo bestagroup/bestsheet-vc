@@ -11,10 +11,10 @@ return new class extends Migration {
         Schema::create('message_attachments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('message_id')->constrained('messages')->cascadeOnDelete();
-            $table->string('original_name');
             $table->string('path');
-            $table->unsignedBigInteger('size')->nullable();
+            $table->string('original_name');
             $table->string('mime_type')->nullable();
+            $table->unsignedBigInteger('size')->nullable();
             $table->timestamps();
         });
     }
