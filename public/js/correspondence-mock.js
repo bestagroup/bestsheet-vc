@@ -358,9 +358,48 @@
                 if (!res.ok) throw new Error();
                 return res.json();
             })
-            .then(() => {
+            .then(data => {
                 const modal = bootstrap.Modal.getInstance(els.composeModal) || new bootstrap.Modal(els.composeModal);
                 modal.hide();
+
+                // اضافه کردن پیام به خود فرستنده
+                const conv = conversations.find(c => c.id === state.activeConversationId);
+                if (conv) {
+                    const attachments = els.composeAttachment?.files
+                        ? Array.from(els.composeAttachment.files).map(f => ({
+                            id: f.name,
+                            name: f.name,
+                            url: URL.createObjectURL(f),
+                            size: f.size,
+                            mime: f.type
+                        }))
+                        : [];
+
+                    const newMessage = {
+                        id: 'm' + data.id,
+                        senderId: authUserId,
+                        body: body,
+                        time: new Date().toISOString(),
+                        direction: 'outgoing',
+                        attachments: attachments
+                    };
+
+                    if (els.composeForm.dataset.parentId) {
+                        // اگر پاسخ است، به replies اضافه شود
+                        conv.messages.replies.push(newMessage);
+                    } else {
+                        // پیام اصلی
+                        conv.messages.root = newMessage;
+                    }
+
+                    // باز کردن یا بروزرسانی modal
+                    if (state.activeConversationId === conv.id) {
+                        openMessageModal(conv.id);
+                    }
+
+                    renderMessageList();
+                }
+
                 resetComposeForm();
                 showToast('پیام با موفقیت ارسال شد.');
             })
@@ -418,27 +457,26 @@
     }
     function initRealtime() {
 
-        const channel = pusher.subscribe('correspondence-channel');
+        const channel = pusher.subscribe('private-correspondence');
+
         channel.bind('App\\Events\\MessageSent', function(data) {
-            // پیدا کردن مکالمه
-            const conv = conversations.find(c => c.id === data.conversation_id);
+            const conv = conversations.find(c => c.id == data.conversation_id);
             if (!conv) return;
 
-            // اگر پیام reply هست، به replies اضافه کن
-            if (data.message.parent_id) {
+            if (data.parent_id) {
                 conv.messages.replies.push(data.message);
             } else {
                 conv.messages.root = data.message;
             }
 
-            // اگر مودال بازه، لیست پیام‌ها آپدیت کن
-            if (state.activeConversationId == conv.id) {
-                if (els.viewMessages) els.viewMessages.innerHTML = renderThread(conv);
+            // اگر conversation فعلی باز است، بلافاصله نمایش بده
+            if (state.activeConversationId === conv.id) {
+                openMessageModal(conv.id);
             }
 
-            // لیست مکالمات سمت چپ آپدیت بشه
             renderMessageList();
         });
+
     }
 
     document.addEventListener('DOMContentLoaded', init);
