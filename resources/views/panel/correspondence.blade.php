@@ -26,14 +26,21 @@
             <div class="card-body">
 
                 {{-- Search --}}
-                <div class="mb-3">
+                <div class="mb-3 d-flex align-items-center gap-2">
                     <input id="searchConversation" type="text"
                            class="form-control"
                            placeholder="جستجوی مکالمه">
+                    <button id="btnOpenCompose"
+                            class="btn btn-primary btn-compose-inline"
+                            data-bs-toggle="modal"
+                            data-bs-target="#composeModal"
+                            title="پیام جدید">
+                        <span class="mdi mdi-plus"></span>
+                    </button>
                 </div>
 
                 {{-- Filters --}}
-                <div id="filterChips" class="mb-3">
+                <div id="filterChips" class="mb-3 filter-chips">
                     <span class="chip active" data-filter="all">همه</span>
                     <span class="chip" data-filter="unread">خوانده نشده</span>
                 </div>
@@ -46,13 +53,7 @@
 
     </div>
 
-    {{-- Compose Button --}}
-    <button id="btnOpenCompose"
-            class="btn btn-primary fab-compose"
-            data-bs-toggle="modal"
-            data-bs-target="#composeModal">
-        <span class="mdi mdi-plus"></span>
-    </button>
+    {{-- Compose Button (moved inline next to search) --}}
 
     {{-- Compose Modal --}}
     <div class="modal fade" id="composeModal" tabindex="-1">
@@ -164,25 +165,36 @@
             ) !!},
             conversations: {!! json_encode(
                 $conversations->map(function ($c) {
+                    $messages = $c->messages->sortBy('created_at')->values();
+                    $rootMsg = $messages->firstWhere('parent_id', null) ?? $messages->first();
+                    $replies = $rootMsg
+                        ? $messages->where('id', '!=', $rootMsg->id)->values()
+                        : collect();
+                    $lastMsg = $messages->last();
+
+                    $mapMessage = function ($m) {
+                        return [
+                            'id' => 'm'.$m->id,
+                            'senderId' => $m->sender_id,
+                            'body' => $m->body,
+                            'time' => $m->created_at,
+                            'attachments' => $m->attachments->map(fn($a) => [
+                                'id' => $a->id,
+                                'name' => $a->original_name,
+                                'url' => $a->url,
+                            ])->toArray()
+                        ];
+                    };
+
                     return [
                         'id' => $c->id,
                         'subject' => $c->subject,
                         'participants' => $c->users->pluck('id')->toArray(),
                         'unread' => $c->pivot->unread_count ?? 0,
-                        'lastActivity' => optional($c->lastMessage)->created_at,
+                        'lastActivity' => optional($lastMsg)->created_at ?? optional($c->lastMessage)->created_at,
                         'messages' => [
-                            'root' => $c->lastMessage ? [
-                                'id' => 'm'.$c->lastMessage->id,
-                                'senderId' => $c->lastMessage->sender_id,
-                                'body' => $c->lastMessage->body,
-                                'time' => $c->lastMessage->created_at,
-                                'attachments' => $c->lastMessage->attachments->map(fn($a) => [
-                                    'id' => $a->id,
-                                    'name' => $a->original_name,
-                                    'url' => $a->url,
-                                ])->toArray()
-                            ] : null,
-                            'replies' => []
+                            'root' => $rootMsg ? $mapMessage($rootMsg) : null,
+                            'replies' => $replies->map($mapMessage)->values()->toArray()
                         ]
                     ];
                 })->values(),
