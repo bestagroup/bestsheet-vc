@@ -8,6 +8,7 @@ use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\MessageAttachment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class CorrespondenceController extends Controller
@@ -16,6 +17,7 @@ class CorrespondenceController extends Controller
 
     public function index()
     {
+        //Artisan::call('cache:clear');
         $user = auth()->user();
 
         $conversations = Conversation::with([
