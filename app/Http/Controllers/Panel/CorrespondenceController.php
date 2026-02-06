@@ -24,6 +24,10 @@ class CorrespondenceController extends Controller
             'users:id,name',
             'lastMessage.sender:id,name',
             'lastMessage.attachments',
+            'messages' => fn ($q) => $q->with([
+                'sender:id,name',
+                'attachments',
+            ])->orderBy('created_at'),
         ])
             ->whereHas('users', fn ($q) => $q->where('users.id', $user->id))
             ->latest('updated_at')

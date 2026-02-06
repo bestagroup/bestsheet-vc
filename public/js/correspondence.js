@@ -31,6 +31,10 @@
         actionAddModal: document.getElementById('actionAddModal')
     };
 
+    function normalizeId(id) {
+        return id == null ? '' : String(id);
+    }
+
     function renderAvatar(user) {
         if (!user) return '';
         const initials = (user.name || '').split(' ').map(p => p[0]).join('').toUpperCase();
@@ -174,6 +178,7 @@
         const list = [];
         conversations.forEach(conv => {
             const root = conv.messages.root;
+            if (!root) return;
             list.push({
                 id: root.id,
                 conversationId: conv.id,
@@ -214,7 +219,8 @@
     }
 
     function openMessageModal(conversationId) {
-        const conv = conversations.find(c => c.id === conversationId);
+        const convId = normalizeId(conversationId);
+        const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
 
         if (els.viewSubject) els.viewSubject.textContent = conv.subject;
@@ -235,8 +241,8 @@
     function renderThread(conv) {
         let html = '';
         const rootMsg = conv.messages.root;
-        html += renderMessage(rootMsg, false);
-        conv.messages.replies.forEach(r => html += renderMessage(r, true));
+        if (rootMsg) html += renderMessage(rootMsg, false);
+        (conv.messages.replies || []).forEach(r => html += renderMessage(r, true));
         return html;
     }
 
@@ -248,12 +254,16 @@
                 ${msg.attachments.map(a => `<a href="${a.url}" target="_blank" class="d-block text-decoration-none">📎 ${a.name}</a>`).join('')}
             </div>`;
         }
-        return `<div class="message-card ${isReply ? 'ms-4 mt-2 border-start ps-3' : ''}">
+        const isSelf = Number(msg.senderId) === Number(authUserId);
+        const alignmentClass = isSelf ? 'message-self' : 'message-other';
+        const replyClass = isReply ? 'message-reply' : '';
+        const canReply = !isSelf;
+        return `<div class="message-card ${alignmentClass} ${replyClass}">
             <div class="fw-600">${sender?.name || ''}</div>
             <small class="text-muted">${formatDateTime(msg.time)}</small>
             <div class="message-body mt-2">${msg.body}</div>
             ${attachmentsHtml}
-            ${!isReply ? `<button class="btn btn-sm btn-outline-primary mt-2" data-action="reply" data-message-id="${msg.id}">پاسخ</button>` : ''}
+            ${canReply ? `<button class="btn btn-sm btn-outline-primary mt-2" data-action="reply" data-message-id="${msg.id}">پاسخ</button>` : ''}
         </div>`;
     }
 
@@ -272,16 +282,19 @@
     }
 
     function markAsRead(conversationId) {
-        const conv = conversations.find(c => c.id === conversationId);
+        const convId = normalizeId(conversationId);
+        const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
         conv.unread = 0;
         conv.lastActivity = conv.messages.root.time || conv.lastActivity;
     }
 
     function handleMessageAction(action, messageId) {
-        const conv = conversations.find(c => c.id === state.activeConversationId);
+        const convId = normalizeId(state.activeConversationId);
+        const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
-        const msg = flattenMessages().find(m => m.id === messageId);
+        const allMsgs = [conv.messages.root].concat(conv.messages.replies || []).filter(Boolean);
+        const msg = allMsgs.find(m => m.id === messageId);
         if (!msg) return;
         if (action === 'delete') return;
         if (action === 'reply') handleReply(messageId);
@@ -293,26 +306,63 @@
         const viewModalInstance = bootstrap.Modal.getInstance(els.viewModal);
         viewModalInstance?.hide();
 
-        const conv = conversations.find(c => c.id === els.viewModal.dataset.conversationId);
+        const convId = normalizeId(els.viewModal.dataset.conversationId);
+        const conv = conversations.find(c => normalizeId(c.id) === convId);
+        if (conv) {
+            els.composeForm.dataset.conversationId = conv.id;
+        }
         els.composeSubject.value = conv?.subject || '';
         els.composeBody.value = '';
+        setRecipientsForReply(conv);
 
         setTimeout(() => {
             bootstrap.Modal.getOrCreateInstance(els.composeModal).show();
         }, 300);
     }
 
+    function setRecipientsForReply(conv) {
+        if (!els.composeRecipients) return;
+        if (!conv) {
+            clearReplyRecipients();
+            return;
+        }
+        const allIds = conv?.participants || [];
+        const replyRecipients = allIds.filter(id => Number(id) !== Number(authUserId));
+
+        $(els.composeRecipients).val(replyRecipients.map(String)).trigger('change');
+        $(els.composeRecipients).prop('disabled', true);
+
+        const group = els.composeRecipients.closest('.mb-3');
+        if (group) group.classList.add('d-none');
+
+        els.composeForm.dataset.isReply = '1';
+    }
+
+    function clearReplyRecipients() {
+        if (!els.composeRecipients) return;
+        $(els.composeRecipients).prop('disabled', false);
+
+        const group = els.composeRecipients.closest('.mb-3');
+        if (group) group.classList.remove('d-none');
+
+        delete els.composeForm.dataset.isReply;
+    }
+
     function handleComposeSend() {
         const subject = (els.composeSubject?.value || '').trim();
         const body = (els.composeBody?.value || '').trim();
         const recipientIds = $(els.composeRecipients || []).val() || [];
+        const conversationId = els.composeForm.dataset.conversationId || '';
+        const parentId = els.composeForm.dataset.parentId || '';
 
-        if (!body || !recipientIds.length) return showToast('متن و گیرندگان الزامی است.');
+        if (!body || (!recipientIds.length && !conversationId)) return showToast('متن و گیرندگان الزامی است.');
 
         const formData = new FormData();
         formData.append('subject', subject);
         formData.append('body', body);
         recipientIds.forEach(id => formData.append('recipients[]', id));
+        if (conversationId) formData.append('conversation_id', conversationId);
+        if (parentId) formData.append('parent_id', parentId);
 
         if (els.composeAttachment?.files?.length) {
             Array.from(els.composeAttachment.files).forEach(file => formData.append('attachments[]', file));
@@ -328,19 +378,43 @@
                 const modal = bootstrap.Modal.getInstance(els.composeModal) || new bootstrap.Modal(els.composeModal);
                 modal.hide();
 
-                const conv = conversations.find(c => c.id === state.activeConversationId);
+                const attachments = els.composeAttachment?.files
+                    ? Array.from(els.composeAttachment.files).map(f => ({id: f.name,name: f.name,url: URL.createObjectURL(f),size: f.size,mime: f.type}))
+                    : [];
+
+                const newMessage = {
+                    id: 'm' + data.message_id,
+                    senderId: authUserId,
+                    body,
+                    time: new Date().toISOString(),
+                    direction: 'outgoing',
+                    attachments
+                };
+
+                const targetConversationId = data.conversation_id || conversationId || state.activeConversationId;
+                const targetConvId = normalizeId(targetConversationId);
+                let conv = conversations.find(c => normalizeId(c.id) === targetConvId);
+
                 if (conv) {
-                    const attachments = els.composeAttachment?.files
-                        ? Array.from(els.composeAttachment.files).map(f => ({id: f.name,name: f.name,url: URL.createObjectURL(f),size: f.size,mime: f.type}))
-                        : [];
-
-                    const newMessage = {id:'m'+data.id,senderId:authUserId,body,time:new Date().toISOString(),direction:'outgoing',attachments};
-                    if (els.composeForm.dataset.parentId) conv.messages.replies.push(newMessage);
+                    if (parentId) conv.messages.replies.push(newMessage);
                     else conv.messages.root = newMessage;
-
-                    if (state.activeConversationId === conv.id) openMessageModal(conv.id);
-                    renderMessageList();
+                    conv.lastActivity = newMessage.time;
+                } else {
+                    const participants = Array.from(new Set([authUserId].concat(recipientIds.map(id => Number(id)))));
+                    conv = {
+                        id: targetConversationId,
+                        subject: subject || '(بدون موضوع)',
+                        participants,
+                        unread: 0,
+                        lastActivity: newMessage.time,
+                        messages: {root: newMessage, replies: []}
+                    };
+                    conversations.unshift(conv);
                 }
+
+                state.activeConversationId = conv.id;
+                state.activeMessageId = newMessage.id;
+                renderMessageList();
 
                 resetComposeForm();
                 showToast('پیام با موفقیت ارسال شد.');
@@ -354,10 +428,13 @@
         els.composeAttachment.value = '';
         $(els.composeRecipients).val(null).trigger('change');
         delete els.composeForm.dataset.parentId;
+        delete els.composeForm.dataset.conversationId;
+        clearReplyRecipients();
     }
 
     function toggleArchive() {
-        const conv = conversations.find(c => c.id === state.activeConversationId);
+        const convId = normalizeId(state.activeConversationId);
+        const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
         conv.archived = !conv.archived;
         toggleHeaderActions(conv.archived, conv.muted);
@@ -366,7 +443,8 @@
     }
 
     function toggleMute() {
-        const conv = conversations.find(c => c.id === state.activeConversationId);
+        const convId = normalizeId(state.activeConversationId);
+        const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
         conv.muted = !conv.muted;
         toggleHeaderActions(conv.archived, conv.muted);
@@ -391,16 +469,18 @@
     }
 
     function initRealtime(){
-        const channel = pusher.subscribe('correspondence');
-        channel.bind('App\\Events\\MessageSent', function(data){
-            const conv = conversations.find(c=>c.id==data.conversation_id);
-            if(!conv) return;
+        conversations.forEach(conv => {
+            const channel = pusher.subscribe(`conversation.${conv.id}`);
+            channel.bind('message.sent', function(data){
+                const target = conversations.find(c=>c.id==data.conversation_id);
+                if(!target) return;
 
-            if(data.parent_id) conv.messages.replies.push(data.message);
-            else conv.messages.root = data.message;
+                if(data.parent_id) target.messages.replies.push(data.message);
+                else target.messages.root = data.message;
 
-            if(state.activeConversationId===conv.id) openMessageModal(conv.id);
-            renderMessageList();
+                if(state.activeConversationId===target.id) openMessageModal(target.id);
+                renderMessageList();
+            });
         });
     }
 

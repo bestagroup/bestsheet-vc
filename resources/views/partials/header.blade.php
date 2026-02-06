@@ -2,7 +2,7 @@
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
   <div class="layout-navbar-nav-left d-flex align-items-center">
     <!-- Burger menu (for mobile) -->
-    <a class="nav-item nav-link px-0 me-xl-4 d-xl-none" href="javascript:void(0)">
+    <a class="nav-item nav-link px-0 me-xl-4 d-xl-none layout-menu-toggle" href="javascript:void(0)">
       <i class="mdi mdi-menu mdi-24px"></i>
     </a>
   </div>
