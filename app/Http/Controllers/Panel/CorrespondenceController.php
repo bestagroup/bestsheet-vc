@@ -101,25 +101,8 @@ class CorrespondenceController extends Controller
             }
 
             // 4️⃣ 🔥 broadcast دقیقاً اینجاست (بعد از همه‌چیز)
-            broadcast(new MessageSent([
-                'conversation_id' => $message->conversation_id ?? $message->id,
-                'parent_id' => $message->parent_id,
-                'message' => [
-                    'id' => $message->id,
-                    'senderId' => $message->sender_id,
-                    'body' => $message->body,
-                    'time' => $message->created_at->toDateTimeString(),
-                    'attachments' => $message->attachments->map(function($a) {
-                        return [
-                            'id' => $a->id,
-                            'name' => $a->original_name,
-                            'url' => asset('storage/'.$a->path),
-                            'size' => $a->size,
-                            'mime' => $a->mime_type,
-                        ];
-                    }),
-                ]
-            ]))->toOthers();
+            broadcast(new MessageSent($message))->toOthers();
+
 
             // 5️⃣ پاسخ
             return response()->json([
