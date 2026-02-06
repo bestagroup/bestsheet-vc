@@ -120,91 +120,97 @@
         window.CORRESPONDENCE_POST_URL = "{{ route('correspondence.store') }}";
     </script>
 
-    <script src="{{'https://js.pusher.com/8.2.0/pusher.min.js'}}"></script>
-
     <script>
         window.CORRESPONDENCE_DATA = {
             authUserId: {{ auth()->id() }},
             users: {!! json_encode(
-            $users->mapWithKeys(function ($u) {
-                $parts = preg_split('/\s+/u', trim($u->name));
-                $initials = collect($parts)->map(fn ($p) => mb_substr($p, 0, 1))->implode('');
+        $users->mapWithKeys(function ($u) {
+            $parts = preg_split('/\s+/u', trim($u->name));
+            $initials = collect($parts)->map(fn ($p) => mb_substr($p, 0, 1))->implode('');
 
-                return [
-                    $u->id => [
-                        'id'        => $u->id,
-                        'name'      => $u->name,
-                        'initials'  => $initials,
-                        'color'     => sprintf('#%06X', crc32($u->id) & 0xFFFFFF),
-                    ]
-                ];
-            })->toArray(),
-            JSON_UNESCAPED_UNICODE
-        ) !!},
+            return [
+                $u->id => [
+                    'id'        => $u->id,
+                    'name'      => $u->name,
+                    'initials'  => $initials,
+                    'color'     => sprintf('#%06X', crc32($u->id) & 0xFFFFFF),
+                ]
+            ];
+        })->toArray(),
+        JSON_UNESCAPED_UNICODE
+    ) !!},
             conversations: {!! json_encode(
-            $conversations->map(function ($c) {
-                return [
-                    'id'            => 'c'.$c->id,
-                    'subject'       => $c->subject,
-                    'type'          => 'internal',
-                    'participants' => collect([$c->sender_id])
-                        ->merge($c->recipients->pluck('id'))
-                        ->unique()
+        $conversations->map(function ($c) {
+            return [
+                'id'            => 'c'.$c->id,
+                'subject'       => $c->subject,
+                'type'          => 'internal',
+                'participants' => collect([$c->sender_id])
+                    ->merge($c->recipients->pluck('id'))
+                    ->unique()
+                    ->values()
+                    ->toArray(),
+                'archived' => false,
+                'muted' => false,
+                'unread' => $c->recipients
+                    ->where('id', auth()->id())
+                    ->whereNull('pivot.read_at')
+                    ->count(),
+                'lastActivity' => $c->updated_at,
+                'messages' => [
+                    'root' => [
+                        'id'        => 'm'.$c->id,
+                        'senderId'  => $c->sender_id,
+                        'body'      => $c->body,
+                        'time'      => $c->created_at,
+                        'direction' => $c->sender_id === auth()->id() ? 'outgoing' : 'incoming',
+                        'attachments' => $c->attachments->map(function ($a) {
+                            return [
+                                'id'   => $a->id,
+                                'name' => $a->original_name,
+                                'url'  => asset('storage/'.$a->path),
+                                'size' => $a->size,
+                                'mime' => $a->mime_type,
+                            ];
+                        })->toArray(),
+                    ],
+                    'replies' => $c->replies
+                        ->sortBy('created_at')
+                        ->map(function ($r) {
+                            return [
+                                'id'        => 'm'.$r->id,
+                                'senderId'  => $r->sender_id,
+                                'body'      => $r->body,
+                                'time'      => $r->created_at,
+                                'direction' => $r->sender_id === auth()->id() ? 'outgoing' : 'incoming',
+                                'attachments' => $r->attachments->map(function ($a) {
+                                    return [
+                                        'id'   => $a->id,
+                                        'name' => $a->original_name,
+                                        'url'  => asset('storage/'.$a->path),
+                                        'size' => $a->size,
+                                        'mime' => $a->mime_type,
+                                    ];
+                                })->toArray(),
+                            ];
+                        })
                         ->values()
                         ->toArray(),
-                    'archived' => false,
-                    'muted' => false,
-                    'unread' => $c->recipients
-                        ->where('id', auth()->id())
-                        ->whereNull('pivot.read_at')
-                        ->count(),
-                    'lastActivity' => $c->updated_at,
-                    'messages' => [
-                        'root' => [
-                            'id'        => 'm'.$c->id,
-                            'senderId'  => $c->sender_id,
-                            'body'      => $c->body,
-                            'time'      => $c->created_at,
-                            'direction' => $c->sender_id === auth()->id() ? 'outgoing' : 'incoming',
-                            'attachments' => $c->attachments->map(function ($a) {
-                                return [
-                                    'id'   => $a->id,
-                                    'name' => $a->original_name,
-                                    'url'  => asset('storage/'.$a->path),
-                                    'size' => $a->size,
-                                    'mime' => $a->mime_type,
-                                ];
-                            })->toArray(),
-                        ],
-                        'replies' => $c->replies
-                            ->sortBy('created_at')
-                            ->map(function ($r) {
-                                return [
-                                    'id'        => 'm'.$r->id,
-                                    'senderId'  => $r->sender_id,
-                                    'body'      => $r->body,
-                                    'time'      => $r->created_at,
-                                    'direction' => $r->sender_id === auth()->id() ? 'outgoing' : 'incoming',
-                                    'attachments' => $r->attachments->map(function ($a) {
-                                        return [
-                                            'id'   => $a->id,
-                                            'name' => $a->original_name,
-                                            'url'  => asset('storage/'.$a->path),
-                                            'size' => $a->size,
-                                            'mime' => $a->mime_type,
-                                        ];
-                                    })->toArray(),
-                                ];
-                            })
-                            ->values()
-                            ->toArray(),
-                        ]
-                        ];
-            })->values()->toArray(),
-            JSON_UNESCAPED_UNICODE
-        ) !!}
+                ]
+            ];
+        })->values()->toArray(),
+        JSON_UNESCAPED_UNICODE
+    ) !!},
+        };
+
+        // ---- تنظیمات Pusher برای JS ----
+        window.PUSHER_CONFIG = {
+            key: "{{ env('PUSHER_APP_KEY') }}",
+            cluster: "{{ env('PUSHER_APP_CLUSTER') }}"
         };
     </script>
+
+    <script src="{{'https://js.pusher.com/8.2.0/pusher.min.js'}}"></script>
 
     <script src="{{ asset('js/correspondence-mock.js') }}"></script>
 @endsection

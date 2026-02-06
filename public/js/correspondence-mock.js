@@ -36,8 +36,8 @@
         const color = user.color || '#cccccc';
         return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
     }
-    const pusher = new Pusher('PUSHER_APP_KEY', {
-        cluster: 'PUSHER_APP_CLUSTER',
+    const pusher = new Pusher(window.PUSHER_CONFIG.key, {
+        cluster: window.PUSHER_CONFIG.cluster,
         forceTLS: true
     });
 
@@ -418,34 +418,26 @@
     }
     function initRealtime() {
 
-        const channel = pusher.subscribe(`private-correspondence.${authUserId}`);
-
-        channel.bind('new-message', function (data) {
-
-            const conv = conversations.find(c => c.id == data.conversation_id);
-
+        const channel = pusher.subscribe('correspondence-channel');
+        channel.bind('App\\Events\\MessageSent', function(data) {
+            // پیدا کردن مکالمه
+            const conv = conversations.find(c => c.id === data.conversation_id);
             if (!conv) return;
 
-            // پیام ریشه
-            if (!data.parent_id) {
-                conv.messages.root = data.message;
-            } else {
+            // اگر پیام reply هست، به replies اضافه کن
+            if (data.message.parent_id) {
                 conv.messages.replies.push(data.message);
+            } else {
+                conv.messages.root = data.message;
             }
 
-            conv.lastActivity = data.message.time;
-
-            if (state.activeConversationId != conv.id) {
-                conv.unread = (conv.unread || 0) + 1;
+            // اگر مودال بازه، لیست پیام‌ها آپدیت کن
+            if (state.activeConversationId == conv.id) {
+                if (els.viewMessages) els.viewMessages.innerHTML = renderThread(conv);
             }
 
-            // اگر مکالمه بازه، زنده آپدیت کن
-            if (state.activeConversationId == conv.id && els.viewMessages) {
-                els.viewMessages.innerHTML = renderThread(conv);
-            }
-
+            // لیست مکالمات سمت چپ آپدیت بشه
             renderMessageList();
-            showToast('پیام جدید دریافت شد');
         });
     }
 
