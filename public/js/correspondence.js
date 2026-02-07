@@ -179,14 +179,15 @@
         conversations.forEach(conv => {
             const root = conv.messages.root;
             if (!root) return;
+            const lastMsg = getLastMessage(conv) || root;
             list.push({
                 id: root.id,
                 conversationId: conv.id,
                 subject: conv.subject,
-                senderId: root.senderId,
-                senderName: users[root.senderId]?.name || 'نامشخص',
-                body: root.body || '',
-                time: root.time,
+                senderId: lastMsg.senderId,
+                senderName: users[lastMsg.senderId]?.name || 'نامشخص',
+                body: lastMsg.body || '',
+                time: lastMsg.time,
                 archived: conv.archived,
                 muted: conv.muted,
                 unread: conv.unread,
@@ -194,7 +195,7 @@
                 deleted: false,
                 direction: root.direction,
                 attachments: root.attachments || [],
-                preview: root.body || ''
+                preview: lastMsg.body || ''
             });
         });
         return list;
@@ -244,6 +245,19 @@
         if (rootMsg) html += renderMessage(rootMsg, false);
         (conv.messages.replies || []).forEach(r => html += renderMessage(r, true));
         return html;
+    }
+
+    function getLastMessage(conv) {
+        const all = [];
+        if (conv?.messages?.root) all.push(conv.messages.root);
+        if (Array.isArray(conv?.messages?.replies)) all.push(...conv.messages.replies);
+        if (!all.length) return null;
+        return all.reduce((latest, msg) => {
+            if (!latest) return msg;
+            const latestTime = new Date(latest.time).getTime();
+            const msgTime = new Date(msg.time).getTime();
+            return msgTime >= latestTime ? msg : latest;
+        }, null);
     }
 
     function renderMessage(msg, isReply) {
@@ -477,6 +491,15 @@
 
                 if(data.parent_id) target.messages.replies.push(data.message);
                 else target.messages.root = data.message;
+
+                target.lastActivity = data.message.time || target.lastActivity;
+                if (Number(data.message.senderId) !== Number(authUserId)) {
+                    if (state.activeConversationId === target.id) {
+                        markAsRead(target.id);
+                    } else {
+                        target.unread = (Number(target.unread) || 0) + 1;
+                    }
+                }
 
                 if(state.activeConversationId===target.id) openMessageModal(target.id);
                 renderMessageList();
