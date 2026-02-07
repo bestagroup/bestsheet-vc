@@ -30,7 +30,8 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::resource('minute'             , 'MinuteController');
     Route::resource('panel/flow'         , 'FlowController');
     Route::resource('panel/report'       , 'ReportController');
-    Route::resource('panel/correspondence', 'CorrespondenceController');
+    Route::resource('correspondence'     , 'CorrespondenceController');
+    Route::resource('panel/contract'     , 'ContractController');
 
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('userdata'                  , 'ProfileController@userdata')->name('userdata');
