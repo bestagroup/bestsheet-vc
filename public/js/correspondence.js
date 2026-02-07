@@ -514,7 +514,7 @@
 
     function initRealtime(){
         const refreshChannel = pusher.subscribe('correspondence.refresh');
-        refreshChannel.bind('message.sent', function(){
+        refreshChannel.bind('correspondence.refresh', function(){
             scheduleRefresh();
         });
 

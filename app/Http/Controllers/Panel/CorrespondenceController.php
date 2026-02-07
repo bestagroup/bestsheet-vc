@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Events\CorrespondenceRefresh;
 use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
@@ -187,6 +188,7 @@ class CorrespondenceController extends Controller
             /* -------- Broadcast -------- */
 
             broadcast(new MessageSent($message))->toOthers();
+            broadcast(new CorrespondenceRefresh($conversation->id));
 
             return response()->json([
                 'conversation_id' => $conversation->id,
