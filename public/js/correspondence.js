@@ -483,8 +483,13 @@
     }
 
     function initRealtime(){
+        const refreshChannel = pusher.subscribe('correspondence.refresh');
+        refreshChannel.bind('message.sent', function(){
+            location.reload();
+        });
+
         conversations.forEach(conv => {
-            const channel = pusher.subscribe(`conversation.${conv.id}`);
+            const channel = pusher.subscribe(`private-conversation.${conv.id}`);
             channel.bind('message.sent', function(data){
                 const target = conversations.find(c=>c.id==data.conversation_id);
                 if(!target) return;
