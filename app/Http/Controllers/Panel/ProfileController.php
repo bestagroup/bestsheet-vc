@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\Commitment;
 use App\Models\Company;
+use App\Models\Conversation;
 use App\Models\MediaFile;
 use App\Models\Minute;
 use App\Models\Project;
@@ -39,6 +40,7 @@ class ProfileController extends Controller
             $project        = Auth::user()->project;
             $files          = MediaFile::where('project_id', $project->id)->whereRole(1)->get();
             $minutes        = Minute::where('project_id', $project->id)->get();
+
         }else{
             $project       = null;
             $investsteps    = null;

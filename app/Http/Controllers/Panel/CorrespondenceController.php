@@ -7,9 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\MessageAttachment;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class CorrespondenceController extends Controller
 {
@@ -126,5 +128,54 @@ class CorrespondenceController extends Controller
                 'message_id'      => $message->id,
             ], 201);
         });
+    }
+
+    public function show(Request $request , $id)
+    {
+        $project = Project::whereId($id)->firstOrFail();
+        if ($request->ajax()) {
+
+            $data = Conversation::query()
+                ->whereHas('users', fn ($q) => $q->where('users.id', $project->user_id))
+                ->with([
+                    'messages.sender:id,name',
+                    'messages.attachments:id,message_id,path,mime_type',
+                ])
+                ->get()
+                ->flatMap(function ($conversation) {
+                    return $conversation->messages->map(function ($message) use ($conversation) {
+                        return [
+                            'id'        => $message->id,
+                            'subject'   => $conversation->subject,
+                            'body'      => $message->body,
+                            'file_path' => optional($message->attachments->first())->path,
+                            'type'      => optional($message->attachments->first())->mime_type,
+                            'user'      => optional($message->sender_id)->name,
+                            'date'      => $message->created_at,
+                        ];
+                    });
+                })
+                ->values();
+
+            return DataTables::of($data)
+                ->editColumn('file_path', function ($row) {
+
+                    if (empty($row['file_path'])) {
+                        return '';
+                    }
+
+                    $fileUrl = asset('storage/' . $row['file_path']);
+
+                    return match ($row['type']) {
+                        'image' => '<img src="'.$fileUrl.'" width="80">',
+                        'audio' => '<audio controls><source src="'.$fileUrl.'" type="audio/mpeg"></audio>',
+                        'video' => '<video width="160" controls><source src="'.$fileUrl.'" type="video/mp4"></video>',
+                        default => '<a href="'.$fileUrl.'" target="_blank">دانلود فایل</a>',
+                    };
+                })
+                ->editColumn('date', fn ($row) => jdate($row['date'])->format('Y/m/d'))
+                ->rawColumns(['file_path'])
+                ->make(true);
+        }
     }
 }

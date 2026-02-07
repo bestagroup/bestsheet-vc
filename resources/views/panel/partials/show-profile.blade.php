@@ -1639,9 +1639,49 @@
     <!-- Message Tab -->
     <div class="tab-pane fade" id="tab-message{{ $project->id }}" role="tabpanel"
          aria-labelledby="message-tab{{ $project->id }}">
-        <table class="table table-bordered mt-2">
-
-        </table>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="conversations" class="table table-striped table-bordered yajra-datatable">
+                        <thead>
+                        <tr class="table-light">
+                            <th>شماره پیام</th>
+                            <th>موضوع پیام</th>
+                            <th>متن پیام</th>
+                            <th>فایل ضمیمه</th>
+                            <th>ارسال کننده</th>
+                            <th>تاریخ پیام</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                var table = $('#conversations.yajra-datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    order: [[0, 'desc']],
+                    scrollX: true,
+                    scrollCollapse: true,
+                    ajax: "{{ route('correspondence.show', $project->id) }}",
+                    columns: [
+                        {data: 'id'         , name: 'id' ?? ''},
+                        {data: 'subject'    , name: 'subject' ?? ''},
+                        {data: 'body'       , name: 'body' ?? ''},
+                        {data: 'file_path'  , name: 'file_path' ?? ''},
+                        {data: 'user'       , name: 'user' ?? ''},
+                        {data: 'date'       , name: 'date' ?? ''},
+                    ],
+                    language: {
+                        url: "{{asset('assets/vendor/js/fa.json')}}"
+                    }
+                });
+            });
+        </script>
     </div>
     <!-- file Tab -->
     <div class="tab-pane fade" id="tab-file{{ $project->id }}" role="tabpanel"
