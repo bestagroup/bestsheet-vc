@@ -8,6 +8,7 @@ use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\MessageAttachment;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,71 @@ class CorrespondenceController extends Controller
                 'edit'    => 'ویرایش مکاتبات',
                 'delete'  => 'حذف مکاتبات',
             ],
-            'users' => \App\Models\User::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
+        ]);
+    }
+
+    public function data()
+    {
+        $user = auth()->user();
+
+        $conversations = Conversation::with([
+            'users:id,name',
+            'lastMessage.sender:id,name',
+            'lastMessage.attachments',
+            'messages' => fn ($q) => $q->with([
+                'sender:id,name',
+                'attachments',
+            ])->orderBy('created_at'),
+        ])
+            ->whereHas('users', fn ($q) => $q->where('users.id', $user->id))
+            ->latest('updated_at')
+            ->get();
+
+        $users = User::select('id', 'name')->get();
+
+        return response()->json([
+            'authUserId' => auth()->id(),
+            'users' => $users->mapWithKeys(fn ($u) => [
+                $u->id => [
+                    'id' => $u->id,
+                    'name' => $u->name,
+                ],
+            ]),
+            'conversations' => $conversations->map(function ($c) {
+                $messages = $c->messages->sortBy('created_at')->values();
+                $rootMsg = $messages->firstWhere('parent_id', null) ?? $messages->first();
+                $replies = $rootMsg
+                    ? $messages->where('id', '!=', $rootMsg->id)->values()
+                    : collect();
+                $lastMsg = $messages->last();
+
+                $mapMessage = function ($m) {
+                    return [
+                        'id' => 'm'.$m->id,
+                        'senderId' => $m->sender_id,
+                        'body' => $m->body,
+                        'time' => $m->created_at,
+                        'attachments' => $m->attachments->map(fn ($a) => [
+                            'id' => $a->id,
+                            'name' => $a->original_name,
+                            'url' => $a->url,
+                        ])->toArray(),
+                    ];
+                };
+
+                return [
+                    'id' => $c->id,
+                    'subject' => $c->subject,
+                    'participants' => $c->users->pluck('id')->toArray(),
+                    'unread' => $c->pivot->unread_count ?? 0,
+                    'lastActivity' => optional($lastMsg)->created_at ?? optional($c->lastMessage)->created_at,
+                    'messages' => [
+                        'root' => $rootMsg ? $mapMessage($rootMsg) : null,
+                        'replies' => $replies->map($mapMessage)->values()->toArray(),
+                    ],
+                ];
+            })->values(),
         ]);
     }
 

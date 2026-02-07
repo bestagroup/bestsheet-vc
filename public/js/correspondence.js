@@ -53,6 +53,8 @@
         }
     });
 
+    let refreshTimer = null;
+
     function init() {
         setTimeout(() => {
             if (els.skeleton) els.skeleton.classList.add('d-none');
@@ -482,10 +484,38 @@
         toastEl.addEventListener('hidden.bs.toast',()=>toastEl.remove());
     }
 
+    function scheduleRefresh() {
+        if (!window.CORRESPONDENCE_REFRESH_URL) return;
+        if (refreshTimer) return;
+        refreshTimer = setTimeout(() => {
+            refreshTimer = null;
+            refreshConversations();
+        }, 300);
+    }
+
+    function refreshConversations() {
+        fetch(window.CORRESPONDENCE_REFRESH_URL, {
+            headers: {'Accept': 'application/json'}
+        })
+            .then(res => res.ok ? res.json() : Promise.reject())
+            .then(data => {
+                if (!data || !Array.isArray(data.conversations)) return;
+                if (data.users) Object.assign(users, data.users);
+                conversations.splice(0, conversations.length, ...data.conversations);
+                renderMessageList();
+
+                const isModalOpen = els.viewModal?.classList.contains('show');
+                if (isModalOpen && state.activeConversationId) {
+                    openMessageModal(state.activeConversationId);
+                }
+            })
+            .catch(() => {});
+    }
+
     function initRealtime(){
         const refreshChannel = pusher.subscribe('correspondence.refresh');
         refreshChannel.bind('message.sent', function(){
-            location.reload();
+            scheduleRefresh();
         });
 
         conversations.forEach(conv => {

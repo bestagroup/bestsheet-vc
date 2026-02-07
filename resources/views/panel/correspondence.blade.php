@@ -148,6 +148,7 @@
         };
 
         window.CORRESPONDENCE_POST_URL = "{{ route('correspondence.store') }}";
+        window.CORRESPONDENCE_REFRESH_URL = "{{ route('correspondence.data') }}";
     </script>
 
     {{-- DATA --}}
