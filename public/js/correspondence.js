@@ -1,4 +1,6 @@
 (function () {
+    if (window.__CORRESPONDENCE_BOOTED__) return;
+    window.__CORRESPONDENCE_BOOTED__ = true;
     const {users, conversations, authUserId} = window.CORRESPONDENCE_DATA;
 
     const state = {
