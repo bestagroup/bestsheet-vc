@@ -174,6 +174,7 @@
         Array.from(els.list.querySelectorAll('.conversation-item')).forEach(item => {
             item.addEventListener('click', () => {
                 state.activeConversationId = item.dataset.conv;
+                subscribeActiveConversationChannel();
                 state.activeMessageId = item.dataset.id;
                 markAsRead(item.dataset.conv);
                 renderMessageList();
@@ -509,7 +510,7 @@
                 if (data.users) Object.assign(users, data.users);
                 conversations.splice(0, conversations.length, ...data.conversations);
                 renderMessageList();
-                subscribeConversationChannels();
+                subscribeActiveConversationChannel();
 
                 const isModalOpen = els.viewModal?.classList.contains('show');
                 if (isModalOpen && state.activeConversationId) {
@@ -521,7 +522,7 @@
 
     function initRealtime(){
         subscribeRefreshChannel();
-        subscribeConversationChannels();
+        subscribeActiveConversationChannel();
     }
 
     function ensureChannel(name) {
@@ -546,28 +547,27 @@
         });
     }
 
-    function subscribeConversationChannels() {
-        conversations.forEach(conv => {
-            const channel = ensureChannel(`private-conversation.${conv.id}`);
-            bindOnce(channel, 'message.sent', function(data){
-                const target = conversations.find(c=>c.id==data.conversation_id);
-                if(!target) return;
+    function subscribeActiveConversationChannel() {
+        if (!state.activeConversationId) return;
+        const channel = ensureChannel(`private-conversation.${state.activeConversationId}`);
+        bindOnce(channel, 'message.sent', function(data){
+            const target = conversations.find(c=>c.id==data.conversation_id);
+            if(!target) return;
 
-                if(data.parent_id) target.messages.replies.push(data.message);
-                else target.messages.root = data.message;
+            if(data.parent_id) target.messages.replies.push(data.message);
+            else target.messages.root = data.message;
 
-                target.lastActivity = data.message.time || target.lastActivity;
-                if (Number(data.message.senderId) !== Number(authUserId)) {
-                    if (state.activeConversationId === target.id) {
-                        markAsRead(target.id);
-                    } else {
-                        target.unread = (Number(target.unread) || 0) + 1;
-                    }
+            target.lastActivity = data.message.time || target.lastActivity;
+            if (Number(data.message.senderId) !== Number(authUserId)) {
+                if (state.activeConversationId === target.id) {
+                    markAsRead(target.id);
+                } else {
+                    target.unread = (Number(target.unread) || 0) + 1;
                 }
+            }
 
-                if(state.activeConversationId===target.id) openMessageModal(target.id);
-                renderMessageList();
-            });
+            if(state.activeConversationId===target.id) openMessageModal(target.id);
+            renderMessageList();
         });
     }
 
