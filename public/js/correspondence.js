@@ -42,7 +42,9 @@
         return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
     }
 
-    const pusher = new Pusher(window.PUSHER_CONFIG.key, {
+    const channelSubscriptions = window.__CORRESPONDENCE_CHANNELS__ || (window.__CORRESPONDENCE_CHANNELS__ = new Set());
+    const channelBindings = window.__CORRESPONDENCE_CHANNEL_BINDINGS__ || (window.__CORRESPONDENCE_CHANNEL_BINDINGS__ = new Set());
+    const pusher = window.__CORRESPONDENCE_PUSHER__ || (window.__CORRESPONDENCE_PUSHER__ = new Pusher(window.PUSHER_CONFIG.key, {
         cluster: window.PUSHER_CONFIG.cluster,
         forceTLS: true,
         authEndpoint: '/broadcasting/auth',
@@ -53,7 +55,7 @@
                 'X-Requested-With': 'XMLHttpRequest'
             }
         }
-    });
+    }));
 
     let refreshTimer = null;
 
@@ -505,6 +507,7 @@
                 if (data.users) Object.assign(users, data.users);
                 conversations.splice(0, conversations.length, ...data.conversations);
                 renderMessageList();
+                subscribeConversationChannels();
 
                 const isModalOpen = els.viewModal?.classList.contains('show');
                 if (isModalOpen && state.activeConversationId) {
@@ -515,14 +518,36 @@
     }
 
     function initRealtime(){
-        const refreshChannel = pusher.subscribe('correspondence.refresh');
-        refreshChannel.bind('correspondence.refresh', function(){
+        subscribeRefreshChannel();
+        subscribeConversationChannels();
+    }
+
+    function ensureChannel(name) {
+        if (!channelSubscriptions.has(name)) {
+            pusher.subscribe(name);
+            channelSubscriptions.add(name);
+        }
+        return pusher.channel(name);
+    }
+
+    function bindOnce(channel, event, handler) {
+        const key = `${channel.name}:${event}`;
+        if (channelBindings.has(key)) return;
+        channel.bind(event, handler);
+        channelBindings.add(key);
+    }
+
+    function subscribeRefreshChannel() {
+        const refreshChannel = ensureChannel('correspondence.refresh');
+        bindOnce(refreshChannel, 'correspondence.refresh', function(){
             scheduleRefresh();
         });
+    }
 
+    function subscribeConversationChannels() {
         conversations.forEach(conv => {
-            const channel = pusher.subscribe(`private-conversation.${conv.id}`);
-            channel.bind('message.sent', function(data){
+            const channel = ensureChannel(`private-conversation.${conv.id}`);
+            bindOnce(channel, 'message.sent', function(data){
                 const target = conversations.find(c=>c.id==data.conversation_id);
                 if(!target) return;
 
