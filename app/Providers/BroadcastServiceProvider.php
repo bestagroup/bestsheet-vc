@@ -10,7 +10,8 @@ class BroadcastServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        Broadcast::routes(['middleware' => ['auth:sanctum']]);
+        // Use web + auth so the session cookie is available to the broadcaster auth endpoint.
+        Broadcast::routes(['middleware' => ['web', 'auth']]);
 
         require base_path('routes/channels.php');
     }
