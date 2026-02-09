@@ -127,7 +127,8 @@ class CorrespondenceController extends Controller
             'recipients'      => 'nullable|array',
             'recipients.*'    => 'exists:users,id',
             'parent_id'       => 'nullable|exists:messages,id',
-            'attachments.*'   => 'file|max:20480',
+            'attachments.*' => 'file|max:20480|mimes:jpg,jpeg,png,pdf,docx,mp4,mp3',
+
         ]);
 
         return DB::transaction(function () use ($data, $request) {
@@ -142,13 +143,15 @@ class CorrespondenceController extends Controller
 
                 $conversation->users()->attach(
                     array_unique(array_merge(
-                        $data['recipients'],
+                        $data['recipients'] ?? [],
                         [auth()->id()]
                     )),
                     ['unread_count' => 0]
                 );
             } else {
-                $conversation = Conversation::findOrFail($data['conversation_id']);
+                $conversation = Conversation::whereHas('users', fn ($q) =>
+                $q->where('users.id', auth()->id())
+                )->findOrFail($data['conversation_id']);
             }
 
             /* -------- Message -------- */
