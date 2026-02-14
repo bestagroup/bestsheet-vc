@@ -633,7 +633,7 @@
 
                                         {{-- Amount --}}
                                         <div class="text-end">
-                                            <div class="fw-semibold">{{ number_format($finance->amount) }} <span class="text-muted small">تومان</span></div>
+                                            <div class="fw-semibold">{{ number_format($finance->amount) }} <span class="text-muted small"> ریال </span></div>
                                             <div class="text-muted small">{{ number_format($finance->amount) }}</div>
                                         </div>
                                     </li>

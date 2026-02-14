@@ -126,45 +126,6 @@ class OwnerController extends Controller
     public function update(Request $request)
     {
 
-        $menu_panel = MenuPanel::findOrfail($request->input('id'));
-        $menu_panel->title        = $request->input('title');
-        $menu_panel->label        = $request->input('label');
-        //$menu_panel->icon         = $request->input('icon');
-        $menu_panel->submenu      = $request->input('submenu');
-        $menu_panel->class        = $request->input('class');
-        $menu_panel->controller   = $request->input('controller');
-        $menu_panel->user_id      = 1;
-        $menu_panel->status       = $request->input('status');
-//        if ($request->input('userlevel')){
-//            $menu->userlevel        = json_encode(explode("،", $request->input('userlevel')));
-//        }
-//        $menu->priority         = $request->input('priority');
-
-        $result = $menu_panel->update();
-        try{
-            if ($result == true) {
-                $success = true;
-                $flag    = 'success';
-                $subject = 'عملیات موفق';
-                $message = 'اطلاعات با موفقیت ثبت شد';
-            }
-            else {
-                $success = false;
-                $flag    = 'error';
-                $subject = 'عملیات نا موفق';
-                $message = 'اطلاعات ثبت نشد، لطفا مجددا تلاش نمایید';
-            }
-
-        } catch (Exception $e) {
-
-            $success = false;
-            $flag    = 'error';
-            $subject = 'خطا در ارتباط با سرور';
-            //$message = strchr($e);
-            $message = 'اطلاعات ثبت نشد،لطفا بعدا مجدد تلاش نمایید ';
-        }
-
-        return response()->json(['success'=>$success , 'subject' => $subject, 'flag' => $flag, 'message' => $message]);
     }
 
     public function destroy(Request $request)

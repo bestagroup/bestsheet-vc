@@ -33,6 +33,7 @@ Route::middleware('admin')->namespace('App\Http\Controllers\Panel')->group(funct
     Route::get('correspondence/data'     , 'CorrespondenceController@data')->name('correspondence.data');
     Route::resource('correspondence'     , 'CorrespondenceController');
     Route::resource('panel/contract'     , 'ContractController');
+    Route::resource('panel/financialstatement', 'FinancialstatementController');
 
     Route::get('profile'                   , 'ProfileController@index')->name('profile');
     Route::get('userdata'                  , 'ProfileController@userdata')->name('userdata');

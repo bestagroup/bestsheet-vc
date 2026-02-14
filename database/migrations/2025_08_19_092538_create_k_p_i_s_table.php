@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('kpis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id')->nullable()->comment('شرکت ');
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+            $table->string('title')->comment('عنوان شاخص');
+            $table->string('type')->comment('شاخص مبنا');
+            $table->string('type_value')->comment('شاخص اندازه گیری');
+            $table->string('value')->comment('مقدار');
+            $table->string('time_step')->comment('زمان شاخص');
+            $table->unsignedBigInteger('project_id')->nullable()->comment('شرکت ');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->integer('factor_number')->comment('شماره شاخص');
             $table->string('file_link')->comment('لینک مستند شاخص');
-            $table->string('title')->comment('عنوان');
-            $table->string('time_step')->comment('زمان این مرحله');
             $table->timestamps();
         });
     }
