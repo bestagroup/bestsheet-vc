@@ -6,56 +6,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
-    @php
-        $fields = [
-            'net_sales'             => 'فروش خالص',
-            'operating_revenue'     => 'درآمدهای عملیاتی',
-            'cogs_goods'            => 'بهای تمام شده کالای فروش رفته',
-            'cogs_services'         => 'بهای تمام شده درآمدهای عملیاتی',
-            'gross_profit'          => 'سود ناخالص',
-            'selling_general_admin_expense' => 'هزینه‌های فروش، اداری و عمومی',
-            'operating_loss'        => 'سود / زیان عملیاتی',
-            'financial_expense'     => 'هزینه‌های مالی',
-            'other_income'          => 'سایر درآمدها',
-            'non_operating_net'     => 'خالص غیرعملیاتی',
-            'profit_before_tax'     => 'سود / زیان قبل از مالیات',
-            'income_tax_expense'    => 'هزینه مالیات',
-            'net_profit'            => 'سود / زیان خالص',
-
-            'tangible_fixed_assets' => 'دارایی‌های ثابت مشهود',
-            'intangible_assets'     => 'دارایی‌های نامشهود',
-            'other_assets'          => 'سایر دارایی‌ها',
-            'total_non_current_assets' => 'جمع دارایی‌های غیرجاری',
-
-            'prepayments'           => 'پیش‌پرداخت‌ها',
-            'inventory'             => 'موجودی مواد و کالا',
-            'trade_receivables'     => 'دریافتنی‌های تجاری',
-            'other_receivables'     => 'سایر دریافتنی‌ها',
-            'cash_and_equivalents'  => 'موجودی نقد',
-            'total_current_assets'  => 'جمع دارایی‌های جاری',
-            'total_assets'          => 'جمع دارایی‌ها',
-
-            'capital'               => 'سرمایه',
-            'capital_in_progress'   => 'سرمایه در جریان',
-            'legal_reserve'         => 'اندوخته قانونی',
-            'retained_earnings'     => 'سود / زیان انباشته',
-            'total_equity'          => 'جمع حقوق مالکانه',
-
-            'long_term_rnd_payable' => 'پرداختنی بلندمدت تحقیق و توسعه',
-            'long_term_loans'       => 'تسهیلات مالی بلندمدت',
-            'employee_benefit_reserve' => 'ذخیره مزایای پایان خدمت',
-            'total_non_current_liabilities' => 'جمع بدهی‌های غیرجاری',
-
-            'trade_payables'        => 'پرداختنی‌های تجاری',
-            'tax_payable'           => 'مالیات پرداختنی',
-            'short_term_loans'      => 'تسهیلات مالی',
-            'advances_received'     => 'پیش‌دریافت‌ها',
-            'total_current_liabilities' => 'جمع بدهی‌های جاری',
-
-            'total_liabilities'     => 'جمع بدهی‌ها',
-            'total_equity_and_liabilities' => 'جمع حقوق مالکانه و بدهی‌ها',
-        ];
-    @endphp
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -65,12 +15,50 @@
                 @endif
             </div>
             <div class="table-responsive">
-                <table id="sample1" class="table table-striped table-bordered yajra-datatable">
+                <table id="financialstatement" class="table table-striped table-bordered yajra-datatable">
                     <thead>
                     <tr class="table-light">
-                        @foreach($fields as $name => $label)
-                            <th>{{ $label }}</th>
-                        @endforeach
+                        <th>نام شرکت</th>
+                        <th>فروش خالص</th>
+                        <th>درآمدهای عملیاتی</th>
+                        <th>بهای تمام شده کالای فروش رفته</th>
+                        <th>بهای تمام شده خدمات</th>
+                        <th>سود ناخالص</th>
+                        <th>هزینه‌های فروش، اداری و عمومی</th>
+                        <th>سود / زیان عملیاتی</th>
+                        <th>هزینه‌های مالی</th>
+                        <th>سایر درآمدها</th>
+                        <th>خالص غیرعملیاتی</th>
+                        <th>سود / زیان قبل از مالیات</th>
+                        <th>هزینه مالیات</th>
+                        <th>سود / زیان خالص</th>
+                        <th>دارایی‌های ثابت مشهود</th>
+                        <th>دارایی‌های نامشهود</th>
+                        <th>سایر دارایی‌ها</th>
+                        <th>جمع دارایی‌های غیرجاری</th>
+                        <th>پیش‌پرداخت‌ها</th>
+                        <th>موجودی مواد و کالا</th>
+                        <th>دریافتنی‌های تجاری</th>
+                        <th>سایر دریافتنی‌ها</th>
+                        <th>موجودی نقد</th>
+                        <th>جمع دارایی‌های جاری</th>
+                        <th>جمع دارایی‌ها</th>
+                        <th>سرمایه</th>
+                        <th>سرمایه در جریان</th>
+                        <th>اندوخته قانونی</th>
+                        <th>سود / زیان انباشته</th>
+                        <th>جمع حقوق مالکانه</th>
+                        <th>پرداختنی بلندمدت تحقیق و توسعه</th>
+                        <th>تسهیلات مالی بلندمدت</th>
+                        <th>ذخیره مزایای پایان خدمت</th>
+                        <th>جمع بدهی‌های غیرجاری</th>
+                        <th>پرداختنی‌های تجاری</th>
+                        <th>مالیات پرداختنی</th>
+                        <th>تسهیلات مالی</th>
+                        <th>پیش‌دریافت‌ها</th>
+                        <th>جمع بدهی‌های جاری</th>
+                        <th>جمع بدهی‌ها</th>
+                        <th>جمع حقوق مالکانه و بدهی‌ها</th>
                         <th>تغییرات</th>
                     </tr>
                     </thead>
@@ -122,14 +110,53 @@
                                 <label>پروژه</label>
                             </div>
                         </div>
-                        @foreach($fields as $name => $label)
-                            <div class="col-6 col-md-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control number-input" name="{{ $name }}" id="{{ $name }}" placeholder="{{ $label }}">
-                                    <label for="{{ $name }}">{{ $label }}</label>
-                                </div>
-                            </div>
-                        @endforeach
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="net_sales" id="net_sales"><label for="net_sales">فروش خالص</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="operating_revenue" id="operating_revenue"><label for="operating_revenue">درآمدهای عملیاتی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="cogs_goods" id="cogs_goods"><label for="cogs_goods">بهای تمام شده کالای فروش رفته</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="cogs_services" id="cogs_services"><label for="cogs_services">بهای تمام شده خدمات</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="gross_profit" id="gross_profit"><label for="gross_profit">سود ناخالص</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="selling_general_admin_expense" id="selling_general_admin_expense"><label for="selling_general_admin_expense">هزینه‌های فروش، اداری و عمومی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="operating_loss" id="operating_loss"><label for="operating_loss">سود / زیان عملیاتی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="financial_expense" id="financial_expense"><label for="financial_expense">هزینه‌های مالی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="other_income" id="other_income"><label for="other_income">سایر درآمدها</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="non_operating_net" id="non_operating_net"><label for="non_operating_net">خالص غیرعملیاتی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="profit_before_tax" id="profit_before_tax"><label for="profit_before_tax">سود / زیان قبل از مالیات</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="income_tax_expense" id="income_tax_expense"><label for="income_tax_expense">هزینه مالیات</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="net_profit" id="net_profit"><label for="net_profit">سود / زیان خالص</label></div></div>
+
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="tangible_fixed_assets" id="tangible_fixed_assets"><label for="tangible_fixed_assets">دارایی‌های ثابت مشهود</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="intangible_assets" id="intangible_assets"><label for="intangible_assets">دارایی‌های نامشهود</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="other_assets" id="other_assets"><label for="other_assets">سایر دارایی‌ها</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_non_current_assets" id="total_non_current_assets"><label for="total_non_current_assets">جمع دارایی‌های غیرجاری</label></div></div>
+
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="prepayments" id="prepayments"><label for="prepayments">پیش‌پرداخت‌ها</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="inventory" id="inventory"><label for="inventory">موجودی مواد و کالا</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="trade_receivables" id="trade_receivables"><label for="trade_receivables">دریافتنی‌های تجاری</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="other_receivables" id="other_receivables"><label for="other_receivables">سایر دریافتنی‌ها</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="cash_and_equivalents" id="cash_and_equivalents"><label for="cash_and_equivalents">موجودی نقد</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_current_assets" id="total_current_assets"><label for="total_current_assets">جمع دارایی‌های جاری</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_assets" id="total_assets"><label for="total_assets">جمع دارایی‌ها</label></div></div>
+
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="capital" id="capital"><label for="capital">سرمایه</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="capital_in_progress" id="capital_in_progress"><label for="capital_in_progress">سرمایه در جریان</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="legal_reserve" id="legal_reserve"><label for="legal_reserve">اندوخته قانونی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="retained_earnings" id="retained_earnings"><label for="retained_earnings">سود / زیان انباشته</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_equity" id="total_equity"><label for="total_equity">جمع حقوق مالکانه</label></div></div>
+
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="long_term_rnd_payable" id="long_term_rnd_payable"><label for="long_term_rnd_payable">پرداختنی بلندمدت تحقیق و توسعه</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="long_term_loans" id="long_term_loans"><label for="long_term_loans">تسهیلات مالی بلندمدت</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="employee_benefit_reserve" id="employee_benefit_reserve"><label for="employee_benefit_reserve">ذخیره مزایای پایان خدمت</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_non_current_liabilities" id="total_non_current_liabilities"><label for="total_non_current_liabilities">جمع بدهی‌های غیرجاری</label></div></div>
+
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="trade_payables" id="trade_payables"><label for="trade_payables">پرداختنی‌های تجاری</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="tax_payable" id="tax_payable"><label for="tax_payable">مالیات پرداختنی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="short_term_loans" id="short_term_loans"><label for="short_term_loans">تسهیلات مالی</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="advances_received" id="advances_received"><label for="advances_received">پیش‌دریافت‌ها</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_current_liabilities" id="total_current_liabilities"><label for="total_current_liabilities">جمع بدهی‌های جاری</label></div></div>
+
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_liabilities" id="total_liabilities"><label for="total_liabilities">جمع بدهی‌ها</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="total_equity_and_liabilities" id="total_equity_and_liabilities"><label for="total_equity_and_liabilities">جمع حقوق مالکانه و بدهی‌ها</label></div></div>
+
                         <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary">ذخیره اطلاعات</button>
                         </div>
@@ -171,7 +198,6 @@
                 ajax: "{{ route(request()->segment(2).'.index') }}",
                 columns: [
                     { data: 'company_name', name: 'company_name' },
-
                     { data: 'net_sales'         , name: 'net_sales' },
                     { data: 'operating_revenue' , name: 'operating_revenue' },
                     { data: 'cogs_goods'        , name: 'cogs_goods' },
@@ -185,12 +211,10 @@
                     { data: 'profit_before_tax' , name: 'profit_before_tax' },
                     { data: 'income_tax_expense', name: 'income_tax_expense' },
                     { data: 'net_profit'        , name: 'net_profit' },
-
                     { data: 'tangible_fixed_assets', name: 'tangible_fixed_assets' },
                     { data: 'intangible_assets' , name: 'intangible_assets' },
                     { data: 'other_assets'      , name: 'other_assets' },
                     { data: 'total_non_current_assets', name: 'total_non_current_assets' },
-
                     { data: 'prepayments'       , name: 'prepayments' },
                     { data: 'inventory'         , name: 'inventory' },
                     { data: 'trade_receivables' , name: 'trade_receivables' },
@@ -198,24 +222,20 @@
                     { data: 'cash_and_equivalents', name: 'cash_and_equivalents' },
                     { data: 'total_current_assets', name: 'total_current_assets' },
                     { data: 'total_assets'      , name: 'total_assets' },
-
                     { data: 'capital'           , name: 'capital' },
                     { data: 'capital_in_progress', name: 'capital_in_progress' },
                     { data: 'legal_reserve'     , name: 'legal_reserve' },
                     { data: 'retained_earnings' , name: 'retained_earnings' },
                     { data: 'total_equity'      , name: 'total_equity' },
-
                     { data: 'long_term_rnd_payable', name: 'long_term_rnd_payable' },
                     { data: 'long_term_loans'   , name: 'long_term_loans' },
                     { data: 'employee_benefit_reserve', name: 'employee_benefit_reserve' },
                     { data: 'total_non_current_liabilities', name: 'total_non_current_liabilities' },
-
                     { data: 'trade_payables'    , name: 'trade_payables' },
                     { data: 'tax_payable'       , name: 'tax_payable' },
                     { data: 'short_term_loans'  , name: 'short_term_loans' },
                     { data: 'advances_received' , name: 'advances_received' },
                     { data: 'total_current_liabilities', name: 'total_current_liabilities' },
-
                     { data: 'total_liabilities' , name: 'total_liabilities' },
                     { data: 'total_equity_and_liabilities', name: 'total_equity_and_liabilities'},
                     { data: 'action'             , name: 'action', orderable: true, searchable: true},
@@ -230,7 +250,7 @@
         //تبدیل اعداد با جدا کننده
         document.addEventListener('DOMContentLoaded', function () {
             document.addEventListener('input', function (e) {
-                if (!e.target.matches('input.numeric')) return;
+                if (!e.target.matches('input.number-input')) return;
                 const input = e.target;
 
                 const selStart = input.selectionStart;

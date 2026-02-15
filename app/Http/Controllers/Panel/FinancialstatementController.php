@@ -37,54 +37,129 @@ class FinancialstatementController extends Controller
 
             return Datatables::of($data)
 
-                ->addColumn('company_name'      , fn ($data) => $data->company_name)
-                ->addColumn('net_sales'         , fn ($data) => number_format($data->net_sales))
-                ->addColumn('operating_revenue' , fn ($data) => number_format($data->operating_revenue))
-                ->addColumn('cogs_goods'        , fn ($data) => number_format($data->cogs_goods))
-                ->addColumn('cogs_services'     , fn ($data) => number_format($data->cogs_services))
-                ->addColumn('gross_profit'      , fn ($data) => number_format($data->gross_profit))
-                ->addColumn('selling_general_admin_expense', fn ($data) => number_format($data->selling_general_admin_expense))
-                ->addColumn('operating_loss'    , fn ($data) => number_format($data->operating_loss))
-                ->addColumn('financial_expense' , fn ($data) => number_format($data->financial_expense))
-                ->addColumn('other_income'      , fn ($data) => number_format($data->other_income))
-                ->addColumn('non_operating_net' , fn ($data) => number_format($data->non_operating_net))
-                ->addColumn('profit_before_tax' , fn ($data) => number_format($data->profit_before_tax))
-                ->addColumn('income_tax_expense', fn ($data) => number_format($data->income_tax_expense))
-                ->addColumn('net_profit'        , fn ($data) => number_format($data->net_profit))
-
-                ->addColumn('tangible_fixed_assets', fn ($data) => number_format($data->tangible_fixed_assets))
-                ->addColumn('intangible_assets' , fn ($data) => number_format($data->intangible_assets))
-                ->addColumn('other_assets'      , fn ($data) => number_format($data->other_assets))
-                ->addColumn('total_non_current_assets', fn ($data) => number_format($data->total_non_current_assets))
-
-                ->addColumn('prepayments'       , fn ($data) => number_format($data->prepayments))
-                ->addColumn('inventory'         , fn ($data) => number_format($data->inventory))
-                ->addColumn('trade_receivables' , fn ($data) => number_format($data->trade_receivables))
-                ->addColumn('other_receivables' , fn ($data) => number_format($data->other_receivables))
-                ->addColumn('cash_and_equivalents', fn ($data) => number_format($data->cash_and_equivalents))
-                ->addColumn('total_current_assets', fn ($data) => number_format($data->total_current_assets))
-                ->addColumn('total_assets'      , fn ($data) => number_format($data->total_assets))
-
-                ->addColumn('capital'           , fn ($data) => number_format($data->capital))
-                ->addColumn('capital_in_progress', fn ($data) => number_format($data->capital_in_progress))
-                ->addColumn('legal_reserve'     , fn ($data) => number_format($data->legal_reserve))
-                ->addColumn('retained_earnings' , fn ($data) => number_format($data->retained_earnings))
-                ->addColumn('total_equity'      , fn ($data) => number_format($data->total_equity))
-
-                ->addColumn('long_term_rnd_payable', fn ($data) => number_format($data->long_term_rnd_payable))
-                ->addColumn('long_term_loans'   , fn ($data) => number_format($data->long_term_loans))
-                ->addColumn('employee_benefit_reserve', fn ($data) => number_format($data->employee_benefit_reserve))
-                ->addColumn('total_non_current_liabilities', fn ($data) => number_format($data->total_non_current_liabilities))
-
-                ->addColumn('trade_payables'    , fn ($data) => number_format($data->trade_payables))
-                ->addColumn('tax_payable'       , fn ($data) => number_format($data->tax_payable))
-                ->addColumn('short_term_loans'  , fn ($data) => number_format($data->short_term_loans))
-                ->addColumn('advances_received' , fn ($data) => number_format($data->advances_received))
-                ->addColumn('total_current_liabilities', fn ($data) => number_format($data->total_current_liabilities))
-
-                ->addColumn('total_liabilities' , fn ($data) => number_format($data->total_liabilities))
-                ->addColumn('total_equity_and_liabilities', fn ($data) => number_format($data->total_equity_and_liabilities))
-
+                ->addColumn('company_name'      , function ($data) {
+                    return  ($data->company_name);
+                })
+                ->addColumn('net_sales'         , function ($data) {
+                    return number_format($data->net_sales);
+                })
+                ->addColumn('operating_revenue' , function ($data) {
+                    return  number_format($data->operating_revenue);
+                })
+                ->addColumn('cogs_goods'        , function ($data) {
+                    return  number_format($data->cogs_goods);
+                })
+                ->addColumn('cogs_services'     , function ($data) {
+                    return  number_format($data->cogs_services);
+                })
+                ->addColumn('gross_profit'      , function ($data) {
+                    return  number_format($data->gross_profit);
+                })
+                ->addColumn('selling_general_admin_expense', function ($data) {
+                    return  number_format($data->selling_general_admin_expense);
+                })
+                ->addColumn('operating_loss'    , function ($data) {
+                    return   number_format($data->operating_loss);
+                })
+                ->addColumn('financial_expense' , function ($data) {
+                    return number_format($data->financial_expense);
+                })
+                ->addColumn('other_income'      , function ($data) {
+                    return  number_format($data->other_income);
+                })
+                ->addColumn('non_operating_net' , function ($data) {
+                    return number_format($data->non_operating_net);
+                })
+                ->addColumn('profit_before_tax' , function ($data) {
+                    return   number_format($data->profit_before_tax);
+                })
+                ->addColumn('income_tax_expense', function ($data) {
+                    return   number_format($data->income_tax_expense);
+                })
+                ->addColumn('net_profit'        , function ($data) {
+                    return number_format($data->net_profit);
+                })
+                ->addColumn('tangible_fixed_assets', function ($data) {
+                    return  number_format($data->tangible_fixed_assets);
+                })
+                ->addColumn('intangible_assets' , function ($data) {
+                    return number_format($data->intangible_assets);
+                })
+                ->addColumn('other_assets'      , function ($data) {
+                    return number_format($data->other_assets);
+                })
+                ->addColumn('total_non_current_assets', function ($data) {
+                    return number_format($data->total_non_current_assets);
+                })
+                ->addColumn('prepayments'       , function ($data) {
+                    return number_format($data->prepayments);
+                })
+                ->addColumn('inventory'         , function ($data) {
+                    return number_format($data->inventory);
+                })
+                ->addColumn('trade_receivables' , function ($data) {
+                    return number_format($data->trade_receivables);
+                })
+                ->addColumn('other_receivables' , function ($data) {
+                    return number_format($data->other_receivables);
+                })
+                ->addColumn('cash_and_equivalents', function ($data) {
+                    return number_format($data->cash_and_equivalents);
+                })
+                ->addColumn('total_current_assets', function ($data) {
+                    return number_format($data->total_current_assets);
+                })
+                ->addColumn('total_assets'      , function ($data) {
+                    return  number_format($data->total_assets);
+                })
+                ->addColumn('capital'           , function ($data) {
+                    return   number_format($data->capital);
+                })
+                ->addColumn('capital_in_progress', function ($data) {
+                    return  number_format($data->capital_in_progress);
+                })
+                ->addColumn('legal_reserve'     , function ($data) {
+                    return  number_format($data->legal_reserve);
+                })
+                ->addColumn('retained_earnings' , function ($data) {
+                    return  number_format($data->retained_earnings);
+                })
+                ->addColumn('total_equity'      , function ($data) {
+                    return  number_format($data->total_equity);
+                })
+                ->addColumn('long_term_rnd_payable', function ($data) {
+                    return  number_format($data->long_term_rnd_payable);
+                })
+                ->addColumn('long_term_loans'   , function ($data) {
+                    return number_format($data->long_term_loans);
+                })
+                ->addColumn('employee_benefit_reserve', function ($data) {
+                    return  number_format($data->employee_benefit_reserve);
+                })
+                ->addColumn('total_non_current_liabilities', function ($data) {
+                    return    number_format($data->total_non_current_liabilities);
+                })
+                ->addColumn('trade_payables'    , function ($data) {
+                    return   number_format($data->trade_payables);
+                })
+                ->addColumn('tax_payable'       , function ($data) {
+                    return    number_format($data->tax_payable);
+                })
+                ->addColumn('short_term_loans'  , function ($data) {
+                    return   number_format($data->short_term_loans);
+                })
+                ->addColumn('advances_received' , function ($data) {
+                    return    number_format($data->advances_received);
+                })
+                ->addColumn('total_current_liabilities', function ($data) {
+                    return   number_format($data->total_current_liabilities);
+                })
+                ->addColumn('total_liabilities' , function ($data) {
+                    return   number_format($data->total_liabilities);
+                })
+                ->addColumn('total_equity_and_liabilities', function ($data) {
+                    return  number_format($data->total_equity_and_liabilities);
+                })
                 ->editColumn('action', function ($data) {
                     $base = 'btn btn-sm btn-icon rounded-pill waves-effect mx-1';
 
