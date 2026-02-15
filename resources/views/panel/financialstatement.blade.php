@@ -247,31 +247,37 @@
         });
     </script>
     <script>
-        //تبدیل اعداد با جدا کننده
         document.addEventListener('DOMContentLoaded', function () {
             document.addEventListener('input', function (e) {
                 if (!e.target.matches('input.number-input')) return;
                 const input = e.target;
-
-                const selStart = input.selectionStart;
-                const rawBefore = input.value;
-                const digitsLeft = rawBefore.slice(0, selStart).replace(/[^0-9]/g, '').length;
-
-                let unformatted = rawBefore.replace(/[^0-9]/g, '');
-                if (!unformatted) { input.value = ''; return; }
-
-                const formatted = unformatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-                input.value = formatted;
-
-                let pos = 0, digitsCount = 0;
-                while (pos < formatted.length && digitsCount < digitsLeft) {
-                    if (/\d/.test(formatted[pos])) digitsCount++;
-                    pos++;
+                const cursorPos = input.selectionStart;
+                const valueBefore = input.value;
+                const isNegative = valueBefore.trim().startsWith('-');
+                const digitsBeforeCursor = valueBefore
+                    .slice(0, cursorPos)
+                    .replace(/[^0-9]/g, '').length;
+                let raw = valueBefore.replace(/[^0-9]/g, '');
+                if (raw === '') {
+                    input.value = isNegative ? '-' : '';
+                    return;
                 }
-                input.setSelectionRange(pos, pos);
+                let formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                if (isNegative) {
+                    formatted = '-' + formatted;
+                }
+                input.value = formatted;
+                let newCursorPos = 0;
+                let digitsCount = 0;
+                while (newCursorPos < formatted.length && digitsCount < digitsBeforeCursor) {
+                    if (/\d/.test(formatted[newCursorPos])) digitsCount++;
+                    newCursorPos++;
+                }
+                if (isNegative) newCursorPos++;
+                input.setSelectionRange(newCursorPos, newCursorPos);
             });
         });
     </script>
+
 
 @endsection
