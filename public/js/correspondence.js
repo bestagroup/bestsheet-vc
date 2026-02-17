@@ -371,7 +371,26 @@
         delete els.composeForm.dataset.isReply;
     }
 
+    function setComposeSending(isSending) {
+        if (!els.btnComposeSend) return;
+        if (!els.btnComposeSend.dataset.defaultHtml) {
+            els.btnComposeSend.dataset.defaultHtml = els.btnComposeSend.innerHTML;
+        }
+
+        els.btnComposeSend.disabled = isSending;
+        els.btnComposeSend.dataset.loading = isSending ? '1' : '0';
+
+        if (isSending) {
+            els.btnComposeSend.innerHTML = '<span class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span>در حال ارسال...';
+            return;
+        }
+
+        els.btnComposeSend.innerHTML = els.btnComposeSend.dataset.defaultHtml;
+    }
+
     function handleComposeSend() {
+        if (els.btnComposeSend?.dataset.loading === '1') return;
+
         const subject = (els.composeSubject?.value || '').trim();
         const body = (els.composeBody?.value || '').trim();
         const recipientIds = $(els.composeRecipients || []).val() || [];
@@ -391,6 +410,7 @@
             Array.from(els.composeAttachment.files).forEach(file => formData.append('attachments[]', file));
         }
 
+        setComposeSending(true);
         fetch(window.CORRESPONDENCE_POST_URL, {
             method: 'POST',
             headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},
@@ -442,7 +462,8 @@
                 resetComposeForm();
                 showToast('پیام با موفقیت ارسال شد.');
             })
-            .catch(()=>showToast('خطا در ارسال پیام.'));
+            .catch(() => showToast('خطا در ارسال پیام.'))
+            .finally(() => setComposeSending(false));
     }
 
     function resetComposeForm() {
