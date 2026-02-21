@@ -91,9 +91,20 @@ class ReportController extends Controller
         ];
 
         // 4) Stage Allocation (count)
+        $records = DB::table('financial_statements')
+            ->where('project_id', 120)
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
+
         $stageAllocation = [
-            'labels' => ['پیش‌بذری','بذری','سری A','سری B','بلوغ'],
-            'data'   => [18, 26, 11, 6, 2],
+            'labels' => $records->map(fn($r) => $r->year . '/' . str_pad($r->month, 2, '0', STR_PAD_LEFT))->values(),
+            'data'   => $records->map(fn($r) => (int) str_replace(',', '', $r->net_sales))->values(),
+        ];
+
+        $stageAllocation = [
+            'labels' => $stageAllocation['labels'],
+            'data'   => $stageAllocation['data'],
         ];
 
         // 5) Portfolio KPI Trend (12 months)
@@ -126,10 +137,25 @@ class ReportController extends Controller
         ];
 
         // 9) Company Performance (Top companies)
+        $records = DB::table('financial_statements')
+            ->where('project_id', 120)
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
+
+        /* labels مثل 1402/01 */
+        $labels = $records->map(function ($row) {
+            return $row->year . '/' . str_pad($row->month, 2, '0', STR_PAD_LEFT);
+        });
+
+        /* datasets */
+        $netSales = $records->pluck('net_sales');
+        $grossProfit = $records->pluck('gross_profit');
+        $netProfit = $records->pluck('net_profit');
         $companyPerformance = [
-            'labels' => $companiesFa,
-            'irr'    => [31, 24, 18, 27, 14, 22, 19, 16], // %
-            'mom'    => [12, 9, 6, 10, 4, 8, 7, 5],       // % MoM growth
+            'labels' => $labels,
+            'irr'    => $netSales, // %
+            'mom'    => $grossProfit,       // % MoM growth
         ];
 
         // 10) Runway by Company (months)
@@ -138,10 +164,27 @@ class ReportController extends Controller
             'data'   => [11, 9, 14, 10, 8, 12, 9, 13],
         ];
 
+        $cashAndEquivalents = $records
+            ->pluck('cash_and_equivalents')
+            ->map(fn($v) => (int) str_replace(',', '', $v))
+            ->values();
+
+        $totalCurrentAssets = $records
+            ->pluck('total_current_assets')
+            ->map(fn($v) => (int) str_replace(',', '', $v))
+            ->values();
+
+        $totalCurrentLiabilities = $records
+            ->pluck('total_current_liabilities')
+            ->map(fn($v) => (int) str_replace(',', '', $v))
+            ->values();
+
+
         return view('panel.report')->with(compact(
             'thispage',
             'dealFunnel',
             'strategicFit',
+            'labels',
             'sectorAllocation',
             'stageAllocation',
             'portfolioKpi',
@@ -149,7 +192,10 @@ class ReportController extends Controller
             'exitTimeline',
             'fundMetrics',
             'companyPerformance',
-            'runwayByCompany'
+            'runwayByCompany',
+            'cashAndEquivalents',
+            'totalCurrentAssets',
+            'totalCurrentLiabilities'
         ));
     }
 }
