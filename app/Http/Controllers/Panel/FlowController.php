@@ -188,21 +188,37 @@ class FlowController extends Controller
 
     public function show($id)
     {
-        $project = Project::leftjoin('users' , 'users.id' , '=' , 'projects.user_id')
-            ->leftjoin('investsteps' , 'investsteps.id' , '=' , 'projects.user_id')
-            ->select('projects.*', 'users.name as ceo_name' , 'users.phone')
-            ->where('projects.id' , $id)
+        $project = Project::leftJoin('users', 'users.id', '=', 'projects.user_id')
+            ->leftJoin('investsteps', 'investsteps.id', '=', 'projects.user_id')
+            ->select('projects.*', 'users.name as ceo_name', 'users.phone')
+            ->where('projects.id', $id)
             ->first();
-        $finances       = Finance::all();
-        $states         = State::all();
-        $cities         = City::all();
-        $kpis           = Kpi::orderBy('kpi_number' , 'ASC')->get();
-        $investsteps    = Investstep::whereStatus(4)->get();
-        $files          = MediaFile::where('status' ,'!=' , 5)->get();
-        $commitments    = Commitment::whereStatus(4)->get();
-        $project_steps  = Project_step::leftjoin('users', 'project_steps.user_id', '=', 'users.id')
-            ->where('project_steps.project_id' , $id)->select('project_steps.*' , 'users.name as username')->get();
-        return view('panel.partials.show-profile', compact('project', 'states', 'cities' ,'project_steps','kpis' ,  'investsteps' , 'files' , 'commitments' , 'finances'));
+
+        $records = DB::table('financial_statements')
+            ->where('project_id', $id)
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
+
+        $strategicFit = [
+            'labels' => $records->map(fn($r) => $r->year . '/' . str_pad($r->month, 2, '0', STR_PAD_LEFT))->values(),
+            'data'   => $records->map(fn($r) => (int) str_replace(',', '', $r->net_sales))->values(),
+        ];
+
+        $finances = Finance::all();
+        $states = State::all();
+        $cities = City::all();
+        $kpis = Kpi::orderBy('kpi_number', 'ASC')->get();
+        $investsteps = Investstep::whereStatus(4)->get();
+        $files = MediaFile::where('status', '!=', 5)->get();
+        $commitments = Commitment::whereStatus(4)->get();
+        $project_steps = Project_step::leftJoin('users', 'project_steps.user_id', '=', 'users.id')
+            ->where('project_steps.project_id', $id)
+            ->select('project_steps.*', 'users.name as username')
+            ->get();
+
+        return view('panel.partials.show-profile', compact('project', 'strategicFit','states','cities','project_steps','kpis','investsteps','files','commitments','finances'
+        ));
     }
 
     public function destroy($id)

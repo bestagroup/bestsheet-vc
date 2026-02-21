@@ -69,6 +69,13 @@
             فایل ها
         </button>
     </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="report-tab{{ $project->id }}" data-bs-toggle="tab"
+                data-bs-target="#tab-report{{ $project->id }}"
+                type="button" role="tab" aria-controls="tab-report{{ $project->id }}" aria-selected="false">
+            گزارشات
+        </button>
+    </li>
 </ul>
 <!-- Tab Content -->
 <div class="tab-content mt-3" id="companyTabsContent{{ $project->id }}">
@@ -1730,5 +1737,98 @@
             });
         </script>
     </div>
+    <!-- report Tab -->
+    <div class="tab-pane fade" id="tab-report{{ $project->id }}" role="tabpanel" aria-labelledby="report-tab{{ $project->id }}">
+        <style>
+            .report-wrap { direction: rtl; }
+            .report-title { margin-bottom: 6px; font-weight: 700; }
+            .report-subtitle { margin-top: 0; opacity: .75; }
+
+            .kpi-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 14px;
+                margin-bottom: 18px;
+            }
+            .kpi-col { flex: 1 1 220px; }
+
+            .kpi-card {
+                border-radius: 14px;
+                box-shadow: 0 8px 22px rgba(17,24,39,.08) !important;
+            }
+            .kpi-card .card-content { padding: 16px 16px; }
+            .kpi-value { font-size: 22px; font-weight: 800; margin: 0; }
+            .kpi-label { margin: 6px 0 0; opacity: .9; }
+
+            .report-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 14px;
+            }
+            .report-col { flex: 1 1 calc(33.333% - 14px); min-width: 340px; }
+
+            .report-card {
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(17,24,39,.08) !important;
+                overflow: hidden;
+            }
+            .report-card .card-content { padding: 16px 16px 10px; }
+            .card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+            .card-head h6 { margin:0; font-weight:800; font-size: 14px; color: #1f2937; }
+            .card-hint { font-size: 12px; opacity: .65; }
+
+            /* fixed height for chart areas */
+            .chart-box { position: relative; height: 240px; }
+            .chart-box.tall { height: 280px; }
+            .chart-box.full { height: 320px; }
+
+            /* make canvas fill */
+            .chart-box canvas { width: 100% !important; height: 100% !important; }
+
+            @media (max-width: 1100px) { .report-col { flex: 1 1 calc(50% - 14px); } }
+            @media (max-width: 700px)  { .report-col { flex: 1 1 100%; min-width: unset; } }
+        </style>
+        <div class="report-col">
+            <div class="card report-card hoverable">
+                <div class="card-content">
+                    <div class="card-head">
+                        <h6>توزیع Strategic Fit</h6>
+                        <span class="card-hint">کیفیت ورودی‌ها</span>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="strategicFitChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.getElementById('strategicFitChart');
+            if (!canvas || !window.Chart) return;
+
+            new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: @json($strategicFit['labels']),
+                    datasets: [{
+                        label: 'تعداد',
+                        data: @json($strategicFit['data']),
+                        borderRadius: 10,
+                        backgroundColor: 'rgba(99,102,241,.85)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {grid: {display: false}, border: {display: false}},
+                        y: {grid: {color: 'rgba(17,24,39,.06)'}, border: {color: 'rgba(17,24,39,.12)'}}
+                    },
+                    plugins: {legend: {display: false}}
+                }
+            });
+        });
+    </script>
 </div>
 
