@@ -32,11 +32,14 @@ class FinancialstatementController extends Controller
         if ($request->ajax()) {
             $data = DB::table('financial_statements as f')
                 ->leftJoin('projects as p', 'p.id', '=', 'f.project_id')
-                ->select('f.id', 'f.project_id', 'p.company_name', 'p.title', 'f.net_sales', 'f.operating_revenue', 'f.cogs_goods', 'f.cogs_services', 'f.gross_profit', 'f.selling_general_admin_expense', 'f.operating_loss', 'f.financial_expense', 'f.other_income', 'f.non_operating_net', 'f.profit_before_tax', 'f.income_tax_expense', 'f.net_profit', 'f.tangible_fixed_assets', 'f.intangible_assets', 'f.other_assets', 'f.total_non_current_assets', 'f.prepayments', 'f.inventory', 'f.trade_receivables', 'f.other_receivables', 'f.cash_and_equivalents', 'f.total_current_assets', 'f.total_assets', 'f.capital', 'f.capital_in_progress', 'f.legal_reserve', 'f.retained_earnings', 'f.total_equity', 'f.long_term_rnd_payable', 'f.long_term_loans', 'f.employee_benefit_reserve', 'f.total_non_current_liabilities', 'f.trade_payables', 'f.tax_payable', 'f.short_term_loans', 'f.advances_received', 'f.total_current_liabilities', 'f.total_liabilities', 'f.total_equity_and_liabilities', 'f.created_at', 'f.updated_at')
+                ->select('f.id', 'f.project_id','f.year','f.month', 'p.company_name', 'p.title', 'f.net_sales', 'f.operating_revenue', 'f.cogs_goods', 'f.cogs_services', 'f.gross_profit', 'f.selling_general_admin_expense', 'f.operating_loss', 'f.financial_expense', 'f.other_income', 'f.non_operating_net', 'f.profit_before_tax', 'f.income_tax_expense', 'f.net_profit', 'f.tangible_fixed_assets', 'f.intangible_assets', 'f.other_assets', 'f.total_non_current_assets', 'f.prepayments', 'f.inventory', 'f.trade_receivables', 'f.other_receivables', 'f.cash_and_equivalents', 'f.total_current_assets', 'f.total_assets', 'f.capital', 'f.capital_in_progress', 'f.legal_reserve', 'f.retained_earnings', 'f.total_equity', 'f.long_term_rnd_payable', 'f.long_term_loans', 'f.employee_benefit_reserve', 'f.total_non_current_liabilities', 'f.trade_payables', 'f.tax_payable', 'f.short_term_loans', 'f.advances_received', 'f.total_current_liabilities', 'f.total_liabilities', 'f.total_equity_and_liabilities', 'f.created_at', 'f.updated_at')
                 ->get();
 
             return Datatables::of($data)
 
+                ->addColumn('year'      , function ($data) {
+                    return  ($data->year.'/'.$data->month);
+                })
                 ->addColumn('company_name'      , function ($data) {
                     return  ($data->company_name);
                 })
@@ -185,6 +188,8 @@ class FinancialstatementController extends Controller
                 $financestatement = new Financial_statement();
                 $financestatement->project_id = $request->project_id;
 
+                $financestatement->year                 = $request->input('year');
+                $financestatement->month                = $request->input('month');
                 $financestatement->net_sales            = $request->filled('net_sales') ? str_replace(',', '', $request->net_sales) : 0;
                 $financestatement->operating_revenue    = $request->filled('operating_revenue') ? str_replace(',', '', $request->operating_revenue) : 0;
                 $financestatement->cogs_goods           = $request->filled('cogs_goods') ? str_replace(',', '', $request->cogs_goods) : 0;

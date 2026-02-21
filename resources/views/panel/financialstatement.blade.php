@@ -19,6 +19,7 @@
                     <thead>
                     <tr class="table-light">
                         <th>نام شرکت</th>
+                        <th>سال و ماه دوره</th>
                         <th>فروش خالص</th>
                         <th>درآمدهای عملیاتی</th>
                         <th>بهای تمام شده کالای فروش رفته</th>
@@ -110,6 +111,8 @@
                                 <label>پروژه</label>
                             </div>
                         </div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control " name="year" id="year"><label for="year">سال دوره</label></div></div>
+                        <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control " name="month" id="month"><label for="month">ماه دوره</label></div></div>
                         <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="net_sales" id="net_sales"><label for="net_sales">فروش خالص</label></div></div>
                         <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="operating_revenue" id="operating_revenue"><label for="operating_revenue">درآمدهای عملیاتی</label></div></div>
                         <div class="col-6 col-md-3"><div class="form-floating form-floating-outline"><input type="text" class="form-control number-input" name="cogs_goods" id="cogs_goods"><label for="cogs_goods">بهای تمام شده کالای فروش رفته</label></div></div>
@@ -197,7 +200,8 @@
                 scrollCollapse: true,
                 ajax: "{{ route(request()->segment(2).'.index') }}",
                 columns: [
-                    { data: 'company_name', name: 'company_name' },
+                    { data: 'company_name'      , name: 'company_name' },
+                    { data: 'year'              , name: 'year' },
                     { data: 'net_sales'         , name: 'net_sales' },
                     { data: 'operating_revenue' , name: 'operating_revenue' },
                     { data: 'cogs_goods'        , name: 'cogs_goods' },
