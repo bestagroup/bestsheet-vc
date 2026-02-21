@@ -373,17 +373,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 //نمایش تقویم جلالی
-    jalaliDatepicker.startWatch();
+    if (window.jalaliDatepicker && typeof window.jalaliDatepicker.startWatch === "function") {
+        window.jalaliDatepicker.startWatch();
+    }
 
-    document.querySelector("[data-jdp-miladi-input]").addEventListener("jdp:change", function (e) {
-        var miladiInput = document.getElementById(this.getAttribute("data-jdp-miladi-input"));
-        if (!this.value) {
-            miladiInput.value = "";
-            return;
-        }
-        var date = this.value.split("/");
-        miladiInput.value = jalali_to_gregorian(date[0], date[1], date[2]).join("/")
-    });
+    var jalaliInput = document.querySelector("[data-jdp-miladi-input]");
+    if (jalaliInput) {
+        jalaliInput.addEventListener("jdp:change", function () {
+            var miladiInput = document.getElementById(this.getAttribute("data-jdp-miladi-input"));
+            if (!miladiInput) return;
+            if (!this.value) {
+                miladiInput.value = "";
+                return;
+            }
+            var date = this.value.split("/");
+            miladiInput.value = jalali_to_gregorian(date[0], date[1], date[2]).join("/")
+        });
+    }
 
     function jalali_to_gregorian(jy, jm, jd) {
         jy = Number(jy);

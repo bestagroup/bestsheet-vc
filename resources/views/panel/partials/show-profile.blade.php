@@ -1796,39 +1796,53 @@
                         <span class="card-hint">کیفیت ورودی‌ها</span>
                     </div>
                     <div class="chart-box">
-                        <canvas id="strategicFitChart"></canvas>
+                        <canvas id="strategicFitChart{{ $project->id }}"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const canvas = document.getElementById('strategicFitChart');
-            if (!canvas || !window.Chart) return;
+        (function () {
+            const chartId = 'strategicFitChart{{ $project->id }}';
+            const reportTabButtonId = 'report-tab{{ $project->id }}';
+            let chartInstance = null;
 
-            new Chart(canvas.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: @json($strategicFit['labels']),
-                    datasets: [{
-                        label: 'تعداد',
-                        data: @json($strategicFit['data']),
-                        borderRadius: 10,
-                        backgroundColor: 'rgba(99,102,241,.85)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {grid: {display: false}, border: {display: false}},
-                        y: {grid: {color: 'rgba(17,24,39,.06)'}, border: {color: 'rgba(17,24,39,.12)'}}
+            function renderChart() {
+                if (chartInstance || !window.Chart) return;
+                const canvas = document.getElementById(chartId);
+                if (!canvas) return;
+
+                chartInstance = new Chart(canvas.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: @json($strategicFit['labels']),
+                        datasets: [{
+                            label: 'تعداد',
+                            data: @json($strategicFit['data']),
+                            borderRadius: 10,
+                            backgroundColor: 'rgba(99,102,241,.85)'
+                        }]
                     },
-                    plugins: {legend: {display: false}}
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {grid: {display: false}, border: {display: false}},
+                            y: {grid: {color: 'rgba(17,24,39,.06)'}, border: {color: 'rgba(17,24,39,.12)'}}
+                        },
+                        plugins: {legend: {display: false}}
+                    }
+                });
+            }
+
+            const reportTabButton = document.getElementById(reportTabButtonId);
+            if (reportTabButton) {
+                reportTabButton.addEventListener('shown.bs.tab', renderChart, { once: true });
+                if (reportTabButton.classList.contains('active')) {
+                    renderChart();
                 }
-            });
-        });
+            }
+        })();
     </script>
 </div>
-
