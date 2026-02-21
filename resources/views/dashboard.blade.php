@@ -149,6 +149,55 @@
         .pill-warning{ background: rgba(245,158,11,.14); color:#d97706; }
 
     </style>
+<style>
+    .report-wrap { direction: rtl; }
+    .report-title { margin-bottom: 6px; font-weight: 700; }
+    .report-subtitle { margin-top: 0; opacity: .75; }
+
+    .kpi-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+    .kpi-col { flex: 1 1 220px; }
+
+    .kpi-card {
+        border-radius: 14px;
+        box-shadow: 0 8px 22px rgba(17,24,39,.08) !important;
+    }
+    .kpi-card .card-content { padding: 16px 16px; }
+    .kpi-value { font-size: 22px; font-weight: 800; margin: 0; }
+    .kpi-label { margin: 6px 0 0; opacity: .9; }
+
+    .report-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+    .report-col { flex: 1 1 calc(33.333% - 14px); min-width: 340px; }
+
+    .report-card {
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(17,24,39,.08) !important;
+        overflow: hidden;
+    }
+    .report-card .card-content { padding: 16px 16px 10px; }
+    .card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .card-head h6 { margin:0; font-weight:800; font-size: 14px; color: #1f2937; }
+    .card-hint { font-size: 12px; opacity: .65; }
+
+    /* fixed height for chart areas */
+    .chart-box { position: relative; height: 240px; }
+    .chart-box.tall { height: 280px; }
+    .chart-box.full { height: 320px; }
+
+    /* make canvas fill */
+    .chart-box canvas { width: 100% !important; height: 100% !important; }
+
+    @media (max-width: 1100px) { .report-col { flex: 1 1 calc(50% - 14px); } }
+    @media (max-width: 700px)  { .report-col { flex: 1 1 100%; min-width: unset; } }
+</style>
 @endsection
 @section('content')
 
@@ -545,58 +594,42 @@
                 </div>
             </div>
         </div>
-
-        <div class="row gy-4">
-
-            <div class="col-lg-12 col-md-12 col-12">
-                <div class="card">
-                    <div class="row">
-                        <div class="col-md-8 col-12">
-                            <div class="card-header">
-                                <h5 class="mb-1">جدول زمانی پروژه ها</h5>
-                                <small class="mb-0 text-body">مجموع 840 وظیفه تکمیل شده</small>
-                            </div>
-                            <div class="card-body px-2">
-                                <div id="projectTimelineChart"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-12 border-start">
-                            <div class="card-header">
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="mb-1">لیست پروژه ها</h5>
-                                    <div class="dropdown">
-                                        <button class="btn p-0" type="button" id="projectTimeline" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="mdi mdi-dots-vertical mdi-24px"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="projectTimeline">
-                                            <a class="dropdown-item" href="javascript:void(0);">نوسازی</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">اشتراک گذاری</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">بروزرسانی</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <small class="text-body mb-0">{{DB::table('projects')->where('invest_step' , '>=' , 1)->count()}}  پروژه در حال اجرا </small>
-                            </div>
-                            <div class="card-body">
-                                @foreach($projects->take(7) as $project)
-                                <div class="d-flex align-items-center mb-3 pb-1">
-                                    <div class="avatar">
-                                        <div class="rounded bg-lighter d-flex align-items-center h-px-30">
-                                            <img src="{{asset('storage/'.$project->logo)}}" alt="credit-card" width="30">
-                                        </div>
-                                    </div>
-                                    <div class="ms-3 d-flex flex-column">
-                                        <h6 class="mb-1 fw-semibold">{{$project->title}}</h6>
-                                        <small class="text-muted"> درصد پیشرفت {{round(($project->total_amount / $totalPaid) * 100)}} % </small>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
+        <div class="col-lg-4 col-md-4 col-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-content">
+                    <div class="card-head">
+                        <h6>نمودار موقعیت طرح های رد شده</h6>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="dealFunnelChart"></canvas>
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="col-lg-4 col-md-4 col-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-content">
+                    <div class="card-head">
+                        <h6>نمودار وضعیت طرح ها</h6>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="strategicFitChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-content">
+                    <div class="card-head">
+                        <h6>توزیع سرمایه بر اساس طرح</h6>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="sectorAllocationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="card h-100 border-0 shadow-sm rounded-4">
                     <div class="card-header d-flex align-items-center justify-content-between bg-white rounded-top-4">
@@ -884,6 +917,7 @@
 @push('scripts')
     <script src="{{ asset('assets/js/timeline-chart.js') }}"></script>
     <script src="{{ asset('assets/js/charts-apex.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
     <script>
         // جستجوی سبک در کلاینت بر اساس نام/ایمیل
         document.addEventListener('DOMContentLoaded', () => {
@@ -898,6 +932,107 @@
                     const email = li.dataset.email || '';
                     li.style.display = (name.includes(q) || email.includes(q)) ? '' : 'none';
                 });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!window.Chart) return;
+
+            // ---------- Global minimal defaults ----------
+            Chart.defaults.font.family = 'Vazirmatn, IRANSans, system-ui, -apple-system, Segoe UI, Roboto';
+            Chart.defaults.color = '#374151';
+            Chart.defaults.plugins.legend.labels.usePointStyle = true;
+            Chart.defaults.plugins.legend.labels.boxWidth = 8;
+            Chart.defaults.plugins.legend.labels.boxHeight = 8;
+
+            const gridColor = 'rgba(17,24,39,.06)';
+            const borderColor = 'rgba(17,24,39,.12)';
+
+            const baseOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {mode: 'index', intersect: false},
+                plugins: {
+                    legend: {position: 'bottom'},
+                    tooltip: {
+                        backgroundColor: 'rgba(17,24,39,.92)',
+                        padding: 10,
+                        cornerRadius: 10,
+                        titleColor: '#fff',
+                        bodyColor: '#fff'
+                    }
+                }
+            };
+
+            // 1) Deal Funnel
+            new Chart(document.getElementById('dealFunnelChart'), {
+                type: 'bar',
+                data: {
+                    labels: @json($dealFunnel['labels']),
+                    datasets: [{
+                        label: 'تعداد',
+                        data: @json($dealFunnel['data']),
+                        borderRadius: 10,
+                        backgroundColor: 'rgba(14,165,233,.85)'
+                    }]
+                },
+                options: {
+                    ...baseOptions,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {grid: {color: gridColor}, border: {color: borderColor}},
+                        y: {grid: {display: false}, border: {display: false}}
+                    },
+                    plugins: {...baseOptions.plugins, legend: {display: false}}
+                }
+            });
+
+            // 2) Strategic Fit
+            new Chart(document.getElementById('strategicFitChart'), {
+                type: 'bar',
+                data: {
+                    labels: @json($strategicFit['labels']),
+                    datasets: [{
+                        label: 'تعداد',
+                        data: @json($strategicFit['data']),
+                        borderRadius: 10,
+                        backgroundColor: 'rgba(99,102,241,.85)'
+                    }]
+                },
+                options: {
+                    ...baseOptions,
+                    scales: {
+                        x: {grid: {display: false}, border: {display: false}},
+                        y: {grid: {color: gridColor}, border: {color: borderColor}}
+                    },
+                    plugins: {...baseOptions.plugins, legend: {display: false}}
+                }
+            });
+
+            // 3) Sector Allocation
+            new Chart(document.getElementById('sectorAllocationChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: @json($sectorAllocation['labels']),
+                    datasets: [{
+                        data: @json($sectorAllocation['data']),
+                        backgroundColor: [
+                            'rgba(14,165,233,.85)',
+                            'rgba(16,185,129,.85)',
+                            'rgba(249,115,22,.85)',
+                            'rgba(99,102,241,.85)',
+                            'rgba(244,63,94,.75)',
+                            'rgba(148,163,184,.85)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...baseOptions,
+                    cutout: '70%',
+                    plugins: {...baseOptions.plugins, legend: {position: 'bottom'}}
+                }
             });
         });
     </script>

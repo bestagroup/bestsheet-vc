@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Models\Investstep;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -30,23 +33,61 @@ class ReportController extends Controller
         $companiesFa = [
             'فراهوش', 'تپسیار', 'پزشک‌یار', 'ابرپرداز', 'هوشمند‌راه', 'داده‌نگار', 'فینوتک', 'سروین‌کلاد'
         ];
-
+        $investSteps = Investstep::where('id' , '>=' , 1)->orderBy('id')->get();
         // 1) Deal Flow Funnel (Counts)
-        $dealFunnel = [
-            'labels' => ['ورودی','غربال اولیه','جلسه اول','ارجاع BU','DD فنی','DD مالی','Term Sheet','سرمایه‌گذاری'],
-            'data'   => [320, 175, 126, 98, 60, 34, 16, 8],
-        ];
+        $dealFunnel = $investSteps->map(function($step) {
+            $count = Project::where('is_rejected', 1)
+                ->where('reject_step', $step->id)
+                ->count();
+            return [
+                'title' => $step->title,
+                'count' => $count
+            ];
+        })
+            ->filter(fn($item) => $item['count'] > 0) // فقط مراحل با حداقل یک رد
+            ->values();
 
+        $dealFunnel = [
+            'labels' => $dealFunnel->pluck('title'),
+            'data'   => $dealFunnel->pluck('count'),
+        ];
         // 2) Strategic Fit Distribution
+
+
+// شمارش خروجی‌ها بر اساس مرحله
         $strategicFit = [
-            'labels' => ['۰-۲۰','۲۰-۴۰','۴۰-۶۰','۶۰-۸۰','۸۰-۱۰۰'],
-            'data'   => [8, 22, 37, 41, 19],
+            'labels' => $investSteps->pluck('title'), // نام مراحل
+            'data'   => $investSteps->map(function($step) {
+                return Project::where('invest_step', $step->id)
+                    ->count();
+            })
         ];
 
         // 3) Sector Allocation (%)
+        $payments = DB::table('finances as f')
+            ->leftJoin('projects as p', 'f.project_id', '=', 'p.id')
+            ->where('f.amount', '>', 0)
+            ->select(
+                'p.id as project_id',
+                'p.title',
+                'p.logo',
+                DB::raw('SUM(f.amount) as total_paid')
+            )
+            ->groupBy('p.id', 'p.title', 'p.logo')
+            ->orderBy('total_paid', 'DESC')
+            ->get();
+
+// محاسبه درصد کل
+        $total = $payments->sum('total_paid');
+
+        $payments = $payments->map(function($item) use ($total) {
+            $item->percent_of_total = $total > 0 ? round(($item->total_paid / $total) * 100, 2) : 0;
+            return $item;
+        });
+
         $sectorAllocation = [
-            'labels' => ['فین‌تک','هوش مصنوعی','هلث‌تک','SaaS','تجارت الکترونیک','امنیت سایبری'],
-            'data'   => [24, 21, 18, 16, 12, 9],
+            'labels' => $payments->pluck('title'),
+            'data'   => $payments->pluck('percent_of_total'),
         ];
 
         // 4) Stage Allocation (count)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Calendar;
 use App\Models\City;
 use App\Models\Finance;
+use App\Models\Investstep;
 use App\Models\MenuPanel;
 use App\Models\Project;
 use App\Models\SubmenuPanel;
@@ -106,8 +107,64 @@ class IndexController extends Controller
         $monthLabels = array_values($monthLabels);
         $monthlyData = array_values($monthlyData);
 
+        $investSteps = Investstep::where('id' , '>=' , 1)->orderBy('id')->get();
+        // 1) Deal Flow Funnel (Counts)
+        $dealFunnel = $investSteps->map(function($step) {
+            $count = Project::where('is_rejected', 1)
+                ->where('reject_step', $step->id)
+                ->count();
+            return [
+                'title' => $step->title,
+                'count' => $count
+            ];
+        })
+            ->filter(fn($item) => $item['count'] > 0) // فقط مراحل با حداقل یک رد
+            ->values();
 
-        return view('dashboard')->with(compact(['thispage' , 'projects' , 'totalPaid' ,'monthLabels', 'users','finances' , 'monthlyData' , 'calendars' , 'projectis']));
+        $dealFunnel = [
+            'labels' => $dealFunnel->pluck('title'),
+            'data'   => $dealFunnel->pluck('count'),
+        ];
+        // 2) Strategic Fit Distribution
+
+
+// شمارش خروجی‌ها بر اساس مرحله
+        $strategicFit = [
+            'labels' => $investSteps->pluck('title'), // نام مراحل
+            'data'   => $investSteps->map(function($step) {
+                return Project::where('invest_step', $step->id)
+                    ->count();
+            })
+        ];
+
+        // 3) Sector Allocation (%)
+        $payments = DB::table('finances as f')
+            ->leftJoin('projects as p', 'f.project_id', '=', 'p.id')
+            ->where('f.amount', '>', 0)
+            ->select(
+                'p.id as project_id',
+                'p.title',
+                'p.logo',
+                DB::raw('SUM(f.amount) as total_paid')
+            )
+            ->groupBy('p.id', 'p.title', 'p.logo')
+            ->orderBy('total_paid', 'DESC')
+            ->get();
+
+// محاسبه درصد کل
+        $total = $payments->sum('total_paid');
+
+        $payments = $payments->map(function($item) use ($total) {
+            $item->percent_of_total = $total > 0 ? round(($item->total_paid / $total) * 100, 2) : 0;
+            return $item;
+        });
+
+        $sectorAllocation = [
+            'labels' => $payments->pluck('title'),
+            'data'   => $payments->pluck('percent_of_total'),
+        ];
+
+        return view('dashboard')->with(compact(['thispage' , 'projects' , 'totalPaid' ,'monthLabels', 'users','finances' , 'monthlyData' , 'calendars' , 'projectis','dealFunnel', 'strategicFit', 'sectorAllocation',]));
     }
     public function getcities($stateId)
     {

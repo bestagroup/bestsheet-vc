@@ -71,8 +71,8 @@
             <div class="kpi-col">
                 <div class="card kpi-card" style="background:#0ea5e9;color:#fff;">
                     <div class="card-content center">
-                        <p class="kpi-value">{{ $dealFunnel['data'][0] }}</p>
-                        <p class="kpi-label">کل ورودی‌ها (YTD)</p>
+                        <p class="kpi-value">{{number_format(DB::table('projects')->count())}}</p>
+                        <p class="kpi-label">کل طرح های ثبت شده</p>
                     </div>
                 </div>
             </div>
@@ -80,8 +80,8 @@
             <div class="kpi-col">
                 <div class="card kpi-card" style="background:#10b981;color:#fff;">
                     <div class="card-content center">
-                        <p class="kpi-value">{{ end($fundMetrics['tvpi']) }}</p>
-                        <p class="kpi-label">TVPI فعلی</p>
+                        <p class="kpi-value">{{DB::table('projects')->where('is_rejected' , 1)->count()}}</p>
+                        <p class="kpi-label"> کل طرح های رد شده</p>
                     </div>
                 </div>
             </div>
@@ -89,8 +89,8 @@
             <div class="kpi-col">
                 <div class="card kpi-card" style="background:#6366f1;color:#fff;">
                     <div class="card-content center">
-                        <p class="kpi-value">{{ $portfolioHealth['data'][1] }}</p>
-                        <p class="kpi-label">شرکت‌های «در حال رشد»</p>
+                        <p class="kpi-value">{{DB::table('projects')->where('is_rejected' , 0)->count()}}</p>
+                        <p class="kpi-label">کل طرح های جاری</p>
                     </div>
                 </div>
             </div>
@@ -98,8 +98,8 @@
             <div class="kpi-col">
                 <div class="card kpi-card" style="background:#f97316;color:#fff;">
                     <div class="card-content center">
-                        <p class="kpi-value">{{ $portfolioKpi['runway'][count($portfolioKpi['runway'])-1] }}</p>
-                        <p class="kpi-label">میانگین Runway (ماه)</p>
+                        <p class="kpi-value">{{DB::table('projects')->where('invest_step' , 20)->count()}}</p>
+                        <p class="kpi-label">کل طرح های خاتمه یافته</p>
                     </div>
                 </div>
             </div>
@@ -112,8 +112,7 @@
                 <div class="card report-card hoverable">
                     <div class="card-content">
                         <div class="card-head">
-                            <h6>قیف پذیرش Deal Flow</h6>
-                            <span class="card-hint">نرخ ریزش مرحله‌ای</span>
+                            <h6>نمودار موقعیت طرح های رد شده</h6>
                         </div>
                         <div class="chart-box">
                             <canvas id="dealFunnelChart"></canvas>
@@ -126,8 +125,7 @@
                 <div class="card report-card hoverable">
                     <div class="card-content">
                         <div class="card-head">
-                            <h6>توزیع Strategic Fit</h6>
-                            <span class="card-hint">کیفیت ورودی‌ها</span>
+                            <h6>نمودار وضعیت طرح ها</h6>
                         </div>
                         <div class="chart-box">
                             <canvas id="strategicFitChart"></canvas>
@@ -140,8 +138,7 @@
                 <div class="card report-card hoverable">
                     <div class="card-content">
                         <div class="card-head">
-                            <h6>توزیع سرمایه بر اساس حوزه</h6>
-                            <span class="card-hint">ترکیب پورتفو</span>
+                            <h6>توزیع سرمایه بر اساس طرح</h6>
                         </div>
                         <div class="chart-box">
                             <canvas id="sectorAllocationChart"></canvas>
