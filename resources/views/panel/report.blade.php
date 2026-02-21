@@ -152,7 +152,6 @@
                     <div class="card-content">
                         <div class="card-head">
                             <h6>سرمایه‌گذاری بر اساس مرحله</h6>
-                            <span class="card-hint">تمرکز استیج</span>
                         </div>
                         <div class="chart-box">
                             <canvas id="stageAllocationChart"></canvas>
@@ -208,7 +207,6 @@
                     <div class="card-content">
                         <div class="card-head">
                             <h6>عملکرد شرکت‌ها</h6>
-                            <span class="card-hint">IRR و رشد ماهانه</span>
                         </div>
                         <div class="chart-box">
                             <canvas id="companyPerformanceChart"></canvas>
@@ -226,6 +224,19 @@
                         </div>
                         <div class="chart-box full">
                             <canvas id="fundMetricsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-col" style="flex:1 1 100%;">
+                <div class="card report-card hoverable">
+                    <div class="card-content">
+                        <div class="card-head">
+                            <h6>وضعیت نقدینگی شرکت</h6>
+                        </div>
+                        <div class="chart-box full">
+                            <canvas id="liquidityChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -513,6 +524,68 @@
                     scales: {
                         x: { grid: { display: false }, border: { display: false } },
                         y: { grid: { color: gridColor }, border: { color: borderColor }, beginAtZero: false }
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!window.Chart) return;
+
+            const liquidityCtx = document.getElementById('liquidityChart').getContext('2d');
+
+            new Chart(liquidityCtx, {
+                type: 'line',
+                data: {
+                    labels: @json($labels),
+                    datasets: [
+                        {
+                            label: 'وجه نقد و معادل نقد',
+                            data: @json($cashAndEquivalents),
+                            borderWidth: 2,
+                            tension: 0.35,
+                            fill: true
+                        },
+                        {
+                            label: 'دارایی‌های جاری',
+                            data: @json($totalCurrentAssets),
+                            borderWidth: 2,
+                            tension: 0.35,
+                            fill: false
+                        },
+                        {
+                            label: 'بدهی‌های جاری',
+                            data: @json($totalCurrentLiabilities),
+                            borderWidth: 2,
+                            tension: 0.35,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': ' +
+                                        Number(context.raw).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function (value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
                     }
                 }
             });
