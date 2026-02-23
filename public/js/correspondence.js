@@ -247,8 +247,14 @@
         const activeClass = state.activeMessageId === msg.id ? 'active' : '';
         const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
 
+        // نمایش نام گیرندگان فقط برای پیام‌های ارسالی
         const recipientsHtml = msg.direction === 'outgoing' && msg.recipients
             ? `<div class="text-muted truncate mt-1" style="font-size:11px">ارسال شده به: ${msg.recipients}</div>`
+            : '';
+
+        // نام فرستنده کنار زمان فقط برای پیام دریافتی
+        const senderHtml = msg.direction === 'incoming'
+            ? `<div class="text-muted truncate mt-1" style="float:left;font-size:11px" title="${msg.senderName}">ارسال شده توسط: ${msg.senderName}</div>`
             : '';
 
         return `
@@ -263,6 +269,7 @@
             <hr>
             <div class="d-flex justify-content-between align-items-center mt-1">
                 <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
+                ${senderHtml}
             </div>
         </div>
     </div>`;
@@ -762,6 +769,7 @@
         offlinePoller = null;
     }
     document.addEventListener('DOMContentLoaded', () => {
+        init();
         bindSearchAndFilter();
     });
 })();
