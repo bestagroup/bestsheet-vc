@@ -9,7 +9,10 @@
         search: '',
         chip: 'all'
     };
-
+    const PAGINATION = {
+        page: 1,
+        perPage: 10
+    };
     const els = {
         skeleton: document.getElementById('correspondence-skeleton'),
         body: document.getElementById('correspondence-body'),
@@ -40,8 +43,30 @@
     function renderAvatar(user) {
         if (!user) return '';
         const initials = (user.name || '').split(' ').map(p => p[0]).join('').toUpperCase();
-        const color = user.color || '#cccccc';
-        return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
+        const color = user.color || '#6c757d';
+
+        return `
+        <span
+            class="avatar"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="${user.name}"
+            style="
+                background-color:${color};
+                width:28px;
+                height:28px;
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+                border-radius:50%;
+                font-size:12px;
+                color:#fff;
+                margin-left:4px;
+                cursor:default
+            ">
+            ${initials}
+        </span>
+    `;
     }
 
     const channelSubscriptions = window.__CORRESPONDENCE_CHANNELS__ || (window.__CORRESPONDENCE_CHANNELS__ = new Set());
@@ -132,19 +157,9 @@
     }
 
     function bindEvents() {
-        els.searchInput?.addEventListener('input', (e) => {
-            state.search = e.target.value.trim();
-            renderMessageList();
-        });
 
-        els.filterChips?.addEventListener('click', (e) => {
-            const chip = e.target.closest('.chip');
-            if (!chip) return;
-            state.chip = chip.dataset.filter;
-            Array.from(els.filterChips.querySelectorAll('.chip'))
-                .forEach(c => c.classList.toggle('active', c === chip));
-            renderMessageList();
-        });
+        els.searchInput?.addEventListener('input', resetPagination);
+        els.filterChips?.addEventListener('click', resetPagination);
 
         els.btnComposeSend?.addEventListener('click', (e) => {
             e.preventDefault();
@@ -165,6 +180,7 @@
 
     function renderMessageList() {
         if (!els.list) return;
+
         const flattened = flattenMessages()
             .filter(filterByChipMessage)
             .filter(filterBySearchMessage)
@@ -175,32 +191,67 @@
             return;
         }
 
-        els.list.innerHTML = flattened.map(msg => {
-            const activeClass = state.activeMessageId === msg.id ? 'active' : '';
-            const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
+        const totalPages = Math.ceil(flattened.length / PAGINATION.perPage);
+        PAGINATION.page = Math.min(PAGINATION.page, totalPages);
 
-            const recipientsHtml = msg.direction === 'outgoing' && msg.recipients
-                ? `<div class="text-muted truncate mt-1" style="font-size:11px">
-             ارسال شده به: ${msg.recipients}
-           </div>`
-                : '';
+        const start = (PAGINATION.page - 1) * PAGINATION.perPage;
+        const items = flattened.slice(start, start + PAGINATION.perPage);
 
-            return `<div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
+        els.list.innerHTML = `
+        ${items.map(renderConversationItem).join('')}
+        ${renderPagination(totalPages)}
+    `;
+
+        bindConversationClicks();
+    }
+    function renderConversationItem(msg) {
+        const activeClass = state.activeMessageId === msg.id ? 'active' : '';
+        const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
+
+        return `
+    <div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
         <div class="p-3">
             <div class="d-flex justify-content-between align-items-center mb-1">
                 <span class="fw-600 truncate">موضوع: ${msg.subject}</span>
                 ${unreadBadge}
             </div>
             <div class="text-muted truncate mt-1">متن پیام: ${msg.preview}</div>
-            ${recipientsHtml}
             <hr>
             <div class="d-flex justify-content-between align-items-center mt-1">
                 <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
             </div>
         </div>
     </div>`;
-        }).join('');
+    }
+    function renderPagination(totalPages) {
+        if (totalPages <= 1) return '';
 
+        let html = `<div class="d-flex justify-content-center gap-1 py-2">`;
+
+        for (let i = 1; i <= totalPages; i++) {
+            html += `
+            <button
+                class="btn btn-sm ${i === PAGINATION.page ? 'btn-primary' : 'btn-outline-secondary'}"
+                data-page="${i}">
+                ${i}
+            </button>
+        `;
+        }
+
+        html += `</div>`;
+        return html;
+    }
+    els.list.addEventListener('click', (e) => {
+        const pageBtn = e.target.closest('[data-page]');
+        if (!pageBtn) return;
+
+        PAGINATION.page = Number(pageBtn.dataset.page);
+        renderMessageList();
+    });
+    function resetPagination() {
+        PAGINATION.page = 1;
+    }
+    function bindConversationClicks() {
         Array.from(els.list.querySelectorAll('.conversation-item')).forEach(item => {
             item.addEventListener('click', () => {
                 state.activeConversationId = item.dataset.conv;
@@ -212,7 +263,6 @@
             });
         });
     }
-
     function flattenMessages() {
         const list = [];
         conversations.forEach(conv => {
@@ -272,7 +322,18 @@
         if (!conv) return;
 
         if (els.viewSubject) els.viewSubject.textContent = conv.subject;
-        if (els.viewParticipants) els.viewParticipants.innerHTML = conv.participants.map(id => renderAvatar(users[id])).join('');
+
+        // ⬇️ این قسمت مهم است
+        if (els.viewParticipants) {
+            els.viewParticipants.innerHTML = conv.participants
+                .map(id => users[id])
+                .filter(Boolean)
+                .map(user => renderAvatar(user))
+                .join('');
+
+            // tooltip ها دوباره init شوند
+            setTimeout(() => reInitTooltips(), 0);
+        }
 
         els.viewModal.dataset.conversationId = conv.id;
 
