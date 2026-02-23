@@ -159,8 +159,21 @@
     function bindEvents() {
 
         els.searchInput?.addEventListener('input', resetPagination);
-        els.filterChips?.addEventListener('click', resetPagination);
+        els.filterChips?.addEventListener('click', (e) => {
+            const chip = e.target.closest('.chip');
+            if (!chip) return;
 
+            state.chip = chip.dataset.filter;
+
+            Array.from(els.filterChips.querySelectorAll('.chip'))
+                .forEach(c => c.classList.toggle('active', c === chip));
+
+            if (typeof resetPagination === 'function') {
+                resetPagination();
+            }
+
+            renderMessageList();
+        });
         els.btnComposeSend?.addEventListener('click', (e) => {
             e.preventDefault();
             handleComposeSend();
@@ -300,20 +313,33 @@
 
     function filterByChipMessage(msg) {
         switch (state.chip) {
-            case 'unread': return msg.unread > 0;
-            case 'archived': return msg.archived;
-            case 'muted': return msg.muted;
-            case 'type-internal': return msg.type === 'internal';
-            case 'type-external': return msg.type === 'external';
-            case 'sent': return msg.direction === 'outgoing';
-            default: return true;
+            case 'sent':
+                return msg.senderId === authUserId;
+
+            case 'received':
+                return msg.senderId !== authUserId;
+
+            case 'all':
+            default:
+                return true;
         }
     }
 
     function filterBySearchMessage(msg) {
         if (!state.search) return true;
         const q = state.search.toLowerCase();
-        return msg.subject.toLowerCase().includes(q) || msg.senderName.toLowerCase().includes(q) || msg.body.toLowerCase().includes(q);
+
+        // نام فرستنده
+        const senderMatch = msg.senderName?.toLowerCase().includes(q);
+
+        // نام گیرندگان (recipients فقط برای outgoing داریم)
+        const recipientsMatch = msg.recipients?.toLowerCase().includes(q);
+
+        // موضوع و متن پیام
+        const subjectMatch = msg.subject?.toLowerCase().includes(q);
+        const bodyMatch = msg.body?.toLowerCase().includes(q);
+
+        return senderMatch || recipientsMatch || subjectMatch || bodyMatch;
     }
 
     function openMessageModal(conversationId) {
