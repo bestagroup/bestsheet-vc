@@ -60,7 +60,35 @@
     }));
 
     let refreshTimer = null;
+    let pusherConnected = false;
+    let offlinePoller = null;
 
+    pusher.connection.bind('connected', () => {
+        pusherConnected = true;
+        stopOfflinePolling();
+    });
+
+    pusher.connection.bind('disconnected', () => {
+        pusherConnected = false;
+        startOfflinePolling();
+    });
+
+    pusher.connection.bind('error', () => {
+        pusherConnected = false;
+        startOfflinePolling();
+    });
+
+    window.addEventListener('offline', () => {
+        pusherConnected = false;
+        startOfflinePolling();
+    });
+
+    window.addEventListener('online', () => {
+        if (!pusherConnected) {
+            try { pusher.connect(); } catch (e) {}
+        }
+        stopOfflinePolling();
+    });
     function init() {
         setTimeout(() => {
             if (els.skeleton) els.skeleton.classList.add('d-none');
@@ -150,25 +178,27 @@
         els.list.innerHTML = flattened.map(msg => {
             const activeClass = state.activeMessageId === msg.id ? 'active' : '';
             const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
-            const flags = `
-                ${msg.archived ? '<span class="badge bg-info text-dark">آرشیو</span>' : ''}
-                ${msg.muted ? '<span class="badge bg-secondary">بی‌صدا</span>' : ''}
-            `;
+
+            const recipientsHtml = msg.direction === 'outgoing' && msg.recipients
+                ? `<div class="text-muted truncate mt-1" style="font-size:11px">
+             ارسال شده به: ${msg.recipients}
+           </div>`
+                : '';
+
             return `<div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
-                        <div class="p-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-600 truncate" title="${msg.subject}"> موضوع :  ${msg.subject}</span>
-                                ${unreadBadge}
-                            </div>
-                            <div class="text-muted truncate mt-1"> متن پیام :   ${msg.preview}</div>
-                            <hr>
-                            <div class="text-muted truncate" style="float:left;font-size: 11px" title="${msg.senderName}"> ارسال شده توسط :  ${msg.senderName}</div>
-                            <div class="d-flex justify-content-between align-items-center mt-1">
-                                <small class="text-muted" style="font-size: 11px">${formatRelative(msg.time)}</small>
-                                <div class="badges-inline">${flags}</div>
-                            </div>
-                        </div>
-                    </div>`;
+        <div class="p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-600 truncate">موضوع: ${msg.subject}</span>
+                ${unreadBadge}
+            </div>
+            <div class="text-muted truncate mt-1">متن پیام: ${msg.preview}</div>
+            ${recipientsHtml}
+            <hr>
+            <div class="d-flex justify-content-between align-items-center mt-1">
+                <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
+            </div>
+        </div>
+    </div>`;
         }).join('');
 
         Array.from(els.list.querySelectorAll('.conversation-item')).forEach(item => {
@@ -189,12 +219,20 @@
             const root = conv.messages.root;
             if (!root) return;
             const lastMsg = getLastMessage(conv) || root;
+
+            const recipientNames = (conv.participants || [])
+                .filter(id => Number(id) !== Number(lastMsg.senderId))
+                .map(id => users[id]?.name)
+                .filter(Boolean)
+                .join('، ');
+
             list.push({
                 id: root.id,
                 conversationId: conv.id,
                 subject: conv.subject,
                 senderId: lastMsg.senderId,
                 senderName: users[lastMsg.senderId]?.name || 'نامشخص',
+                recipients: recipientNames, // ⬅️ اضافه شد
                 body: lastMsg.body || '',
                 time: lastMsg.time,
                 archived: conv.archived,
@@ -425,13 +463,19 @@
                     ? Array.from(els.composeAttachment.files).map(f => ({id: f.name,name: f.name,url: URL.createObjectURL(f),size: f.size,mime: f.type}))
                     : [];
 
+                const recipientNames = recipientIds
+                    .map(id => users[id]?.name)
+                    .filter(Boolean)
+                    .join('، ');
+
                 const newMessage = {
                     id: 'm' + data.message_id,
                     senderId: authUserId,
                     body,
                     time: new Date().toISOString(),
                     direction: 'outgoing',
-                    attachments
+                    attachments,
+                    recipients: recipientNames // ⬅️ اضافه شد
                 };
 
                 const targetConversationId = data.conversation_id || conversationId || state.activeConversationId;
@@ -542,19 +586,32 @@
     }
 
     function initRealtime(){
-        subscribeRefreshChannel();
-        subscribeActiveConversationChannel();
+        if (navigator.onLine && pusherConnected) {
+            subscribeRefreshChannel();
+            subscribeActiveConversationChannel();
+        } else {
+            startOfflinePolling();
+        }
     }
 
+
     function ensureChannel(name) {
+        if (!pusherConnected) return null;
+
         if (!channelSubscriptions.has(name)) {
-            pusher.subscribe(name);
-            channelSubscriptions.add(name);
+            try {
+                pusher.subscribe(name);
+                channelSubscriptions.add(name);
+            } catch (e) {
+                startOfflinePolling();
+                return null;
+            }
         }
         return pusher.channel(name);
     }
 
     function bindOnce(channel, event, handler) {
+        if (!channel) return;
         const key = `${channel.name}:${event}`;
         if (channelBindings.has(key)) return;
         channel.bind(event, handler);
@@ -591,6 +648,17 @@
             renderMessageList();
         });
     }
+    function startOfflinePolling() {
+        if (offlinePoller) return;
+        offlinePoller = setInterval(() => {
+            refreshConversations();
+        }, 5000);
+    }
 
+    function stopOfflinePolling() {
+        if (!offlinePoller) return;
+        clearInterval(offlinePoller);
+        offlinePoller = null;
+    }
     document.addEventListener('DOMContentLoaded', init);
 })();
