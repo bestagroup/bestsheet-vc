@@ -693,13 +693,9 @@
             .catch(() => {});
     }
 
-    function initRealtime(){
-        if (navigator.onLine && pusherConnected) {
-            subscribeRefreshChannel();
-            subscribeActiveConversationChannel();
-        } else {
-            startOfflinePolling();
-        }
+    function initRealtime() {
+        subscribeRefreshChannel();
+        subscribeActiveConversationChannel();
     }
 
 
@@ -735,26 +731,52 @@
 
     function subscribeActiveConversationChannel() {
         if (!state.activeConversationId) return;
-        const channel = ensureChannel(`private-conversation.${state.activeConversationId}`);
-        bindOnce(channel, 'message.sent', function(data){
-            const target = conversations.find(c=>c.id==data.conversation_id);
-            if(!target) return;
 
-            if(data.parent_id) target.messages.replies.push(data.message);
-            else target.messages.root = data.message;
+        const channelName = `private-conversation.${state.activeConversationId}`;
+        if (!window.__CORRESPONDENCE_CHANNELS__) window.__CORRESPONDENCE_CHANNELS__ = new Set();
+        const channelSubscriptions = window.__CORRESPONDENCE_CHANNELS__;
 
-            target.lastActivity = data.message.time || target.lastActivity;
-            if (Number(data.message.senderId) !== Number(authUserId)) {
-                if (state.activeConversationId === target.id) {
-                    markAsRead(target.id);
+        if (!channelSubscriptions.has(channelName)) {
+            const channel = pusher.subscribe(channelName);
+
+            channel.bind('message.sent', function(data) {
+                // پیدا کردن conversation هدف
+                let conv = conversations.find(c => normalizeId(c.id) === normalizeId(data.conversation_id));
+
+                // اگر پیدا نشد، conversation جدید بساز
+                if (!conv) {
+                    conv = {
+                        id: data.conversation_id,
+                        subject: data.subject || '(بدون موضوع)',
+                        participants: data.participants || [],
+                        unread: 0,
+                        lastActivity: data.message.time,
+                        messages: {root: data.message, replies: []}
+                    };
+                    conversations.unshift(conv);
                 } else {
-                    target.unread = (Number(target.unread) || 0) + 1;
+                    // پیام اصلی یا پاسخ
+                    if (data.parent_id) conv.messages.replies.push(data.message);
+                    else conv.messages.root = data.message;
+                    conv.lastActivity = data.message.time;
                 }
-            }
 
-            if(state.activeConversationId===target.id) openMessageModal(target.id);
-            renderMessageList();
-        });
+                // mark as unread یا read
+                if (Number(data.message.senderId) !== Number(authUserId)) {
+                    if (state.activeConversationId === conv.id) markAsRead(conv.id);
+                    else conv.unread = (Number(conv.unread) || 0) + 1;
+                }
+
+                // رندر مجدد
+                renderMessageList();
+                // اگر modal باز است، آپدیت شود
+                if (state.activeConversationId === conv.id && els.viewModal?.classList.contains('show')) {
+                    openMessageModal(conv.id);
+                }
+            });
+
+            channelSubscriptions.add(channelName);
+        }
     }
     function startOfflinePolling() {
         if (offlinePoller) return;
