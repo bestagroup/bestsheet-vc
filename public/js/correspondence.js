@@ -155,10 +155,36 @@
             new bootstrap.Tooltip(el);
         });
     }
+    function bindSearchAndFilter() {
+        // سرچ
+        els.searchInput?.addEventListener('input', (e) => {
+            state.search = e.target.value.trim();
+            resetPagination();
+            renderMessageList();
+        });
 
+        // فیلتر chip
+        els.filterChips?.addEventListener('click', (e) => {
+            const chip = e.target.closest('.chip');
+            if (!chip) return;
+            state.chip = chip.dataset.filter;
+
+            Array.from(els.filterChips.querySelectorAll('.chip'))
+                .forEach(c => c.classList.toggle('active', c === chip));
+
+            resetPagination();
+            renderMessageList();
+        });
+    }
     function bindEvents() {
 
-        els.searchInput?.addEventListener('input', resetPagination);
+        els.searchInput = document.getElementById('searchConversation');
+
+        els.searchInput?.addEventListener('input', (e) => {
+            state.search = e.target.value.trim();
+            if (typeof resetPagination === 'function') resetPagination();
+            renderMessageList();
+        });
         els.filterChips?.addEventListener('click', (e) => {
             const chip = e.target.closest('.chip');
             if (!chip) return;
@@ -194,10 +220,10 @@
     function renderMessageList() {
         if (!els.list) return;
 
-        const flattened = flattenMessages()
+        let flattened = flattenMessages()
             .filter(filterByChipMessage)
             .filter(filterBySearchMessage)
-            .sort((a, b) => new Date(b.time) - new Date(a.time));
+            .sort((a,b) => new Date(b.time) - new Date(a.time));
 
         if (!flattened.length) {
             els.list.innerHTML = '<div class="text-muted text-center py-3">موردی یافت نشد.</div>';
@@ -221,6 +247,10 @@
         const activeClass = state.activeMessageId === msg.id ? 'active' : '';
         const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
 
+        const recipientsHtml = msg.direction === 'outgoing' && msg.recipients
+            ? `<div class="text-muted truncate mt-1" style="font-size:11px">ارسال شده به: ${msg.recipients}</div>`
+            : '';
+
         return `
     <div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
         <div class="p-3">
@@ -229,6 +259,7 @@
                 ${unreadBadge}
             </div>
             <div class="text-muted truncate mt-1">متن پیام: ${msg.preview}</div>
+            ${recipientsHtml}
             <hr>
             <div class="d-flex justify-content-between align-items-center mt-1">
                 <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
@@ -238,26 +269,16 @@
     }
     function renderPagination(totalPages) {
         if (totalPages <= 1) return '';
-
         let html = `<div class="d-flex justify-content-center gap-1 py-2">`;
-
         for (let i = 1; i <= totalPages; i++) {
-            html += `
-            <button
-                class="btn btn-sm ${i === PAGINATION.page ? 'btn-primary' : 'btn-outline-secondary'}"
-                data-page="${i}">
-                ${i}
-            </button>
-        `;
+            html += `<button class="btn btn-sm ${i === PAGINATION.page ? 'btn-primary' : 'btn-outline-secondary'}" data-page="${i}">${i}</button>`;
         }
-
         html += `</div>`;
         return html;
     }
-    els.list.addEventListener('click', (e) => {
+    els.list?.addEventListener('click', (e) => {
         const pageBtn = e.target.closest('[data-page]');
         if (!pageBtn) return;
-
         PAGINATION.page = Number(pageBtn.dataset.page);
         renderMessageList();
     });
@@ -315,10 +336,8 @@
         switch (state.chip) {
             case 'sent':
                 return msg.senderId === authUserId;
-
             case 'received':
                 return msg.senderId !== authUserId;
-
             case 'all':
             default:
                 return true;
@@ -329,17 +348,12 @@
         if (!state.search) return true;
         const q = state.search.toLowerCase();
 
-        // نام فرستنده
-        const senderMatch = msg.senderName?.toLowerCase().includes(q);
-
-        // نام گیرندگان (recipients فقط برای outgoing داریم)
-        const recipientsMatch = msg.recipients?.toLowerCase().includes(q);
-
-        // موضوع و متن پیام
         const subjectMatch = msg.subject?.toLowerCase().includes(q);
         const bodyMatch = msg.body?.toLowerCase().includes(q);
+        const senderMatch = msg.senderName?.toLowerCase().includes(q);
+        const recipientsMatch = msg.recipients?.toLowerCase().includes(q);
 
-        return senderMatch || recipientsMatch || subjectMatch || bodyMatch;
+        return subjectMatch || bodyMatch || senderMatch || recipientsMatch;
     }
 
     function openMessageModal(conversationId) {
@@ -747,5 +761,7 @@
         clearInterval(offlinePoller);
         offlinePoller = null;
     }
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+        bindSearchAndFilter();
+    });
 })();
