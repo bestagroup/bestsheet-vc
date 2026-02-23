@@ -53,6 +53,7 @@ class FlowController extends Controller
                     'p.invest_step',
                     'p.percentageshare',
                     'p.amount_request_accept',
+                    'p.created_at',
                     DB::raw('(SELECT COALESCE(SUM(f.amount),0) FROM finances f WHERE f.project_id = p.id) as total_payment')
                 )
                 ->get();
@@ -100,6 +101,9 @@ class FlowController extends Controller
                 ->addColumn('commitment_balance', function ($data) {
                     return (number_format($data->amount_request_accept - $data->total_payment));
                 })
+                ->addColumn('created_at', function ($data) {
+                    return (jdate($data->created_at)->format('Y-m') ?? 0);
+                })
                 ->editColumn('action', function ($data) {
                     $base = 'btn btn-sm btn-icon rounded-pill waves-effect mx-1';
 
@@ -120,7 +124,7 @@ class FlowController extends Controller
                 ->rawColumns(['action','invest_step'])
                 ->make(true);
         }
-        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' , 'menupanels' , 'states'  ,'cities']));
+        return view('panel.flow')->with(compact(['thispage' , 'submenupanels' ,'menupanels' , 'states'  ,'cities']));
     }
 
     public function store(Request $request)
@@ -194,16 +198,64 @@ class FlowController extends Controller
             ->where('projects.id', $id)
             ->first();
 
-        $records = DB::table('financial_statements')
-            ->where('project_id', $id)
-            ->orderBy('year')
-            ->orderBy('month')
+
+        $investSteps = Investstep::where('id' , '>=' , 1)->orderBy('id')->get();
+        // 1) Deal Flow Funnel (Counts)
+        $dealFunnel = $investSteps->map(function($step) {
+            $count = Project::where('is_rejected', 1)
+                ->where('reject_step', $step->id)
+                ->count();
+            return [
+                'title' => $step->title,
+                'count' => $count
+            ];
+        })
+            ->filter(fn($item) => $item['count'] > 0) // فقط مراحل با حداقل یک رد
+            ->values();
+
+        $dealFunnel = [
+            'labels' => $dealFunnel->pluck('title'),
+            'data'   => $dealFunnel->pluck('count'),
+        ];
+        // 2) Strategic Fit Distribution
+
+
+// شمارش خروجی‌ها بر اساس مرحله
+        $strategicFit = [
+            'labels' => $investSteps->pluck('title'), // نام مراحل
+            'data'   => $investSteps->map(function($step) {
+                return Project::where('invest_step', $step->id)
+                    ->count();
+            })
+        ];
+
+        // 3) Sector Allocation (%)
+        $payments = DB::table('finances as f')
+            ->leftJoin('projects as p', 'f.project_id', '=', 'p.id')
+            ->where('f.amount', '>', 0)
+            ->select(
+                'p.id as project_id',
+                'p.title',
+                'p.logo',
+                DB::raw('SUM(f.amount) as total_paid')
+            )
+            ->groupBy('p.id', 'p.title', 'p.logo')
+            ->orderBy('total_paid', 'DESC')
             ->get();
 
-        $strategicFit = [
-            'labels' => $records->map(fn($r) => $r->year . '/' . str_pad($r->month, 2, '0', STR_PAD_LEFT))->values(),
-            'data'   => $records->map(fn($r) => (int) str_replace(',', '', $r->net_sales))->values(),
+// محاسبه درصد کل
+        $total = $payments->sum('total_paid');
+
+        $payments = $payments->map(function($item) use ($total) {
+            $item->percent_of_total = $total > 0 ? round(($item->total_paid / $total) * 100, 2) : 0;
+            return $item;
+        });
+
+        $sectorAllocation = [
+            'labels' => $payments->pluck('title'),
+            'data'   => $payments->pluck('percent_of_total'),
         ];
+
 
         $finances = Finance::all();
         $states = State::all();
@@ -217,7 +269,7 @@ class FlowController extends Controller
             ->select('project_steps.*', 'users.name as username')
             ->get();
 
-        return view('panel.partials.show-profile', compact('project', 'strategicFit','states','cities','project_steps','kpis','investsteps','files','commitments','finances'
+        return view('panel.partials.show-profile', compact('project', 'strategicFit','dealFunnel' , 'sectorAllocation' , 'states','cities','project_steps','kpis','investsteps','files','commitments','finances'
         ));
     }
 

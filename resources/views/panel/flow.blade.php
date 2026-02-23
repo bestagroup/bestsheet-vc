@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/dropzone.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('assets/css/flow.css') }}"/>
-<link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-email.css') }}" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
@@ -32,6 +31,7 @@
                         <th>کل مبلغ درخواستی</th>
                         <th>مجموع مبلغ واریزی</th>
                         <th>مانده مبلغ تعهدات</th>
+                        <th>تاریخ ثبت</th>
                         <th>تغییرات</th>
                     </tr>
                     </thead>
@@ -283,6 +283,8 @@
     <script src="{{asset('assets/vendor/js/dataTables.fixedColumns.js')}}"></script>
     <script src="{{asset('assets/vendor/js/fixedColumns.dataTables.js')}}"></script>
     <script src="{{asset('assets/vendor/js/formhandler.js')}}"></script>
+    <script src="{{ asset('assets/js/timeline-chart.js') }}"></script>
+    <script src="{{ asset('assets/js/charts-apex.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
     @yield('filescript')
 
@@ -310,6 +312,7 @@
                     {data: 'amount_request_accept'          , name: 'amount_request_accept',className:'text-center'},
                     {data: 'amount_deposited'               , name: 'amount_deposited',className:'text-center'},
                     {data: 'commitment_balance'             , name: 'commitment_balance',className:'text-center'},
+                    {data: 'created_at'                     , name: 'created_at',className:'text-center'},
                     {data: 'action'                         , name: 'action', orderable: true, searchable: true,className:'text-center'},
                 ],
                 language: {
