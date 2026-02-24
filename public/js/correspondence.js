@@ -44,6 +44,17 @@
         return normalizeId(left) === normalizeId(right);
     }
 
+    function canonicalMessageId(id) {
+        return normalizeId(id).replace(/^m/i, '');
+    }
+
+    function isSameMessageId(left, right) {
+        const a = canonicalMessageId(left);
+        const b = canonicalMessageId(right);
+        if (!a || !b) return false;
+        return a === b;
+    }
+
     function escapeHtml(value) {
         return String(value ?? '')
             .replace(/&/g, '&amp;')
@@ -63,7 +74,7 @@
         try {
             const parsed = new URL(String(url || ''), window.location.origin);
             const protocol = parsed.protocol.toLowerCase();
-            if (protocol === 'http:' || protocol === 'https:') return parsed.href;
+            if (protocol === 'http:' || protocol === 'https:' || protocol === 'blob:') return parsed.href;
         } catch (_) {}
         return '#';
     }
@@ -402,7 +413,12 @@
         let html = '';
         const rootMsg = conv?.messages?.root;
         if (rootMsg) html += renderMessage(rootMsg, false);
-        const replies = Array.isArray(conv?.messages?.replies) ? conv.messages.replies : [];
+        const replies = Array.isArray(conv?.messages?.replies) ? conv.messages.replies.slice() : [];
+        replies.sort((a, b) => {
+            const t1 = new Date(a?.time || 0).getTime();
+            const t2 = new Date(b?.time || 0).getTime();
+            return t1 - t2;
+        });
         replies.forEach(r => html += renderMessage(r, true));
         return html;
     }
@@ -455,6 +471,42 @@
         return d.toLocaleDateString('fa-IR');
     }
 
+    function ensureConversationMessages(conv) {
+        if (!conv.messages || typeof conv.messages !== 'object') {
+            conv.messages = {root: null, replies: []};
+        }
+        if (!Array.isArray(conv.messages.replies)) {
+            conv.messages.replies = [];
+        }
+    }
+
+    function upsertConversationMessage(conv, message, parentId) {
+        ensureConversationMessages(conv);
+        const incomingId = message?.id;
+
+        if (incomingId != null) {
+            if (conv.messages.root && isSameMessageId(conv.messages.root.id, incomingId)) {
+                conv.messages.root = {...conv.messages.root, ...message};
+                return {inserted: false, message: conv.messages.root};
+            }
+
+            const existingReplyIndex = conv.messages.replies.findIndex((m) => isSameMessageId(m?.id, incomingId));
+            if (existingReplyIndex >= 0) {
+                conv.messages.replies[existingReplyIndex] = {...conv.messages.replies[existingReplyIndex], ...message};
+                return {inserted: false, message: conv.messages.replies[existingReplyIndex]};
+            }
+        }
+
+        const shouldAppendToReplies = !!parentId || !!conv.messages.root;
+        if (shouldAppendToReplies) {
+            conv.messages.replies.push(message);
+            return {inserted: true, message};
+        }
+
+        conv.messages.root = message;
+        return {inserted: true, message};
+    }
+
     function markAsRead(conversationId) {
         const convId = normalizeId(conversationId);
         const conv = conversations.find(c => normalizeId(c.id) === convId);
@@ -468,7 +520,7 @@
         const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
         const allMsgs = [conv.messages.root].concat(conv.messages.replies || []).filter(Boolean);
-        const msg = allMsgs.find(m => isSameId(m.id, messageId));
+        const msg = allMsgs.find(m => isSameMessageId(m.id, messageId));
         if (!msg) return;
         if (action === 'delete') return;
         if (action === 'reply') handleReply(messageId);
@@ -590,9 +642,8 @@
                 let conv = conversations.find(c => normalizeId(c.id) === targetConvId);
 
                 if (conv) {
-                    if (parentId) conv.messages.replies.push(newMessage);
-                    else conv.messages.root = newMessage;
-                    conv.lastActivity = newMessage.time;
+                    const result = upsertConversationMessage(conv, newMessage, parentId);
+                    conv.lastActivity = result.message.time || conv.lastActivity;
                 } else {
                     const participants = Array.from(new Set([authUserId].concat(recipientIds.map(id => Number(id)))));
                     conv = {
@@ -749,20 +800,17 @@
             }
 
             const incomingMessage = data?.message || {};
+            const incomingParentId = data?.parent_id ?? data?.parentId ?? incomingMessage.parent_id ?? incomingMessage.parentId;
             const normalizedIncomingMessage = {
                 ...incomingMessage,
+                id: incomingMessage.id ?? data?.message_id ?? data?.messageId,
                 senderId: incomingMessage.senderId ?? incomingMessage.sender_id ?? incomingMessage.sender?.id
             };
 
-            if (data.parent_id) {
-                if (!Array.isArray(target.messages.replies)) target.messages.replies = [];
-                target.messages.replies.push(normalizedIncomingMessage);
-            } else {
-                target.messages.root = normalizedIncomingMessage;
-            }
+            const result = upsertConversationMessage(target, normalizedIncomingMessage, incomingParentId);
 
             target.lastActivity = normalizedIncomingMessage.time || target.lastActivity;
-            if (Number(normalizedIncomingMessage.senderId) !== Number(authUserId)) {
+            if (result.inserted && Number(normalizedIncomingMessage.senderId) !== Number(authUserId)) {
                 if (isSameId(state.activeConversationId, target.id)) {
                     markAsRead(target.id);
                 } else {

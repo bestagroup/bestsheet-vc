@@ -202,77 +202,8 @@
 @section('content')
 
     <div class="row gy-4 mb-4">
-    <div class="alert alert-info"> {{Auth::user()->name}} خوش آمدید به داشبورد مدیریت 👋</div>
-
+        <div class="alert alert-info"> {{Auth::user()->name}} خوش آمدید به داشبورد مدیریت 👋</div>
     </div>
-
-    <!-- Radar Chart -->
-{{--    <div class="col-md-12 col-12">--}}
-{{--        <div class="row justify-content-between">--}}
-{{--            <div class="card col-md-6 m-1">--}}
-{{--                <div class="card-header d-flex justify-content-between align-items-center">--}}
-{{--                    <h5 class="card-title mb-0">شاخص کلیدی عملکرد</h5>--}}
-{{--                    <div class="dropdown primary-font">--}}
-{{--                        <button class="btn px-0" type="button" id="heatChartDd1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-{{--                            <i class="bx bx-dots-vertical-rounded"></i>--}}
-{{--                        </button>--}}
-{{--                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="heatChartDd1">--}}
-{{--                            <a class="dropdown-item" href="javascript:void(0);">28 روز اخیر</a>--}}
-{{--                            <a class="dropdown-item" href="javascript:void(0);">ماه قبل</a>--}}
-{{--                            <a class="dropdown-item" href="javascript:void(0);">سال قبل</a>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                <div class="card-body">--}}
-{{--                    <div id="radarChart"></div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class="card col-md-6 m-1">--}}
-{{--                <div class="card-header d-flex justify-content-between">--}}
-{{--                    <div>--}}
-{{--                        <h5 class="card-title mb-1">آخرین به‌روزرسانی‌ها</h5>--}}
-{{--                        <small class="text-muted primary-font">شبکه‌های تجاری</small>--}}
-{{--                    </div>--}}
-{{--                    <div class="dropdown primary-font">--}}
-{{--                        <button type="button" class="btn dropdown-toggle px-0" data-bs-toggle="dropdown" aria-expanded="false">--}}
-{{--                            <i class="bx bx-calendar"></i>--}}
-{{--                        </button>--}}
-{{--                        <ul class="dropdown-menu dropdown-menu-end">--}}
-{{--                            <li>--}}
-{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">امروز</a>--}}
-{{--                            </li>--}}
-{{--                            <li>--}}
-{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">دیروز</a>--}}
-{{--                            </li>--}}
-{{--                            <li>--}}
-{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">7 روز اخیر</a>--}}
-{{--                            </li>--}}
-{{--                            <li>--}}
-{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">30 روز اخیر</a>--}}
-{{--                            </li>--}}
-{{--                            <li>--}}
-{{--                                <hr class="dropdown-divider">--}}
-{{--                            </li>--}}
-{{--                            <li>--}}
-{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">این ماه</a>--}}
-{{--                            </li>--}}
-{{--                            <li>--}}
-{{--                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">ماه قبل</a>--}}
-{{--                            </li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                <div class="card-body">--}}
-{{--                    <div id="lineAreaChart"></div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-    <!-- /Radar Chart -->
-
-    <!-- Line Area Chart -->
-
-    <!-- /Line Area Chart -->
 
     <div class="row gy-4 mb-4">
 
@@ -316,11 +247,11 @@
                                                         <tr>
                                                             <td>
                                                                 @if($user->gender == 1)
-                                                                    <img src="{{ asset('assets/img/avatars/1.png') }}" class="w-px-40 h-auto rounded-circle" />
+                                                                    <img src="{{ asset('assets/img/avatars/1.png') }}" class="w-px-40 h-auto rounded-circle"  alt=""/>
                                                                 @elseif($user->gender == 2)
-                                                                    <img src="{{ asset('assets/img/avatars/8.png') }}" class="w-px-40 h-auto rounded-circle" />
+                                                                    <img src="{{ asset('assets/img/avatars/8.png') }}" class="w-px-40 h-auto rounded-circle"  alt=""/>
                                                                 @else
-                                                                    <img src="{{ asset('assets/img/avatars/1.png') }}" class="w-px-40 h-auto rounded-circle" />
+                                                                    <img src="{{ asset('assets/img/avatars/1.png') }}" class="w-px-40 h-auto rounded-circle"  alt=""/>
                                                                 @endif
                                                             </td>
                                                             <td>{{ $user->name }}</td>
@@ -404,7 +335,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-6">
                 <div class="card h-100">
                     <div class="card-body">
@@ -461,7 +391,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-6">
                 <div class="card h-100">
                     <div class="card-body">
@@ -518,7 +447,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-6">
                 <div class="card h-100">
                     <div class="card-body">
@@ -575,7 +503,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-6">
                 <div class="card h-100">
                     <div class="card-body">
@@ -594,8 +521,9 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-4 col-md-4 col-4">
-            <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-3">
                 <div class="card-content">
                     <div class="card-head">
                         <h6>نمودار موقعیت طرح های رد شده</h6>
@@ -607,7 +535,7 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-4">
-            <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-3">
                 <div class="card-content">
                     <div class="card-head">
                         <h6>نمودار وضعیت طرح ها</h6>
@@ -619,7 +547,7 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-4">
-            <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-3">
                 <div class="card-content">
                     <div class="card-head">
                         <h6>توزیع سرمایه بر اساس طرح</h6>
