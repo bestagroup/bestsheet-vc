@@ -40,10 +40,38 @@
         return id == null ? '' : String(id);
     }
 
+    function isSameId(left, right) {
+        return normalizeId(left) === normalizeId(right);
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function sanitizeColor(value) {
+        const raw = String(value || '').trim();
+        const isHex = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(raw);
+        return isHex ? raw : '#cccccc';
+    }
+
+    function sanitizeUrl(url) {
+        try {
+            const parsed = new URL(String(url || ''), window.location.origin);
+            const protocol = parsed.protocol.toLowerCase();
+            if (protocol === 'http:' || protocol === 'https:') return parsed.href;
+        } catch (_) {}
+        return '#';
+    }
+
     function renderAvatar(user) {
         if (!user) return '';
-        const initials = (user.name || '').split(' ').map(p => p[0]).join('').toUpperCase();
-        const color = user.color || '#cccccc';
+        const initials = escapeHtml((user.name || '').split(' ').map(p => p[0]).join('').toUpperCase());
+        const color = sanitizeColor(user.color);
         return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
     }
 
@@ -63,6 +91,7 @@
     }));
 
     let refreshTimer = null;
+    let activeConversationChannelName = null;
 
     function init() {
         setTimeout(() => {
@@ -85,8 +114,13 @@
 
     function initComposeModal() {
         if (els.composeRecipients) {
-            els.composeRecipients.innerHTML = Object.values(users)
-                .map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+            els.composeRecipients.innerHTML = '';
+            Object.values(users).forEach((u) => {
+                const option = document.createElement('option');
+                option.value = String(u.id ?? '');
+                option.textContent = u.name || '';
+                els.composeRecipients.appendChild(option);
+            });
             $(els.composeRecipients).select2({
                 width: '100%',
                 dir: 'rtl',
@@ -175,17 +209,19 @@
     }
 
     function renderConversationItem(msg) {
-        const activeClass = state.activeMessageId === msg.id ? 'active' : '';
+        const activeClass = isSameId(state.activeMessageId, msg.id) ? 'active' : '';
         const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
+        const safeSubject = escapeHtml(msg.subject);
+        const safePreview = escapeHtml(msg.preview);
 
         return `
-    <div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
+    <div class="conversation-item ${activeClass}" data-id="${escapeHtml(msg.id)}" data-conv="${escapeHtml(msg.conversationId)}">
         <div class="p-3">
             <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="fw-600 truncate">موضوع: ${msg.subject}</span>
+                <span class="fw-600 truncate">موضوع: ${safeSubject}</span>
                 ${unreadBadge}
             </div>
-            <div class="text-muted truncate mt-1">متن پیام: ${msg.preview}</div>
+            <div class="text-muted truncate mt-1">متن پیام: ${safePreview}</div>
             <hr>
             <div class="d-flex justify-content-between align-items-center mt-1">
                 <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
@@ -211,7 +247,7 @@
         html += `</div>`;
         return html;
     }
-    els.list.addEventListener('click', (e) => {
+    els.list?.addEventListener('click', (e) => {
         const pageBtn = e.target.closest('[data-page]');
         if (!pageBtn) return;
 
@@ -284,9 +320,15 @@
     function flattenMessages() {
         const list = [];
         conversations.forEach(conv => {
-            const root = conv.messages.root;
+            const root = conv?.messages?.root;
             if (!root) return;
             const lastMsg = getLastMessage(conv) || root;
+            const participants = Array.isArray(conv.participants) ? conv.participants : [];
+            const recipients = participants
+                .filter((id) => !isSameId(id, authUserId))
+                .map((id) => users[id]?.name || '')
+                .filter(Boolean)
+                .join(' ');
             list.push({
                 id: root.id,
                 conversationId: conv.id,
@@ -302,7 +344,8 @@
                 deleted: false,
                 direction: root.direction,
                 attachments: root.attachments || [],
-                preview: lastMsg.body || ''
+                preview: lastMsg.body || '',
+                recipients
             });
         });
         return list;
@@ -311,10 +354,10 @@
     function filterByChipMessage(msg) {
         switch (state.chip) {
             case 'sent':
-                return msg.senderId === authUserId;
+                return isSameId(msg.senderId, authUserId);
 
             case 'received':
-                return msg.senderId !== authUserId;
+                return !isSameId(msg.senderId, authUserId);
 
             case 'all':
             default:
@@ -337,9 +380,11 @@
         const convId = normalizeId(conversationId);
         const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
+        if (!els.viewModal) return;
 
         if (els.viewSubject) els.viewSubject.textContent = conv.subject;
-        if (els.viewParticipants) els.viewParticipants.innerHTML = conv.participants.map(id => renderAvatar(users[id])).join('');
+        const participants = Array.isArray(conv.participants) ? conv.participants : [];
+        if (els.viewParticipants) els.viewParticipants.innerHTML = participants.map(id => renderAvatar(users[id])).join('');
 
         els.viewModal.dataset.conversationId = conv.id;
 
@@ -355,9 +400,10 @@
 
     function renderThread(conv) {
         let html = '';
-        const rootMsg = conv.messages.root;
+        const rootMsg = conv?.messages?.root;
         if (rootMsg) html += renderMessage(rootMsg, false);
-        (conv.messages.replies || []).forEach(r => html += renderMessage(r, true));
+        const replies = Array.isArray(conv?.messages?.replies) ? conv.messages.replies : [];
+        replies.forEach(r => html += renderMessage(r, true));
         return html;
     }
 
@@ -379,7 +425,7 @@
         let attachmentsHtml = '';
         if (msg.attachments?.length) {
             attachmentsHtml = `<div class="message-attachments mt-2">
-                ${msg.attachments.map(a => `<a href="${a.url}" target="_blank" class="d-block text-decoration-none">📎 ${a.name}</a>`).join('')}
+                ${msg.attachments.map(a => `<a href="${sanitizeUrl(a.url)}" target="_blank" rel="noopener noreferrer" class="d-block text-decoration-none">📎 ${escapeHtml(a.name)}</a>`).join('')}
             </div>`;
         }
         const isSelf = Number(msg.senderId) === Number(authUserId);
@@ -387,9 +433,9 @@
         const replyClass = isReply ? 'message-reply' : '';
         const canReply = !isSelf;
         return `<div class="message-card ${alignmentClass} ${replyClass}">
-            <div class="fw-600">${sender?.name || ''}</div>
+            <div class="fw-600">${escapeHtml(sender?.name || '')}</div>
             <small class="text-muted">${formatDateTime(msg.time)}</small>
-            <div class="message-body mt-2">${msg.body}</div>
+            <div class="message-body mt-2">${escapeHtml(msg.body)}</div>
             ${attachmentsHtml}
             ${canReply ? `<button class="btn btn-sm btn-outline-primary mt-2" data-action="reply" data-message-id="${msg.id}">پاسخ</button>` : ''}
         </div>`;
@@ -414,7 +460,7 @@
         const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
         conv.unread = 0;
-        conv.lastActivity = conv.messages.root.time || conv.lastActivity;
+        conv.lastActivity = conv?.messages?.root?.time || conv.lastActivity;
     }
 
     function handleMessageAction(action, messageId) {
@@ -422,7 +468,7 @@
         const conv = conversations.find(c => normalizeId(c.id) === convId);
         if (!conv) return;
         const allMsgs = [conv.messages.root].concat(conv.messages.replies || []).filter(Boolean);
-        const msg = allMsgs.find(m => m.id === messageId);
+        const msg = allMsgs.find(m => isSameId(m.id, messageId));
         if (!msg) return;
         if (action === 'delete') return;
         if (action === 'reply') handleReply(messageId);
@@ -430,7 +476,7 @@
     }
 
     function handleReply(messageId) {
-        els.composeForm.dataset.parentId = messageId.replace('m','');
+        els.composeForm.dataset.parentId = normalizeId(messageId).replace(/^m/, '');
         const viewModalInstance = bootstrap.Modal.getInstance(els.viewModal);
         viewModalInstance?.hide();
 
@@ -610,8 +656,19 @@
         const toastEl=document.createElement('div');
         toastEl.className='toast align-items-center text-bg-primary border-0 position-fixed';
         toastEl.style.zIndex=9999; toastEl.style.left='20px'; toastEl.style.bottom='20px'; toastEl.role='alert';
-        toastEl.innerHTML=`<div class="d-flex"><div class="toast-body">${message}</div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>`;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'd-flex';
+        const body = document.createElement('div');
+        body.className = 'toast-body';
+        body.textContent = message || '';
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'btn-close btn-close-white me-2 m-auto';
+        closeBtn.setAttribute('data-bs-dismiss', 'toast');
+        closeBtn.setAttribute('aria-label', 'Close');
+        wrapper.appendChild(body);
+        wrapper.appendChild(closeBtn);
+        toastEl.appendChild(wrapper);
         document.body.appendChild(toastEl);
         const toast=new bootstrap.Toast(toastEl,{delay:2200}); toast.show();
         toastEl.addEventListener('hidden.bs.toast',()=>toastEl.remove());
@@ -675,27 +732,52 @@
 
     function subscribeActiveConversationChannel() {
         if (!state.activeConversationId) return;
-        const channel = ensureChannel(`private-conversation.${state.activeConversationId}`);
+        const nextChannelName = `private-conversation.${state.activeConversationId}`;
+        if (activeConversationChannelName && activeConversationChannelName !== nextChannelName) {
+            pusher.unsubscribe(activeConversationChannelName);
+            channelSubscriptions.delete(activeConversationChannelName);
+            channelBindings.delete(`${activeConversationChannelName}:message.sent`);
+        }
+        activeConversationChannelName = nextChannelName;
+
+        const channel = ensureChannel(nextChannelName);
         bindOnce(channel, 'message.sent', function(data){
-            const target = conversations.find(c=>c.id==data.conversation_id);
-            if(!target) return;
+            const target = conversations.find(c => isSameId(c.id, data?.conversation_id));
+            if (!target) {
+                scheduleRefresh();
+                return;
+            }
 
-            if(data.parent_id) target.messages.replies.push(data.message);
-            else target.messages.root = data.message;
+            const incomingMessage = data?.message || {};
+            const normalizedIncomingMessage = {
+                ...incomingMessage,
+                senderId: incomingMessage.senderId ?? incomingMessage.sender_id ?? incomingMessage.sender?.id
+            };
 
-            target.lastActivity = data.message.time || target.lastActivity;
-            if (Number(data.message.senderId) !== Number(authUserId)) {
-                if (state.activeConversationId === target.id) {
+            if (data.parent_id) {
+                if (!Array.isArray(target.messages.replies)) target.messages.replies = [];
+                target.messages.replies.push(normalizedIncomingMessage);
+            } else {
+                target.messages.root = normalizedIncomingMessage;
+            }
+
+            target.lastActivity = normalizedIncomingMessage.time || target.lastActivity;
+            if (Number(normalizedIncomingMessage.senderId) !== Number(authUserId)) {
+                if (isSameId(state.activeConversationId, target.id)) {
                     markAsRead(target.id);
                 } else {
                     target.unread = (Number(target.unread) || 0) + 1;
                 }
             }
 
-            if(state.activeConversationId===target.id) openMessageModal(target.id);
+            if (isSameId(state.activeConversationId, target.id)) openMessageModal(target.id);
             renderMessageList();
         });
     }
 
-    document.addEventListener('DOMContentLoaded', init);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();
