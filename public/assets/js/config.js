@@ -36,7 +36,7 @@ let config = {
     },
     enableMenuLocalStorage: !0,
   },
-  assetsPath = document.documentElement.getAttribute("data-assets-path"),
+  assetsPath = document.documentElement.getAttribute("data-assets-path") || "/assets/",
   templateName = document.documentElement.getAttribute("data-template"),
   rtlSupport = !0;
 "undefined" != typeof TemplateCustomizer &&

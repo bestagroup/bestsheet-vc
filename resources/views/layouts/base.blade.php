@@ -2,7 +2,7 @@
     $theme = session('theme', 'theme-default');
 @endphp
     <!DOCTYPE html>
-<html lang="fa" dir="rtl" data-theme="{{ $theme }}">
+<html lang="fa" dir="rtl" data-theme="{{ $theme }}" data-assets-path="{{ asset('assets/') }}/" data-template="vertical-menu-template">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
