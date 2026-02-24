@@ -9,10 +9,7 @@
         search: '',
         chip: 'all'
     };
-    const PAGINATION = {
-        page: 1,
-        perPage: 10
-    };
+
     const els = {
         skeleton: document.getElementById('correspondence-skeleton'),
         body: document.getElementById('correspondence-body'),
@@ -43,30 +40,8 @@
     function renderAvatar(user) {
         if (!user) return '';
         const initials = (user.name || '').split(' ').map(p => p[0]).join('').toUpperCase();
-        const color = user.color || '#6c757d';
-
-        return `
-        <span
-            class="avatar"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            title="${user.name}"
-            style="
-                background-color:${color};
-                width:28px;
-                height:28px;
-                display:inline-flex;
-                align-items:center;
-                justify-content:center;
-                border-radius:50%;
-                font-size:12px;
-                color:#fff;
-                margin-left:4px;
-                cursor:default
-            ">
-            ${initials}
-        </span>
-    `;
+        const color = user.color || '#cccccc';
+        return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
     }
 
     const channelSubscriptions = window.__CORRESPONDENCE_CHANNELS__ || (window.__CORRESPONDENCE_CHANNELS__ = new Set());
@@ -85,35 +60,7 @@
     }));
 
     let refreshTimer = null;
-    let pusherConnected = false;
-    let offlinePoller = null;
 
-    pusher.connection.bind('connected', () => {
-        pusherConnected = true;
-        stopOfflinePolling();
-    });
-
-    pusher.connection.bind('disconnected', () => {
-        pusherConnected = false;
-        startOfflinePolling();
-    });
-
-    pusher.connection.bind('error', () => {
-        pusherConnected = false;
-        startOfflinePolling();
-    });
-
-    window.addEventListener('offline', () => {
-        pusherConnected = false;
-        startOfflinePolling();
-    });
-
-    window.addEventListener('online', () => {
-        if (!pusherConnected) {
-            try { pusher.connect(); } catch (e) {}
-        }
-        stopOfflinePolling();
-    });
     function init() {
         setTimeout(() => {
             if (els.skeleton) els.skeleton.classList.add('d-none');
@@ -155,51 +102,22 @@
             new bootstrap.Tooltip(el);
         });
     }
-    function bindSearchAndFilter() {
-        // سرچ
-        els.searchInput?.addEventListener('input', (e) => {
-            state.search = e.target.value.trim();
-            resetPagination();
-            renderMessageList();
-        });
 
-        // فیلتر chip
-        els.filterChips?.addEventListener('click', (e) => {
-            const chip = e.target.closest('.chip');
-            if (!chip) return;
-            state.chip = chip.dataset.filter;
-
-            Array.from(els.filterChips.querySelectorAll('.chip'))
-                .forEach(c => c.classList.toggle('active', c === chip));
-
-            resetPagination();
-            renderMessageList();
-        });
-    }
     function bindEvents() {
-
-        els.searchInput = document.getElementById('searchConversation');
-
         els.searchInput?.addEventListener('input', (e) => {
             state.search = e.target.value.trim();
-            if (typeof resetPagination === 'function') resetPagination();
             renderMessageList();
         });
+
         els.filterChips?.addEventListener('click', (e) => {
             const chip = e.target.closest('.chip');
             if (!chip) return;
-
             state.chip = chip.dataset.filter;
-
             Array.from(els.filterChips.querySelectorAll('.chip'))
                 .forEach(c => c.classList.toggle('active', c === chip));
-
-            if (typeof resetPagination === 'function') {
-                resetPagination();
-            }
-
             renderMessageList();
         });
+
         els.btnComposeSend?.addEventListener('click', (e) => {
             e.preventDefault();
             handleComposeSend();
@@ -219,80 +137,40 @@
 
     function renderMessageList() {
         if (!els.list) return;
-
-        let flattened = flattenMessages()
+        const flattened = flattenMessages()
             .filter(filterByChipMessage)
             .filter(filterBySearchMessage)
-            .sort((a,b) => new Date(b.time) - new Date(a.time));
+            .sort((a, b) => new Date(b.time) - new Date(a.time));
 
         if (!flattened.length) {
             els.list.innerHTML = '<div class="text-muted text-center py-3">موردی یافت نشد.</div>';
             return;
         }
 
-        const totalPages = Math.ceil(flattened.length / PAGINATION.perPage);
-        PAGINATION.page = Math.min(PAGINATION.page, totalPages);
+        els.list.innerHTML = flattened.map(msg => {
+            const activeClass = state.activeMessageId === msg.id ? 'active' : '';
+            const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
+            const flags = `
+                ${msg.archived ? '<span class="badge bg-info text-dark">آرشیو</span>' : ''}
+                ${msg.muted ? '<span class="badge bg-secondary">بی‌صدا</span>' : ''}
+            `;
+            return `<div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-600 truncate" title="${msg.subject}"> موضوع :  ${msg.subject}</span>
+                                ${unreadBadge}
+                            </div>
+                            <div class="text-muted truncate mt-1"> متن پیام :   ${msg.preview}</div>
+                            <hr>
+                            <div class="text-muted truncate" style="float:left;font-size: 11px" title="${msg.senderName}"> ارسال شده توسط :  ${msg.senderName}</div>
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                <small class="text-muted" style="font-size: 11px">${formatRelative(msg.time)}</small>
+                                <div class="badges-inline">${flags}</div>
+                            </div>
+                        </div>
+                    </div>`;
+        }).join('');
 
-        const start = (PAGINATION.page - 1) * PAGINATION.perPage;
-        const items = flattened.slice(start, start + PAGINATION.perPage);
-
-        els.list.innerHTML = `
-        ${items.map(renderConversationItem).join('')}
-        ${renderPagination(totalPages)}
-    `;
-
-        bindConversationClicks();
-    }
-    function renderConversationItem(msg) {
-        const activeClass = state.activeMessageId === msg.id ? 'active' : '';
-        const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
-
-        // نمایش نام گیرندگان فقط برای پیام‌های ارسالی
-        const recipientsHtml = msg.direction === 'outgoing' && msg.recipients
-            ? `<div class="text-muted truncate mt-1" style="font-size:11px">ارسال شده به: ${msg.recipients}</div>`
-            : '';
-
-        // نام فرستنده کنار زمان فقط برای پیام دریافتی
-        const senderHtml = msg.direction === 'incoming'
-            ? `<div class="text-muted truncate mt-1" style="float:left;font-size:11px" title="${msg.senderName}">ارسال شده توسط: ${msg.senderName}</div>`
-            : '';
-
-        return `
-    <div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
-        <div class="p-3">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="fw-600 truncate">موضوع: ${msg.subject}</span>
-                ${unreadBadge}
-            </div>
-            <div class="text-muted truncate mt-1">متن پیام: ${msg.preview}</div>
-            ${recipientsHtml}
-            <hr>
-            <div class="d-flex justify-content-between align-items-center mt-1">
-                <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
-                ${senderHtml}
-            </div>
-        </div>
-    </div>`;
-    }
-    function renderPagination(totalPages) {
-        if (totalPages <= 1) return '';
-        let html = `<div class="d-flex justify-content-center gap-1 py-2">`;
-        for (let i = 1; i <= totalPages; i++) {
-            html += `<button class="btn btn-sm ${i === PAGINATION.page ? 'btn-primary' : 'btn-outline-secondary'}" data-page="${i}">${i}</button>`;
-        }
-        html += `</div>`;
-        return html;
-    }
-    els.list?.addEventListener('click', (e) => {
-        const pageBtn = e.target.closest('[data-page]');
-        if (!pageBtn) return;
-        PAGINATION.page = Number(pageBtn.dataset.page);
-        renderMessageList();
-    });
-    function resetPagination() {
-        PAGINATION.page = 1;
-    }
-    function bindConversationClicks() {
         Array.from(els.list.querySelectorAll('.conversation-item')).forEach(item => {
             item.addEventListener('click', () => {
                 state.activeConversationId = item.dataset.conv;
@@ -304,26 +182,19 @@
             });
         });
     }
+
     function flattenMessages() {
         const list = [];
         conversations.forEach(conv => {
             const root = conv.messages.root;
             if (!root) return;
             const lastMsg = getLastMessage(conv) || root;
-
-            const recipientNames = (conv.participants || [])
-                .filter(id => Number(id) !== Number(lastMsg.senderId))
-                .map(id => users[id]?.name)
-                .filter(Boolean)
-                .join('، ');
-
             list.push({
                 id: root.id,
                 conversationId: conv.id,
                 subject: conv.subject,
                 senderId: lastMsg.senderId,
                 senderName: users[lastMsg.senderId]?.name || 'نامشخص',
-                recipients: recipientNames, // ⬅️ اضافه شد
                 body: lastMsg.body || '',
                 time: lastMsg.time,
                 archived: conv.archived,
@@ -341,26 +212,20 @@
 
     function filterByChipMessage(msg) {
         switch (state.chip) {
-            case 'sent':
-                return msg.senderId === authUserId;
-            case 'received':
-                return msg.senderId !== authUserId;
-            case 'all':
-            default:
-                return true;
+            case 'unread': return msg.unread > 0;
+            case 'archived': return msg.archived;
+            case 'muted': return msg.muted;
+            case 'type-internal': return msg.type === 'internal';
+            case 'type-external': return msg.type === 'external';
+            case 'sent': return msg.direction === 'outgoing';
+            default: return true;
         }
     }
 
     function filterBySearchMessage(msg) {
         if (!state.search) return true;
         const q = state.search.toLowerCase();
-
-        const subjectMatch = msg.subject?.toLowerCase().includes(q);
-        const bodyMatch = msg.body?.toLowerCase().includes(q);
-        const senderMatch = msg.senderName?.toLowerCase().includes(q);
-        const recipientsMatch = msg.recipients?.toLowerCase().includes(q);
-
-        return subjectMatch || bodyMatch || senderMatch || recipientsMatch;
+        return msg.subject.toLowerCase().includes(q) || msg.senderName.toLowerCase().includes(q) || msg.body.toLowerCase().includes(q);
     }
 
     function openMessageModal(conversationId) {
@@ -369,18 +234,7 @@
         if (!conv) return;
 
         if (els.viewSubject) els.viewSubject.textContent = conv.subject;
-
-        // ⬇️ این قسمت مهم است
-        if (els.viewParticipants) {
-            els.viewParticipants.innerHTML = conv.participants
-                .map(id => users[id])
-                .filter(Boolean)
-                .map(user => renderAvatar(user))
-                .join('');
-
-            // tooltip ها دوباره init شوند
-            setTimeout(() => reInitTooltips(), 0);
-        }
+        if (els.viewParticipants) els.viewParticipants.innerHTML = conv.participants.map(id => renderAvatar(users[id])).join('');
 
         els.viewModal.dataset.conversationId = conv.id;
 
@@ -571,19 +425,13 @@
                     ? Array.from(els.composeAttachment.files).map(f => ({id: f.name,name: f.name,url: URL.createObjectURL(f),size: f.size,mime: f.type}))
                     : [];
 
-                const recipientNames = recipientIds
-                    .map(id => users[id]?.name)
-                    .filter(Boolean)
-                    .join('، ');
-
                 const newMessage = {
                     id: 'm' + data.message_id,
                     senderId: authUserId,
                     body,
                     time: new Date().toISOString(),
                     direction: 'outgoing',
-                    attachments,
-                    recipients: recipientNames // ⬅️ اضافه شد
+                    attachments
                 };
 
                 const targetConversationId = data.conversation_id || conversationId || state.activeConversationId;
@@ -693,29 +541,20 @@
             .catch(() => {});
     }
 
-    function initRealtime() {
+    function initRealtime(){
         subscribeRefreshChannel();
         subscribeActiveConversationChannel();
     }
 
-
     function ensureChannel(name) {
-        if (!pusherConnected) return null;
-
         if (!channelSubscriptions.has(name)) {
-            try {
-                pusher.subscribe(name);
-                channelSubscriptions.add(name);
-            } catch (e) {
-                startOfflinePolling();
-                return null;
-            }
+            pusher.subscribe(name);
+            channelSubscriptions.add(name);
         }
         return pusher.channel(name);
     }
 
     function bindOnce(channel, event, handler) {
-        if (!channel) return;
         const key = `${channel.name}:${event}`;
         if (channelBindings.has(key)) return;
         channel.bind(event, handler);
@@ -731,67 +570,27 @@
 
     function subscribeActiveConversationChannel() {
         if (!state.activeConversationId) return;
+        const channel = ensureChannel(`private-conversation.${state.activeConversationId}`);
+        bindOnce(channel, 'message.sent', function(data){
+            const target = conversations.find(c=>c.id==data.conversation_id);
+            if(!target) return;
 
-        const channelName = `private-conversation.${state.activeConversationId}`;
-        if (!window.__CORRESPONDENCE_CHANNELS__) window.__CORRESPONDENCE_CHANNELS__ = new Set();
-        const channelSubscriptions = window.__CORRESPONDENCE_CHANNELS__;
+            if(data.parent_id) target.messages.replies.push(data.message);
+            else target.messages.root = data.message;
 
-        if (!channelSubscriptions.has(channelName)) {
-            const channel = pusher.subscribe(channelName);
-
-            channel.bind('message.sent', function(data) {
-                // پیدا کردن conversation هدف
-                let conv = conversations.find(c => normalizeId(c.id) === normalizeId(data.conversation_id));
-
-                // اگر پیدا نشد، conversation جدید بساز
-                if (!conv) {
-                    conv = {
-                        id: data.conversation_id,
-                        subject: data.subject || '(بدون موضوع)',
-                        participants: data.participants || [],
-                        unread: 0,
-                        lastActivity: data.message.time,
-                        messages: {root: data.message, replies: []}
-                    };
-                    conversations.unshift(conv);
+            target.lastActivity = data.message.time || target.lastActivity;
+            if (Number(data.message.senderId) !== Number(authUserId)) {
+                if (state.activeConversationId === target.id) {
+                    markAsRead(target.id);
                 } else {
-                    // پیام اصلی یا پاسخ
-                    if (data.parent_id) conv.messages.replies.push(data.message);
-                    else conv.messages.root = data.message;
-                    conv.lastActivity = data.message.time;
+                    target.unread = (Number(target.unread) || 0) + 1;
                 }
+            }
 
-                // mark as unread یا read
-                if (Number(data.message.senderId) !== Number(authUserId)) {
-                    if (state.activeConversationId === conv.id) markAsRead(conv.id);
-                    else conv.unread = (Number(conv.unread) || 0) + 1;
-                }
-
-                // رندر مجدد
-                renderMessageList();
-                // اگر modal باز است، آپدیت شود
-                if (state.activeConversationId === conv.id && els.viewModal?.classList.contains('show')) {
-                    openMessageModal(conv.id);
-                }
-            });
-
-            channelSubscriptions.add(channelName);
-        }
-    }
-    function startOfflinePolling() {
-        if (offlinePoller) return;
-        offlinePoller = setInterval(() => {
-            refreshConversations();
-        }, 5000);
+            if(state.activeConversationId===target.id) openMessageModal(target.id);
+            renderMessageList();
+        });
     }
 
-    function stopOfflinePolling() {
-        if (!offlinePoller) return;
-        clearInterval(offlinePoller);
-        offlinePoller = null;
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-        init();
-        bindSearchAndFilter();
-    });
+    document.addEventListener('DOMContentLoaded', init);
 })();
