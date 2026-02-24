@@ -9,7 +9,10 @@
         search: '',
         chip: 'all'
     };
-
+    const PAGINATION = {
+        page: 1,
+        perPage: 10
+    };
     const els = {
         skeleton: document.getElementById('correspondence-skeleton'),
         body: document.getElementById('correspondence-body'),
@@ -104,17 +107,27 @@
     }
 
     function bindEvents() {
+        els.searchInput = document.getElementById('searchConversation');
+
         els.searchInput?.addEventListener('input', (e) => {
-            state.search = e.target.value.trim();
-            renderMessageList();
+            state.search = e.target.value.trim();  // متن سرچ را ذخیره می‌کنیم
+            if (typeof resetPagination === 'function') resetPagination(); // اگر pagination داری صفحه را ریست کن
+            renderMessageList(); // رندر مجدد لیست با فیلتر جدید
         });
 
         els.filterChips?.addEventListener('click', (e) => {
             const chip = e.target.closest('.chip');
             if (!chip) return;
+
             state.chip = chip.dataset.filter;
+
             Array.from(els.filterChips.querySelectorAll('.chip'))
                 .forEach(c => c.classList.toggle('active', c === chip));
+
+            if (typeof resetPagination === 'function') {
+                resetPagination();
+            }
+
             renderMessageList();
         });
 
@@ -134,9 +147,9 @@
         els.actionMuteModal?.addEventListener('click', toggleMute);
         els.actionAddModal?.addEventListener('click', () => showToast('UI فقط: انتخاب عضو جدید پیاده‌سازی نشده است.'));
     }
-
     function renderMessageList() {
         if (!els.list) return;
+
         const flattened = flattenMessages()
             .filter(filterByChipMessage)
             .filter(filterBySearchMessage)
@@ -147,30 +160,65 @@
             return;
         }
 
-        els.list.innerHTML = flattened.map(msg => {
-            const activeClass = state.activeMessageId === msg.id ? 'active' : '';
-            const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
-            const flags = `
-                ${msg.archived ? '<span class="badge bg-info text-dark">آرشیو</span>' : ''}
-                ${msg.muted ? '<span class="badge bg-secondary">بی‌صدا</span>' : ''}
-            `;
-            return `<div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
-                        <div class="p-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-600 truncate" title="${msg.subject}"> موضوع :  ${msg.subject}</span>
-                                ${unreadBadge}
-                            </div>
-                            <div class="text-muted truncate mt-1"> متن پیام :   ${msg.preview}</div>
-                            <hr>
-                            <div class="text-muted truncate" style="float:left;font-size: 11px" title="${msg.senderName}"> ارسال شده توسط :  ${msg.senderName}</div>
-                            <div class="d-flex justify-content-between align-items-center mt-1">
-                                <small class="text-muted" style="font-size: 11px">${formatRelative(msg.time)}</small>
-                                <div class="badges-inline">${flags}</div>
-                            </div>
-                        </div>
-                    </div>`;
-        }).join('');
+        const totalPages = Math.ceil(flattened.length / PAGINATION.perPage);
+        PAGINATION.page = Math.min(PAGINATION.page, totalPages);
 
+        const start = (PAGINATION.page - 1) * PAGINATION.perPage;
+        const items = flattened.slice(start, start + PAGINATION.perPage);
+
+        els.list.innerHTML = `
+        ${items.map(renderConversationItem).join('')}
+        ${renderPagination(totalPages)}
+    `;
+
+        bindConversationClicks();
+    }
+
+    function renderConversationItem(msg) {
+        const activeClass = state.activeMessageId === msg.id ? 'active' : '';
+        const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
+
+        return `
+    <div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
+        <div class="p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-600 truncate">موضوع: ${msg.subject}</span>
+                ${unreadBadge}
+            </div>
+            <div class="text-muted truncate mt-1">متن پیام: ${msg.preview}</div>
+            <hr>
+            <div class="d-flex justify-content-between align-items-center mt-1">
+                <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
+            </div>
+        </div>
+    </div>`;
+    }
+    function renderPagination(totalPages) {
+        if (totalPages <= 1) return '';
+
+        let html = `<div class="d-flex justify-content-center gap-1 py-2">`;
+
+        for (let i = 1; i <= totalPages; i++) {
+            html += `
+            <button
+                class="btn btn-sm ${i === PAGINATION.page ? 'btn-primary' : 'btn-outline-secondary'}"
+                data-page="${i}">
+                ${i}
+            </button>
+        `;
+        }
+
+        html += `</div>`;
+        return html;
+    }
+    els.list.addEventListener('click', (e) => {
+        const pageBtn = e.target.closest('[data-page]');
+        if (!pageBtn) return;
+
+        PAGINATION.page = Number(pageBtn.dataset.page);
+        renderMessageList();
+    });
+    function bindConversationClicks() {
         Array.from(els.list.querySelectorAll('.conversation-item')).forEach(item => {
             item.addEventListener('click', () => {
                 state.activeConversationId = item.dataset.conv;
@@ -182,6 +230,56 @@
             });
         });
     }
+    function resetPagination() {
+        PAGINATION.page = 1;
+    }
+    // function renderMessageList() {
+    //     if (!els.list) return;
+    //     const flattened = flattenMessages()
+    //         .filter(filterByChipMessage)
+    //         .filter(filterBySearchMessage)
+    //         .sort((a, b) => new Date(b.time) - new Date(a.time));
+    //
+    //     if (!flattened.length) {
+    //         els.list.innerHTML = '<div class="text-muted text-center py-3">موردی یافت نشد.</div>';
+    //         return;
+    //     }
+    //
+    //     els.list.innerHTML = flattened.map(msg => {
+    //         const activeClass = state.activeMessageId === msg.id ? 'active' : '';
+    //         const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
+    //         const flags = `
+    //             ${msg.archived ? '<span class="badge bg-info text-dark">آرشیو</span>' : ''}
+    //             ${msg.muted ? '<span class="badge bg-secondary">بی‌صدا</span>' : ''}
+    //         `;
+    //         return `<div class="conversation-item ${activeClass}" data-id="${msg.id}" data-conv="${msg.conversationId}">
+    //                     <div class="p-3">
+    //                         <div class="d-flex justify-content-between align-items-center mb-1">
+    //                             <span class="fw-600 truncate" title="${msg.subject}"> موضوع :  ${msg.subject}</span>
+    //                             ${unreadBadge}
+    //                         </div>
+    //                         <div class="text-muted truncate mt-1"> متن پیام :   ${msg.preview}</div>
+    //                         <hr>
+    //                         <div class="text-muted truncate" style="float:left;font-size: 11px" title="${msg.senderName}"> ارسال شده توسط :  ${msg.senderName}</div>
+    //                         <div class="d-flex justify-content-between align-items-center mt-1">
+    //                             <small class="text-muted" style="font-size: 11px">${formatRelative(msg.time)}</small>
+    //                             <div class="badges-inline">${flags}</div>
+    //                         </div>
+    //                     </div>
+    //                 </div>`;
+    //     }).join('');
+    //
+    //     Array.from(els.list.querySelectorAll('.conversation-item')).forEach(item => {
+    //         item.addEventListener('click', () => {
+    //             state.activeConversationId = item.dataset.conv;
+    //             subscribeActiveConversationChannel();
+    //             state.activeMessageId = item.dataset.id;
+    //             markAsRead(item.dataset.conv);
+    //             renderMessageList();
+    //             openMessageModal(item.dataset.conv);
+    //         });
+    //     });
+    // }
 
     function flattenMessages() {
         const list = [];
@@ -212,20 +310,27 @@
 
     function filterByChipMessage(msg) {
         switch (state.chip) {
-            case 'unread': return msg.unread > 0;
-            case 'archived': return msg.archived;
-            case 'muted': return msg.muted;
-            case 'type-internal': return msg.type === 'internal';
-            case 'type-external': return msg.type === 'external';
-            case 'sent': return msg.direction === 'outgoing';
-            default: return true;
+            case 'sent':
+                return msg.senderId === authUserId;
+
+            case 'received':
+                return msg.senderId !== authUserId;
+
+            case 'all':
+            default:
+                return true;
         }
     }
 
     function filterBySearchMessage(msg) {
         if (!state.search) return true;
+
         const q = state.search.toLowerCase();
-        return msg.subject.toLowerCase().includes(q) || msg.senderName.toLowerCase().includes(q) || msg.body.toLowerCase().includes(q);
+        const subjectMatch = msg.subject?.toLowerCase().includes(q);
+        const bodyMatch = msg.body?.toLowerCase().includes(q);
+        const senderMatch = msg.senderName?.toLowerCase().includes(q);
+        const recipientsMatch = msg.recipients?.toLowerCase().includes(q);
+        return subjectMatch || bodyMatch || senderMatch || recipientsMatch;
     }
 
     function openMessageModal(conversationId) {

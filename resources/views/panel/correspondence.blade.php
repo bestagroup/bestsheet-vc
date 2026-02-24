@@ -42,7 +42,8 @@
                 {{-- Filters --}}
                 <div id="filterChips" class="mb-3 filter-chips">
                     <span class="chip active" data-filter="all">همه</span>
-                    <span class="chip" data-filter="unread">خوانده نشده</span>
+                    <span class="chip" data-filter="sent">ارسالی</span>
+                    <span class="chip" data-filter="received">دریافتی</span>
                 </div>
 
                 {{-- List --}}
@@ -204,7 +205,7 @@
         };
     </script>
 
-    <script src="{{'https://js.pusher.com/8.2.0/pusher.min.js'}}"></script>
+    <script src="{{ asset('js/pusher.min.js') }}"></script>
     <script src="{{ asset('js/correspondence.js') }}"></script>
 
 @endsection
