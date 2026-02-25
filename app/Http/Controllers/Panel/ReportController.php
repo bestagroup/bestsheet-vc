@@ -76,7 +76,7 @@ class ReportController extends Controller
             'labels' => $investSteps->pluck('title'),
             'data'   => $investSteps->map(function($step) use ($companyId) {
 
-                $query = Project::where('invest_step',$step->id);
+                $query = Project::where('invest_step',$step->id)->where('is_rejected',0)->get();
 
                 if ($companyId) {
                     $query->where('id',$companyId);
@@ -121,6 +121,21 @@ class ReportController extends Controller
         // ================================
         // 4️⃣ Financial Statements (با scope)
         // ================================
+        $payments = Finance::select(
+            DB::raw('DATE_FORMAT(date, "%Y-%m") as month'),
+            DB::raw('SUM(amount) as total_amount')
+        )
+            ->filter($request)
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+        $labels = $payments->pluck('month');
+        $data = $payments->pluck('total_amount');
+        $stageAllocation = [
+            'labels' => $labels,
+            'data'   => $data
+        ];
+
         $records = Financial_statement::query()
             ->filter($request)
             ->orderBy('year')
@@ -130,13 +145,6 @@ class ReportController extends Controller
         $labels = $records->map(fn($r) =>
             $r->year.'/'.str_pad($r->month,2,'0',STR_PAD_LEFT)
         );
-
-        $stageAllocation = [
-            'labels' => $labels,
-            'data'   => $records->map(fn($r) =>
-            (int) str_replace(',','',$r->net_sales)
-            ),
-        ];
 
         // ================================
         // KPI Trend (static فعلاً)

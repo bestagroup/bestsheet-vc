@@ -629,71 +629,7 @@
             });
         });
     </script>
-{{--    <script>--}}
-{{--        let sectorChart = null;--}}
-{{--        let liquidityChart = null;--}}
 
-{{--        $('#reportFilterForm').on('submit', function(e) {--}}
-{{--            e.preventDefault();--}}
-
-{{--            $.ajax({--}}
-{{--                url: "{{ route('report.show') }}",--}}
-{{--                method: "POST",--}}
-{{--                data: $(this).serialize(),--}}
-{{--                beforeSend: function() {--}}
-{{--                    console.log('loading...');--}}
-{{--                },--}}
-{{--                success: function(res) {--}}
-
-{{--                    // ======================--}}
-{{--                    // آپدیت doughnut--}}
-{{--                    // ======================--}}
-{{--                    if (sectorChart) sectorChart.destroy();--}}
-
-{{--                    const ctx1 = document.getElementById('sectorAllocationChart');--}}
-
-{{--                    sectorChart = new Chart(ctx1, {--}}
-{{--                        type: 'doughnut',--}}
-{{--                        data: {--}}
-{{--                            labels: res.sectorAllocation.labels,--}}
-{{--                            datasets: [{--}}
-{{--                                data: res.sectorAllocation.data--}}
-{{--                            }]--}}
-{{--                        }--}}
-{{--                    });--}}
-
-{{--                    // ======================--}}
-{{--                    // آپدیت liquidity--}}
-{{--                    // ======================--}}
-{{--                    if (liquidityChart) liquidityChart.destroy();--}}
-
-{{--                    const ctx2 = document.getElementById('liquidityChart');--}}
-
-{{--                    liquidityChart = new Chart(ctx2, {--}}
-{{--                        type: 'line',--}}
-{{--                        data: {--}}
-{{--                            labels: res.labels,--}}
-{{--                            datasets: [--}}
-{{--                                {--}}
-{{--                                    label: 'وجه نقد',--}}
-{{--                                    data: res.cashAndEquivalents,--}}
-{{--                                },--}}
-{{--                                {--}}
-{{--                                    label: 'دارایی جاری',--}}
-{{--                                    data: res.totalCurrentAssets,--}}
-{{--                                },--}}
-{{--                                {--}}
-{{--                                    label: 'بدهی جاری',--}}
-{{--                                    data: res.totalCurrentLiabilities,--}}
-{{--                                }--}}
-{{--                            ]--}}
-{{--                        }--}}
-{{--                    });--}}
-
-{{--                }--}}
-{{--            });--}}
-{{--        });--}}
-{{--    </script>--}}
     <script src="{{asset('assets/vendor/libs/block-ui/block-ui.js')}}"></script>
     <script src="{{asset('assets/vendor/libs/jalalidatepicker/jalalidatepicker.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/js/formhandler.js') }}"></script>
