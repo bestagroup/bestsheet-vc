@@ -53,6 +53,7 @@ class FlowController extends Controller
                     'p.invest_step',
                     'p.percentageshare',
                     'p.amount_request_accept',
+                    'p.is_rejected',
                     'p.created_at',
                     DB::raw('(SELECT COALESCE(SUM(f.amount),0) FROM finances f WHERE f.project_id = p.id) as total_payment')
                 )
@@ -68,7 +69,13 @@ class FlowController extends Controller
                     return ($data->company_name);
                 })
                 ->addColumn('flow_level', function ($data) {
-                    return ($data->flow_level);
+                    $flow = $data->flow_level;
+
+                    if ($data->is_rejected == 1) {
+                        // می‌توانی از FontAwesome یا emoji استفاده کنی
+                        $flow .= ' <span style="color:red;">&#9940;</span>'; // علامت عبور ممنوع ❌
+                    }
+                    return $flow;
                 })
                 ->addColumn('percentageshare', function ($data) {
                     return ($data->percentageshare . '%');
@@ -121,7 +128,7 @@ class FlowController extends Controller
 
                     return $actionBtn;
                 })
-                ->rawColumns(['action','invest_step'])
+                ->rawColumns(['action','invest_step','flow_level'])
                 ->make(true);
         }
         return view('panel.flow')->with(compact(['thispage' , 'submenupanels' ,'menupanels' , 'states'  ,'cities']));
