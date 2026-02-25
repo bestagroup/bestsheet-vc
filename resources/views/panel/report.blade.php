@@ -3,7 +3,10 @@
 @section('title')
     <title>{{ $thispage['title'] }}</title>
 @endsection
-
+@section('style')
+    <link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/vendor/libs/jalalidatepicker/jalalidatepicker.min.css')}}" />
+@endsection
 @section('content')
     <style>
         .report-wrap { direction: rtl; }
@@ -104,7 +107,42 @@
                 </div>
             </div>
         </div>
+        <div class="card" style="margin:15px;padding: 40px;">
+            <div class="card-content">
+                <form method="GET" action="{{ route('report.index') }}">
+                    <div class="row">
 
+                        {{-- شرکت --}}
+                        <div class="input-field col s12 m4">
+                            <select name="company_id" class="form-control">
+                                <option value="">همه شرکت‌ها</option>
+                                @foreach($companies as $company)
+                                    <option value="{{ $company->id }}"
+                                        {{ request('company_id') == $company->id ? 'selected' : '' }}>
+                                        {{ $company->title }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                        </div>
+
+                        {{-- از تاریخ --}}
+                        <div class="input-field col s12 m3">
+                            <input type="text" data-jdp class="form-control" autocomplete="off" id="from_date" name="from_date" placeholder="از تاریخ " >
+                        </div>
+
+                        {{-- تا تاریخ --}}
+                        <div class="input-field col s12 m3">
+                            <input type="text" data-jdp class="form-control" autocomplete="off" id="to_date" name="to_date" placeholder="تا تاریخ " >
+                        </div>
+
+                        <div class="input-field col s12 m2">
+                            <button class="btn" type="submit">اعمال فیلتر</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         {{-- Charts --}}
         <div class="report-grid">
 
@@ -591,22 +629,73 @@
             });
         });
     </script>
-    <script src="{{asset('assets/vendor/libs/jquery/jquery.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/popper/popper.js')}}"></script>
-    <script src="{{asset('assets/vendor/js/bootstrap.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/node-waves/node-waves.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/hammer/hammer.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/i18n/i18n.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/typeahead-js/typeahead.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/quill/katex.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/quill/quill.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
-    <script src="{{asset('assets/vendor/js/menu.js')}}"></script>
+{{--    <script>--}}
+{{--        let sectorChart = null;--}}
+{{--        let liquidityChart = null;--}}
+
+{{--        $('#reportFilterForm').on('submit', function(e) {--}}
+{{--            e.preventDefault();--}}
+
+{{--            $.ajax({--}}
+{{--                url: "{{ route('report.show') }}",--}}
+{{--                method: "POST",--}}
+{{--                data: $(this).serialize(),--}}
+{{--                beforeSend: function() {--}}
+{{--                    console.log('loading...');--}}
+{{--                },--}}
+{{--                success: function(res) {--}}
+
+{{--                    // ======================--}}
+{{--                    // آپدیت doughnut--}}
+{{--                    // ======================--}}
+{{--                    if (sectorChart) sectorChart.destroy();--}}
+
+{{--                    const ctx1 = document.getElementById('sectorAllocationChart');--}}
+
+{{--                    sectorChart = new Chart(ctx1, {--}}
+{{--                        type: 'doughnut',--}}
+{{--                        data: {--}}
+{{--                            labels: res.sectorAllocation.labels,--}}
+{{--                            datasets: [{--}}
+{{--                                data: res.sectorAllocation.data--}}
+{{--                            }]--}}
+{{--                        }--}}
+{{--                    });--}}
+
+{{--                    // ======================--}}
+{{--                    // آپدیت liquidity--}}
+{{--                    // ======================--}}
+{{--                    if (liquidityChart) liquidityChart.destroy();--}}
+
+{{--                    const ctx2 = document.getElementById('liquidityChart');--}}
+
+{{--                    liquidityChart = new Chart(ctx2, {--}}
+{{--                        type: 'line',--}}
+{{--                        data: {--}}
+{{--                            labels: res.labels,--}}
+{{--                            datasets: [--}}
+{{--                                {--}}
+{{--                                    label: 'وجه نقد',--}}
+{{--                                    data: res.cashAndEquivalents,--}}
+{{--                                },--}}
+{{--                                {--}}
+{{--                                    label: 'دارایی جاری',--}}
+{{--                                    data: res.totalCurrentAssets,--}}
+{{--                                },--}}
+{{--                                {--}}
+{{--                                    label: 'بدهی جاری',--}}
+{{--                                    data: res.totalCurrentLiabilities,--}}
+{{--                                }--}}
+{{--                            ]--}}
+{{--                        }--}}
+{{--                    });--}}
+
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
     <script src="{{asset('assets/vendor/libs/block-ui/block-ui.js')}}"></script>
-    <script src="{{asset('assets/js/main.js')}}"></script>
-    <script src="{{asset('assets/js/app-email.js')}}"></script>
-
-
+    <script src="{{asset('assets/vendor/libs/jalalidatepicker/jalalidatepicker.min.js')}}"></script>
+    <script src="{{ asset('assets/vendor/js/formhandler.js') }}"></script>
 
 @endpush
