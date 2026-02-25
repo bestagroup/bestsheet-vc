@@ -81,9 +81,40 @@
 
     function renderAvatar(user) {
         if (!user) return '';
-        const initials = escapeHtml((user.name || '').split(' ').map(p => p[0]).join('').toUpperCase());
+
+        const initials = escapeHtml(
+            (user.name || '')
+                .split(' ')
+                .map(p => p[0])
+                .join('')
+                .toUpperCase()
+        );
+
         const color = sanitizeColor(user.color);
-        return `<span class="avatar" style="background-color:${color};width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;color:#fff;margin-left:2px">${initials}</span>`;
+        const name = escapeHtml(user.name || '');
+
+        return `
+        <span
+            class="avatar"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            title="${name}"
+            style="
+                background-color:${color};
+                width:28px;
+                height:28px;
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+                border-radius:50%;
+                font-size:12px;
+                color:#fff;
+                margin-left:2px;
+                cursor:pointer;
+            ">
+            ${initials}
+        </span>
+    `;
     }
 
     const channelSubscriptions = window.__CORRESPONDENCE_CHANNELS__ || (window.__CORRESPONDENCE_CHANNELS__ = new Set());
@@ -219,23 +250,45 @@
         bindConversationClicks();
     }
 
+    // 1️⃣ نمایش نام ارسال‌کننده در لیست مکالمات (conversation list)
+// جایگزین renderConversationItem
+
+// فقط renderConversationItem را اصلاح کن
+
     function renderConversationItem(msg) {
         const activeClass = isSameId(state.activeMessageId, msg.id) ? 'active' : '';
         const unreadBadge = msg.unread ? `<span class="badge unread text-white">${msg.unread}</span>` : '';
+
         const safeSubject = escapeHtml(msg.subject);
         const safePreview = escapeHtml(msg.preview);
+        const safeSender = escapeHtml(msg.senderName || '');
 
         return `
-    <div class="conversation-item ${activeClass}" data-id="${escapeHtml(msg.id)}" data-conv="${escapeHtml(msg.conversationId)}">
+    <div class="conversation-item ${activeClass}"
+         data-id="${escapeHtml(msg.id)}"
+         data-conv="${escapeHtml(msg.conversationId)}">
         <div class="p-3">
             <div class="d-flex justify-content-between align-items-center mb-1">
                 <span class="fw-600 truncate">موضوع: ${safeSubject}</span>
                 ${unreadBadge}
             </div>
-            <div class="text-muted truncate mt-1">متن پیام: ${safePreview}</div>
+
+            <div class="text-muted truncate mt-1">
+                متن پیام: ${safePreview}
+            </div>
+
             <hr>
+
             <div class="d-flex justify-content-between align-items-center mt-1">
-                <small class="text-muted" style="font-size:11px">${formatRelative(msg.time)}</small>
+                <!-- سمت راست: زمان -->
+                <small class="text-muted" style="font-size:11px">
+                  زمان ارسال : ${formatRelative(msg.time)}
+                </small>
+
+                <!-- سمت چپ: نام ارسال‌کننده -->
+                <small class="text-muted fw-600" style="font-size:11px">
+                   ارسال کننده :  ${safeSender}
+                </small>
             </div>
         </div>
     </div>`;
@@ -390,12 +443,19 @@
     function openMessageModal(conversationId) {
         const convId = normalizeId(conversationId);
         const conv = conversations.find(c => normalizeId(c.id) === convId);
-        if (!conv) return;
-        if (!els.viewModal) return;
+        if (!conv || !els.viewModal) return;
 
-        if (els.viewSubject) els.viewSubject.textContent = conv.subject;
+        if (els.viewSubject) {
+            els.viewSubject.textContent = conv.subject;
+        }
+
         const participants = Array.isArray(conv.participants) ? conv.participants : [];
-        if (els.viewParticipants) els.viewParticipants.innerHTML = participants.map(id => renderAvatar(users[id])).join('');
+
+        if (els.viewParticipants) {
+            els.viewParticipants.innerHTML = participants
+                .map(id => renderAvatar(users[id]))
+                .join('');
+        }
 
         els.viewModal.dataset.conversationId = conv.id;
 
@@ -405,8 +465,13 @@
 
         toggleHeaderActions(conv.archived, conv.muted);
 
-        const modal = bootstrap.Modal.getInstance(els.viewModal) || new bootstrap.Modal(els.viewModal);
+        const modal =
+            bootstrap.Modal.getInstance(els.viewModal) ||
+            new bootstrap.Modal(els.viewModal);
+
         modal.show();
+
+        reInitTooltips();
     }
 
     function renderThread(conv) {
@@ -436,25 +501,63 @@
         }, null);
     }
 
+// 2️⃣ نمایش نام دریافت‌کنندگان داخل خود پیام برای ارسال‌کننده
+// جایگزین renderMessage
+
     function renderMessage(msg, isReply) {
         const sender = users[msg.senderId];
+        const isSelf = Number(msg.senderId) === Number(authUserId);
+
         let attachmentsHtml = '';
         if (msg.attachments?.length) {
             attachmentsHtml = `<div class="message-attachments mt-2">
-                ${msg.attachments.map(a => `<a href="${sanitizeUrl(a.url)}" target="_blank" rel="noopener noreferrer" class="d-block text-decoration-none">📎 ${escapeHtml(a.name)}</a>`).join('')}
-            </div>`;
+            ${msg.attachments.map(a =>
+                `<a href="${sanitizeUrl(a.url)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="d-block text-decoration-none">
+                    📎 ${escapeHtml(a.name)}
+                 </a>`
+            ).join('')}
+        </div>`;
         }
-        const isSelf = Number(msg.senderId) === Number(authUserId);
+
         const alignmentClass = isSelf ? 'message-self' : 'message-other';
         const replyClass = isReply ? 'message-reply' : '';
         const canReply = !isSelf;
-        return `<div class="message-card ${alignmentClass} ${replyClass}">
-            <div class="fw-600">${escapeHtml(sender?.name || '')}</div>
-            <small class="text-muted">${formatDateTime(msg.time)}</small>
-            <div class="message-body mt-2">${escapeHtml(msg.body)}</div>
-            ${attachmentsHtml}
-            ${canReply ? `<button class="btn btn-sm btn-outline-primary mt-2" data-action="reply" data-message-id="${msg.id}">پاسخ</button>` : ''}
-        </div>`;
+
+        return `
+    <div class="message-card ${alignmentClass} ${replyClass}">
+        <div class="fw-600">ارسال کننده :  ${escapeHtml(sender?.name || '')}</div>
+
+        <div class="message-body mt-2">متن پیام  :  ${escapeHtml(msg.body)}</div>
+
+        ${attachmentsHtml}
+
+        <!-- تاریخ و ساعت ارسال پیام شمسی -->
+        <small class="text-muted mt-1 d-block" style="font-size:11px"> <hr>
+          تاریخ ارسال پیام :   ${formatDateTime(msg.time)}
+        </small>
+
+        ${canReply
+            ? `<button class="btn btn-sm btn-outline-primary mt-2"
+                       data-action="reply"
+                       data-message-id="${msg.id}">
+                   پاسخ
+               </button>`
+            : ''}
+    </div>`;
+    }
+
+// اگر formatDateTime فعلی دارید، همان را استفاده کنید تا تاریخ و ساعت شمسی شود
+    function formatDateTime(dateStr) {
+        const d = new Date(dateStr);
+        return d.toLocaleString('fa-IR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: 'short'
+        });
     }
 
     function formatDateTime(dateStr) {
