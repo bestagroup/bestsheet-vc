@@ -113,6 +113,7 @@
                     <div class="row">
 
                         {{-- شرکت --}}
+                        {{-- شرکت --}}
                         <div class="input-field col s12 m4">
                             <select name="company_id" class="form-control">
                                 <option value="">همه شرکت‌ها</option>
@@ -123,17 +124,20 @@
                                     </option>
                                 @endforeach
                             </select>
-
                         </div>
 
                         {{-- از تاریخ --}}
                         <div class="input-field col s12 m3">
-                            <input type="text" data-jdp class="form-control" autocomplete="off" id="from_date" name="from_date" placeholder="از تاریخ " >
+                            <input type="text" data-jdp class="form-control" autocomplete="off"
+                                   id="from_date" name="from_date" placeholder="از تاریخ"
+                                   value="{{ request('from_date') }}">
                         </div>
 
                         {{-- تا تاریخ --}}
                         <div class="input-field col s12 m3">
-                            <input type="text" data-jdp class="form-control" autocomplete="off" id="to_date" name="to_date" placeholder="تا تاریخ " >
+                            <input type="text" data-jdp class="form-control" autocomplete="off"
+                                   id="to_date" name="to_date" placeholder="تا تاریخ"
+                                   value="{{ request('to_date') }}">
                         </div>
 
                         <div class="input-field col s12 m2">
@@ -149,11 +153,9 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>نمودار موقعیت طرح های رد شده</h6>
-                        </div>
+                        <div class="card-head"><h6>روند فروش خالص</h6></div>
                         <div class="chart-box">
-                            <canvas id="dealFunnelChart"></canvas>
+                            <canvas id="netSalesChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -162,11 +164,9 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>نمودار وضعیت طرح ها</h6>
-                        </div>
+                        <div class="card-head"><h6>نسبت بهای تمام‌شده به فروش</h6></div>
                         <div class="chart-box">
-                            <canvas id="strategicFitChart"></canvas>
+                            <canvas id="cogsRatioChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -175,11 +175,9 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>توزیع سرمایه بر اساس طرح</h6>
-                        </div>
+                        <div class="card-head"><h6>حاشیه سود ناخالص</h6></div>
                         <div class="chart-box">
-                            <canvas id="sectorAllocationChart"></canvas>
+                            <canvas id="grossMarginChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -188,11 +186,9 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>سرمایه‌گذاری بر اساس مرحله</h6>
-                        </div>
+                        <div class="card-head"><h6>نسبت هزینه اداری و فروش</h6></div>
                         <div class="chart-box">
-                            <canvas id="stageAllocationChart"></canvas>
+                            <canvas id="sgaRatioChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -201,12 +197,9 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>روند KPIهای پورتفو</h6>
-                            <span class="card-hint">MRR / Burn / Runway</span>
-                        </div>
-                        <div class="chart-box tall">
-                            <canvas id="kpiTrendChart"></canvas>
+                        <div class="card-head"><h6>ترکیب دارایی‌های جاری</h6></div>
+                        <div class="chart-box">
+                            <canvas id="currentAssetRatioChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -215,12 +208,9 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>سلامت پورتفو</h6>
-                            <span class="card-hint">ریسک و آمادگی خروج</span>
-                        </div>
+                        <div class="card-head"><h6>نقدینگی (Current Ratio)</h6></div>
                         <div class="chart-box">
-                            <canvas id="portfolioHealthChart"></canvas>
+                            <canvas id="currentRatioChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -229,12 +219,9 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>تایم‌لاین خروج‌ها</h6>
-                            <span class="card-hint">تعداد + ارزش خروج</span>
-                        </div>
+                        <div class="card-head"><h6>ریسک مالی (بدهی به سرمایه)</h6></div>
                         <div class="chart-box">
-                            <canvas id="exitTimelineChart"></canvas>
+                            <canvas id="debtToEquityChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -243,38 +230,31 @@
             <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>عملکرد شرکت‌ها</h6>
-                        </div>
+                        <div class="card-head"><h6>بازده دارایی (ROA)</h6></div>
                         <div class="chart-box">
-                            <canvas id="companyPerformanceChart"></canvas>
+                            <canvas id="roaChart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="report-col" style="flex:1 1 100%;">
+            <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>بازدهی سرمایه (TVPI / DPI / RVPI)</h6>
-                            <span class="card-hint">روند تجمیعی صندوق</span>
-                        </div>
-                        <div class="chart-box full">
-                            <canvas id="fundMetricsChart"></canvas>
+                        <div class="card-head"><h6>کیفیت سود</h6></div>
+                        <div class="chart-box">
+                            <canvas id="profitQualityChart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="report-col" style="flex:1 1 100%;">
+            <div class="report-col">
                 <div class="card report-card hoverable">
                     <div class="card-content">
-                        <div class="card-head">
-                            <h6>وضعیت نقدینگی شرکت</h6>
-                        </div>
-                        <div class="chart-box full">
-                            <canvas id="liquidityChart"></canvas>
+                        <div class="card-head"><h6>کنترل ترازنامه</h6></div>
+                        <div class="chart-box">
+                            <canvas id="balanceCheckChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -286,352 +266,119 @@
 
 @push('scripts')
     <script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
+    <script src="{{asset('assets/vendor/libs/block-ui/block-ui.js')}}"></script>
+    <script src="{{asset('assets/vendor/libs/jalalidatepicker/jalalidatepicker.min.js')}}"></script>
+    <script src="{{ asset('assets/vendor/js/formhandler.js') }}"></script>
+    {{-- ================================ --}}
+    {{-- نکته اصلی: همه نمودارها از یک labels مشترک استفاده می‌کنند --}}
+    {{-- labels = بازه زمانی (سال/ماه) --}}
+    {{-- ================================ --}}
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             if (!window.Chart) return;
 
-            // ---------- Global minimal defaults ----------
-            Chart.defaults.font.family = 'Vazirmatn, IRANSans, system-ui, -apple-system, Segoe UI, Roboto';
+            Chart.defaults.font.family = 'Vazirmatn, IRANSans, system-ui';
             Chart.defaults.color = '#374151';
-            Chart.defaults.plugins.legend.labels.usePointStyle = true;
-            Chart.defaults.plugins.legend.labels.boxWidth = 8;
-            Chart.defaults.plugins.legend.labels.boxHeight = 8;
 
-            const gridColor = 'rgba(17,24,39,.06)';
+            const gridColor   = 'rgba(17,24,39,.06)';
             const borderColor = 'rgba(17,24,39,.12)';
 
             const baseOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
                 interaction: { mode: 'index', intersect: false },
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: {
-                        backgroundColor: 'rgba(17,24,39,.92)',
-                        padding: 10,
-                        cornerRadius: 10,
-                        titleColor: '#fff',
-                        bodyColor: '#fff'
-                    }
+                plugins: { legend: { position: 'bottom' } },
+                scales: {
+                    x: { grid: { display: false }, border: { display: false } },
+                    y: { grid: { color: gridColor }, border: { color: borderColor } }
                 }
             };
 
-            // 1) Deal Funnel
-            new Chart(document.getElementById('dealFunnelChart'), {
-                type: 'bar',
-                data: {
-                    labels: @json($dealFunnel['labels']),
-                    datasets: [{
-                        label: 'تعداد',
-                        data: @json($dealFunnel['data']),
-                        borderRadius: 10,
-                        backgroundColor: 'rgba(14,165,233,.85)'
-                    }]
-                },
-                options: {
-                    ...baseOptions,
-                    indexAxis: 'y',
-                    scales: {
-                        x: { grid: { color: gridColor }, border: { color: borderColor } },
-                        y: { grid: { display: false }, border: { display: false } }
+            const labels = @json($netSales['labels']);
+
+            const lineChart = (id, data, color, unit) =>
+                new Chart(document.getElementById(id), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            borderColor: color,
+                            backgroundColor: color.replace('1)', '.12)'),
+                            fill: true,
+                            tension: .35,
+                            pointRadius: 2
+                        }]
                     },
-                    plugins: { ...baseOptions.plugins, legend: { display: false } }
-                }
-            });
-
-            // 2) Strategic Fit
-            new Chart(document.getElementById('strategicFitChart'), {
-                type: 'bar',
-                data: {
-                    labels: @json($strategicFit['labels']),
-                    datasets: [{
-                        label: 'تعداد',
-                        data: @json($strategicFit['data']),
-                        borderRadius: 10,
-                        backgroundColor: 'rgba(99,102,241,.85)'
-                    }]
-                },
-                options: {
-                    ...baseOptions,
-                    scales: {
-                        x: { grid: { display: false }, border: { display: false } },
-                        y: { grid: { color: gridColor }, border: { color: borderColor } }
+                    options: {
+                        ...baseOptions,
+                        scales: {
+                            ...baseOptions.scales,
+                            y: {
+                                ...baseOptions.scales.y,
+                                beginAtZero: false, // مهم برای نمایش منفی‌ها
+                                title: { display: true, text: unit }
+                            }
+                        }
                     },
-                    plugins: { ...baseOptions.plugins, legend: { display: false } }
-                }
-            });
-
-            // 3) Sector Allocation
-            new Chart(document.getElementById('sectorAllocationChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: @json($sectorAllocation['labels']),
-                    datasets: [{
-                        data: @json($sectorAllocation['data']),
-                        backgroundColor: [
-                            'rgba(14,165,233,.85)',
-                            'rgba(16,185,129,.85)',
-                            'rgba(249,115,22,.85)',
-                            'rgba(99,102,241,.85)',
-                            'rgba(244,63,94,.75)',
-                            'rgba(148,163,184,.85)'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    ...baseOptions,
-                    cutout: '70%',
-                    plugins: { ...baseOptions.plugins, legend: { position: 'bottom' } }
-                }
-            });
-
-            // 4) Stage Allocation
-            new Chart(document.getElementById('stageAllocationChart'), {
-                type: 'bar',
-                data: {
-                    labels: @json($stageAllocation['labels']),
-                    datasets: [{
-                        label: 'تعداد',
-                        data: @json($stageAllocation['data']),
-                        borderRadius: 10,
-                        backgroundColor: 'rgba(16,185,129,.85)'
-                    }]
-                },
-                options: {
-                    ...baseOptions,
-                    plugins: { ...baseOptions.plugins, legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, border: { display: false } },
-                        y: { grid: { color: gridColor }, border: { color: borderColor } }
-                    }
-                }
-            });
-
-            // 5) KPI Trend
-            new Chart(document.getElementById('kpiTrendChart'), {
-                type: 'line',
-                data: {
-                    labels: @json($portfolioKpi['months']),
-                    datasets: [
-                        {
-                            label: 'MRR',
-                            data: @json($portfolioKpi['mrr']),
-                            borderColor: 'rgba(14,165,233,1)',
-                            backgroundColor: 'rgba(14,165,233,.12)',
-                            fill: true,
-                            tension: .35,
-                            pointRadius: 2
-                        },
-                        {
-                            label: 'Burn',
-                            data: @json($portfolioKpi['burn']),
-                            borderColor: 'rgba(244,63,94,1)',
-                            backgroundColor: 'rgba(244,63,94,.10)',
-                            fill: true,
-                            tension: .35,
-                            pointRadius: 2
-                        },
-                        {
-                            label: 'Runway (ماه)',
-                            data: @json($portfolioKpi['runway']),
-                            borderColor: 'rgba(249,115,22,1)',
-                            backgroundColor: 'rgba(249,115,22,.10)',
-                            fill: true,
-                            tension: .35,
-                            pointRadius: 2
-                        }
-                    ]
-                },
-                options: {
-                    ...baseOptions,
-                    scales: {
-                        x: { grid: { display: false }, border: { display: false } },
-                        y: { grid: { color: gridColor }, border: { color: borderColor } }
-                    }
-                }
-            });
-
-            // 6) Portfolio Health
-            new Chart(document.getElementById('portfolioHealthChart'), {
-                type: 'polarArea',
-                data: {
-                    labels: @json($portfolioHealth['labels']),
-                    datasets: [{
-                        data: @json($portfolioHealth['data']),
-                        backgroundColor: [
-                            'rgba(16,185,129,.70)',
-                            'rgba(14,165,233,.70)',
-                            'rgba(249,115,22,.65)',
-                            'rgba(244,63,94,.60)',
-                            'rgba(99,102,241,.70)'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    ...baseOptions,
-                    scales: { r: { grid: { color: gridColor }, ticks: { display: false } } }
-                }
-            });
-
-            // 7) Exit Timeline (bar + line)
-            new Chart(document.getElementById('exitTimelineChart'), {
-                data: {
-                    labels: @json($exitTimeline['labels']),
-                    datasets: [
-                        {
-                            type: 'bar',
-                            label: 'تعداد خروج',
-                            data: @json($exitTimeline['count']),
-                            backgroundColor: 'rgba(99,102,241,.80)',
-                            borderRadius: 10
-                        },
-                        {
-                            type: 'line',
-                            label: 'ارزش خروج',
-                            data: @json($exitTimeline['value']),
-                            borderColor: 'rgba(249,115,22,1)',
-                            backgroundColor: 'rgba(249,115,22,.12)',
-                            fill: true,
-                            tension: .35,
-                            pointRadius: 2,
-                            yAxisID: 'y1'
-                        }
-                    ]
-                },
-                options: {
-                    ...baseOptions,
-                    scales: {
-                        x: { grid: { display: false }, border: { display: false } },
-                        y: { grid: { color: gridColor }, border: { color: borderColor }, beginAtZero: true },
-                        y1: { position: 'right', grid: { display: false }, beginAtZero: true }
-                    }
-                }
-            });
-
-            // 8) Company Performance (IRR + MoM)
-            new Chart(document.getElementById('companyPerformanceChart'), {
-                data: {
-                    labels: @json($companyPerformance['labels']),
-                    datasets: [
-                        {
-                            type: 'bar',
-                            label: 'IRR (%)',
-                            data: @json($companyPerformance['irr']),
-                            backgroundColor: 'rgba(16,185,129,.80)',
-                            borderRadius: 10
-                        },
-                        {
-                            type: 'line',
-                            label: 'رشد ماهانه (%)',
-                            data: @json($companyPerformance['mom']),
-                            borderColor: 'rgba(14,165,233,1)',
-                            backgroundColor: 'rgba(14,165,233,.10)',
-                            fill: true,
-                            tension: .35,
-                            pointRadius: 2,
-                            yAxisID: 'y1'
-                        }
-                    ]
-                },
-                options: {
-                    ...baseOptions,
-                    scales: {
-                        x: { grid: { display: false }, border: { display: false } },
-                        y: { grid: { color: gridColor }, border: { color: borderColor }, beginAtZero: true },
-                        y1: { position: 'right', grid: { display: false }, beginAtZero: true }
-                    }
-                }
-            });
-
-            // 9) Fund Metrics
-            new Chart(document.getElementById('fundMetricsChart'), {
-                type: 'line',
-                data: {
-                    labels: @json($fundMetrics['labels']),
-                    datasets: [
-                        { label: 'TVPI', data: @json($fundMetrics['tvpi']), borderColor: 'rgba(14,165,233,1)', backgroundColor:'rgba(14,165,233,.10)', fill:true, tension:.35, pointRadius:2 },
-                        { label: 'DPI',  data: @json($fundMetrics['dpi']),  borderColor: 'rgba(16,185,129,1)', backgroundColor:'rgba(16,185,129,.10)', fill:true, tension:.35, pointRadius:2 },
-                        { label: 'RVPI', data: @json($fundMetrics['rvpi']), borderColor: 'rgba(244,63,94,1)',  backgroundColor:'rgba(244,63,94,.10)',  fill:true, tension:.35, pointRadius:2 }
-                    ]
-                },
-                options: {
-                    ...baseOptions,
-                    scales: {
-                        x: { grid: { display: false }, border: { display: false } },
-                        y: { grid: { color: gridColor }, border: { color: borderColor }, beginAtZero: false }
-                    }
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            if (!window.Chart) return;
-
-            const liquidityCtx = document.getElementById('liquidityChart').getContext('2d');
-
-            new Chart(liquidityCtx, {
-                type: 'line',
-                data: {
-                    labels: @json($labels),
-                    datasets: [
-                        {
-                            label: 'وجه نقد و معادل نقد',
-                            data: @json($cashAndEquivalents),
-                            borderWidth: 2,
-                            tension: 0.35,
-                            fill: true
-                        },
-                        {
-                            label: 'دارایی‌های جاری',
-                            data: @json($totalCurrentAssets),
-                            borderWidth: 2,
-                            tension: 0.35,
-                            fill: false
-                        },
-                        {
-                            label: 'بدهی‌های جاری',
-                            data: @json($totalCurrentLiabilities),
-                            borderWidth: 2,
-                            tension: 0.35,
-                            fill: false
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return context.dataset.label + ': ' +
-                                        Number(context.raw).toLocaleString();
-                                }
+                        ...baseOptions.plugins
+                    },
+                    plugins: [{
+                        id: 'force-ltr',
+                        beforeInit: chart => {
+                            chart.ctx.canvas.style.direction = 'ltr';
+                        }
+                    }]
+                });
+
+            const barChart = (id, data, color, unit) =>
+                new Chart(document.getElementById(id), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: color,
+                            borderRadius: 10
+                        }]
+                    },
+                    options: {
+                        ...baseOptions,
+                        scales: {
+                            ...baseOptions.scales,
+                            y: {
+                                ...baseOptions.scales.y,
+                                beginAtZero: false, // مقادیر منفی را به درستی نمایش دهد
+                                title: { display: true, text: unit }
                             }
                         }
                     },
-                    scales: {
-                        y: {
-                            ticks: {
-                                callback: function (value) {
-                                    return value.toLocaleString();
-                                }
-                            }
+                    plugins: {
+                        ...baseOptions.plugins
+                    },
+                    plugins: [{
+                        id: 'force-ltr',
+                        beforeInit: chart => {
+                            chart.ctx.canvas.style.direction = 'ltr';
                         }
-                    }
-                }
-            });
+                    }]
+                });
+
+            // ================================
+            // KPI Charts با واحد اندازه‌گیری
+            // ================================
+            lineChart('netSalesChart',          @json($netSales['data']),          'rgba(14,165,233,1)', 'ریال');
+            lineChart('cogsRatioChart',         @json($cogsRatio['data']),         'rgba(244,63,94,1)', 'ریال');
+            lineChart('grossMarginChart',       @json($grossMargin['data']),       'rgba(16,185,129,1)', 'ریال');
+            barChart ('sgaRatioChart',          @json($sgaRatio['data']),          'rgba(99,102,241,.85)', 'ریال');
+            lineChart('currentAssetRatioChart', @json($currentAssetRatio['data']), 'rgba(14,165,233,1)');
+            lineChart('currentRatioChart',      @json($currentRatio['data']),      'rgba(16,185,129,1)');
+            barChart ('debtToEquityChart',      @json($debtToEquity['data']),      'rgba(249,115,22,.85)', 'ریال');
+            lineChart('roaChart',               @json($roa['data']),               'rgba(99,102,241,1)');
+            lineChart('profitQualityChart',     @json($profitQuality['data']),     'rgba(14,165,233,1)');
+            barChart ('balanceCheckChart',      @json($balanceCheck['data']),      'rgba(244,63,94,.75)', 'ریال');
         });
     </script>
-
-    <script src="{{asset('assets/vendor/libs/block-ui/block-ui.js')}}"></script>
-    <script src="{{asset('assets/vendor/libs/jalalidatepicker/jalalidatepicker.min.js')}}"></script>
-    <script src="{{ asset('assets/vendor/js/formhandler.js') }}"></script>
-
 @endpush

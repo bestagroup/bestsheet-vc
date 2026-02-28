@@ -15,189 +15,140 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         $thispage = [
-            'title'   => 'گزارشات جامع سرمایه‌گذاری',
-            'list'    => 'داشبورد گزارشات مدیریتی',
-            'add'     => '',
-            'create'  => '',
-            'enter'   => '',
-            'edit'    => '',
-            'delete'  => '',
+            'title' => 'گزارشات جامع سرمایه‌گذاری',
+            'list'  => 'داشبورد گزارشات مدیریتی',
         ];
 
-        // ================================
-        // دریافت فیلترها
-        // ================================
-        $companyId = $request->company_id;
-        $fromDate  = $request->from_date;
-        $toDate    = $request->to_date;
+        // لیست شرکت‌ها
+        $companies = Project::select('id','title')
+            ->where('invest_step','>',13)
+            ->get();
 
         // ================================
-        // Persian Months
+        // Base Query با استفاده از scopeFilter
         // ================================
-        $monthsFa = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+        $fsQuery = Financial_statement::query()
+            ->filter($request)   // scopeFilter
+            ->join('projects','projects.id','=','financial_statements.project_id')
+            ->orderBy('financial_statements.year');
 
         // ================================
-        // لیست شرکت‌ها برای dropdown
+        // Helper: تبدیل Collection به labels/data امن
         // ================================
-        $companies = Project::select('id','title')->where('invest_step' , '>', 13)->get();
-
-        // ================================
-        // Invest Steps
-        // ================================
-        $investSteps = Investstep::where('id','>=',1)->orderBy('id')->get();
-
-        // ================================
-        // 1️⃣ Deal Funnel
-        // ================================
-        $dealFunnel = $investSteps->map(function($step) use ($companyId) {
-
-            $query = Project::where('is_rejected',1)
-                ->where('reject_step',$step->id);
-
-            if ($companyId) {
-                $query->where('id',$companyId);
-            }
-
+        $toChart = function ($rows, $valueField) {
+            $rows = $rows->map(fn($r) => [
+                'label' => $r->year,
+                'value' => (float)$r->$valueField
+            ]);
             return [
-                'title' => $step->title,
-                'count' => $query->count()
+                'labels' => $rows->pluck('label')->values(),
+                'data'   => $rows->pluck('value')->values()
             ];
-        })->filter(fn($i) => $i['count'] > 0)->values();
-
-        $dealFunnel = [
-            'labels' => $dealFunnel->pluck('title'),
-            'data'   => $dealFunnel->pluck('count'),
-        ];
+        };
 
         // ================================
-        // 2️⃣ Strategic Fit
+        // 1️⃣ Net Sales رشد فروش
         // ================================
-        $strategicFit = [
-            'labels' => $investSteps->pluck('title'),
-            'data'   => $investSteps->map(function($step) use ($companyId) {
-
-                $query = Project::where('invest_step',$step->id)->where('is_rejected',0)->get();
-
-                if ($companyId) {
-                    $query->where('id',$companyId);
-                }
-
-                return $query->count();
-            })
-        ];
+        $netSales          = $toChart((clone $fsQuery)->get(), 'net_sales');
 
         // ================================
-        // 3️⃣ Sector Allocation (با scope)
+        // 2️⃣ COGS Ratio نسبت بهای تمام‌شده به فروش
         // ================================
-        $payments = Finance::query()
-            ->filter($request)
-            ->from('finances as f')
-            ->leftJoin('projects as p','f.project_id','=','p.id')
-            ->where('f.amount','>',0)
-            ->select(
-                'p.id as project_id',
-                'p.title',
-                'p.logo',
-                DB::raw('SUM(f.amount) as total_paid')
-            )
-            ->groupBy('p.id','p.title','p.logo')
-            ->orderByDesc('total_paid')
-            ->get();
 
-        $total = $payments->sum('total_paid');
-
-        $payments = $payments->map(function($item) use ($total){
-            $item->percent_of_total = $total > 0
-                ? round(($item->total_paid / $total) * 100,2)
-                : 0;
-            return $item;
-        });
-
-        $sectorAllocation = [
-            'labels' => $payments->pluck('title'),
-            'data'   => $payments->pluck('percent_of_total'),
-        ];
-
-        // ================================
-        // 4️⃣ Financial Statements (با scope)
-        // ================================
-        $payments = Finance::select(
-            DB::raw('DATE_FORMAT(date, "%Y-%m") as month'),
-            DB::raw('SUM(amount) as total_amount')
-        )
-            ->filter($request)
-            ->groupBy('date')
-            ->orderBy('date', 'asc')
-            ->get();
-        $labels = $payments->pluck('month');
-        $data = $payments->pluck('total_amount');
-        $stageAllocation = [
-            'labels' => $labels,
-            'data'   => $data
-        ];
-
-        $records = Financial_statement::query()
-            ->filter($request)
-            ->orderBy('year')
-            ->orderBy('month')
-            ->get();
-
-        $labels = $records->map(fn($r) =>
-            $r->year.'/'.str_pad($r->month,2,'0',STR_PAD_LEFT)
+        $cogsRatio = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'cogs_ratio'=>($r->cogs_goods + $r->cogs_services)/($r->net_sales ?: 1)
+            ]), 'cogs_ratio'
         );
 
         // ================================
-        // KPI Trend (static فعلاً)
+        // 3️⃣ Gross Margin حاشیه سود ناخالص
         // ================================
-        $portfolioKpi = [
-            'months'  => $monthsFa,
-            'mrr'     => [120,138,155,172,190,210,235,255,280,305,330,360],
-            'burn'    => [92,95,98,101,105,110,112,114,116,118,120,122],
-            'runway'  => [15,15,14,13,12,12,11,10,10,9,9,8],
-        ];
+        $grossMargin = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'gross_margin'=>($r->gross_profit)/($r->net_sales ?: 1)
+            ]), 'gross_margin'
+        );
 
         // ================================
-        // سایر داده‌های استاتیک
+        // 4️⃣ SG&A Ratio نسبت هزینه اداری و فروش
         // ================================
-        $portfolioHealth = [
-            'labels' => ['پایدار','در حال رشد','ریسکی','بحرانی','آماده خروج'],
-            'data'   => [14,9,6,2,3],
-        ];
+        $sgaRatio = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'sga_ratio'=>($r->selling_general_admin_expense)/($r->net_sales ?: 1)
+            ]), 'sga_ratio'
+        );
 
-        $exitTimeline = [
-            'labels' => ['۱۳۹۹','۱۴۰۰','۱۴۰۱','۱۴۰۲','۱۴۰۳'],
-            'count'  => [1,2,4,5,3],
-            'value'  => [8,14,26,33,21],
-        ];
+        // ================================
+        // 5️⃣ Current Asset Ratio ترکیب دارایی‌ها
+        // ================================
+        $currentAssetRatio = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'current_asset_ratio'=>($r->total_current_assets)/($r->total_assets ?: 1)
+            ]), 'current_asset_ratio'
+        );
 
-        $fundMetrics = [
-            'labels' => ['۱۳۹۹','۱۴۰۰','۱۴۰۱','۱۴۰۲','۱۴۰۳'],
-            'tvpi'   => [1.05,1.22,1.38,1.61,1.84],
-            'dpi'    => [0.12,0.28,0.39,0.52,0.63],
-            'rvpi'   => [0.93,0.94,0.99,1.09,1.21],
-        ];
+        // ================================
+        // 6️⃣ Current Ratio نقدینگی
+        // ================================
+        $currentRatio = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'current_ratio'=>($r->total_current_assets)/($r->total_current_liabilities ?: 1)
+            ]), 'current_ratio'
+        );
 
-        $companyPerformance = [
-            'labels' => $labels,
-            'irr'    => $records->pluck('net_sales'),
-            'mom'    => $records->pluck('gross_profit'),
-        ];
+        // ================================
+        // 7️⃣ Debt to Equity ریسک مالی
+        // ================================
+        $debtToEquity = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'debt_to_equity'=>($r->total_liabilities)/($r->total_equity ?: 1)
+            ]), 'debt_to_equity'
+        );
 
-        $runwayByCompany = [
-            'labels' => $companies->pluck('title'),
-            'data'   => [11,9,14,10,8,12,9,13],
-        ];
+        // ================================
+        // 8️⃣ ROA بازده دارایی
+        // ================================
+        $roa = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'roa'=>($r->net_profit)/($r->total_assets ?: 1)
+            ]), 'roa'
+        );
 
-        $cashAndEquivalents = $records->pluck('cash_and_equivalents')
-            ->map(fn($v)=>(int)str_replace(',','',$v));
+        // ================================
+        // 9️⃣ Profit Quality کیفیت سود
+        // ================================
+        $profitQuality = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'profit_quality'=>($r->net_profit - $r->non_operating_net)/($r->net_profit ?: 1)
+            ]), 'profit_quality'
+        );
 
-        $totalCurrentAssets = $records->pluck('total_current_assets')
-            ->map(fn($v)=>(int)str_replace(',','',$v));
+        // ================================
+        // 🔟 Balance Check کنترل ترازنامه
+        // ================================
+        $balanceCheck = $toChart(
+            (clone $fsQuery)->get()->map(fn($r) => (object)[
+                'year'=>$r->year,
+                'balance_check'=>($r->total_assets - $r->total_equity_and_liabilities)
+            ]), 'balance_check'
+        );
 
-        $totalCurrentLiabilities = $records->pluck('total_current_liabilities')
-            ->map(fn($v)=>(int)str_replace(',','',$v));
-
-        return view('panel.report')->with(compact('thispage', 'companies','dealFunnel','strategicFit','labels','sectorAllocation','stageAllocation','portfolioKpi','portfolioHealth','exitTimeline','fundMetrics','companyPerformance','runwayByCompany','cashAndEquivalents','totalCurrentAssets','totalCurrentLiabilities'
+        // ================================
+        // ارسال به View
+        // ================================
+        return view('panel.report')->with(compact(
+            'thispage','companies',
+            'netSales','cogsRatio','grossMargin','sgaRatio','currentAssetRatio','currentRatio',
+            'debtToEquity','roa','profitQuality','balanceCheck'
         ));
     }
 
